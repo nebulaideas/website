@@ -16,7 +16,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('nebula-language') as Language | null;
-      if (stored === 'en' || stored === 'es') return stored;
+      if (stored === 'en' || stored === 'es') {return stored;}
     }
     return 'en';
   });
@@ -70,7 +70,11 @@ export function useLanguage() {
   return context;
 }
 
-export function useAltCalendly() {
+/**
+ * Hook to retrieve the Calendly booking URL for the opposite (complementary) language
+ * than the currently active language. Useful for cross-linking booking pages.
+ */
+export function useComplementaryCalendlyUrl() {
   const { language } = useLanguage();
   return language === 'en'
     ? 'https://cal.com/nebula-ideas/descubrimiento'

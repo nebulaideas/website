@@ -30,7 +30,7 @@ export default function Navigation() {
 
     navLinks.forEach((link) => {
       const el = document.getElementById(link.href.slice(1));
-      if (el) observer.observe(el);
+      if (el) {observer.observe(el);}
     });
 
     return () => observer.disconnect();

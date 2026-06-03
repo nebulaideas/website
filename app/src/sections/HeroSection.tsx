@@ -12,7 +12,7 @@ export default function HeroSection() {
   // Three.js constellation effect
   useEffect(() => {
     const container = canvasContainerRef.current;
-    if (!container) return;
+    if (!container) {return;}
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -82,14 +82,14 @@ export default function HeroSection() {
     let isActive = true;
 
     function animate() {
-      if (!isActive) return;
+      if (!isActive) {return;}
       animFrameId = requestAnimationFrame(animate);
 
       particles.forEach((p) => {
         p.position.add(p.userData.velocity);
-        if (Math.abs(p.position.x) > 24) p.userData.velocity.x *= -1;
-        if (Math.abs(p.position.y) > 15) p.userData.velocity.y *= -1;
-        if (Math.abs(p.position.z) > 9) p.userData.velocity.z *= -1;
+        if (Math.abs(p.position.x) > 24) {p.userData.velocity.x *= -1;}
+        if (Math.abs(p.position.y) > 15) {p.userData.velocity.y *= -1;}
+        if (Math.abs(p.position.z) > 9) {p.userData.velocity.z *= -1;}
       });
 
       if (linesMesh) {
@@ -160,7 +160,7 @@ export default function HeroSection() {
       clearTimeout(timer);
       window.removeEventListener('mousemove', handleMouseMove);
       resizeObserver.disconnect();
-      if (linesMesh) linesMesh.geometry.dispose();
+      if (linesMesh) {linesMesh.geometry.dispose();}
       sphereGeo.dispose();
       lineMaterial.dispose();
       particles.forEach((p) => { (p.material as THREE.Material).dispose(); });

@@ -15,7 +15,7 @@ const updateMeta = (attrKey: 'name' | 'property', attrValue: string, contentValu
 };
 
 export function updateMetaTags(title: string, description: string, language: Language) {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') {return;}
 
   document.title = title;
 

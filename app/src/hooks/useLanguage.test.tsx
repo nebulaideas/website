@@ -1,6 +1,6 @@
 import { renderHook, act, render, screen } from '@testing-library/react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { LanguageProvider, useLanguage, useAltCalendly } from './useLanguage';
+import { LanguageProvider, useLanguage, useComplementaryCalendlyUrl } from './useLanguage';
 import { translations } from '../lib/translations';
 
 const TEST_METAS = [
@@ -187,15 +187,15 @@ describe('useLanguage hook & LanguageProvider', () => {
   });
 });
 
-describe('useAltCalendly hook', () => {
-  it('should return the correct alt calendly URL based on language', () => {
+describe('useComplementaryCalendlyUrl hook', () => {
+  it('should return the correct complementary calendly URL based on language', () => {
     // Helper wrapper component for testing hooks requiring context
     const wrapper = ({ children }: { children: React.ReactNode }) => (
       <LanguageProvider>{children}</LanguageProvider>
     );
 
     const { result } = renderHook(() => {
-      const altUrl = useAltCalendly();
+      const altUrl = useComplementaryCalendlyUrl();
       const { toggleLanguage } = useLanguage();
       return { altUrl, toggleLanguage };
     }, { wrapper });

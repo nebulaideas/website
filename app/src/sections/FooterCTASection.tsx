@@ -10,7 +10,7 @@ export default function FooterCTASection() {
   // Subtle Three.js galaxy effect
   useEffect(() => {
     const container = canvasContainerRef.current;
-    if (!container) return;
+    if (!container) {return;}
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -71,14 +71,14 @@ export default function FooterCTASection() {
     let isActive = true;
 
     function animate() {
-      if (!isActive) return;
+      if (!isActive) {return;}
       animFrameId = requestAnimationFrame(animate);
 
       particles.forEach((p) => {
         p.position.add(p.userData.velocity);
-        if (Math.abs(p.position.x) > 20) p.userData.velocity.x *= -1;
-        if (Math.abs(p.position.y) > 10) p.userData.velocity.y *= -1;
-        if (Math.abs(p.position.z) > 8) p.userData.velocity.z *= -1;
+        if (Math.abs(p.position.x) > 20) {p.userData.velocity.x *= -1;}
+        if (Math.abs(p.position.y) > 10) {p.userData.velocity.y *= -1;}
+        if (Math.abs(p.position.z) > 8) {p.userData.velocity.z *= -1;}
       });
 
       if (linesMesh) {
@@ -134,7 +134,7 @@ export default function FooterCTASection() {
       isActive = false;
       cancelAnimationFrame(animFrameId);
       resizeObserver.disconnect();
-      if (linesMesh) linesMesh.geometry.dispose();
+      if (linesMesh) {linesMesh.geometry.dispose();}
       sphereGeo.dispose();
       lineMaterial.dispose();
       particles.forEach((p) => { (p.material as THREE.Material).dispose(); });

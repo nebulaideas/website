@@ -1,0 +1,19 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "src/components/*.tsx",
+    "src/hooks/**/*.ts",
+    "src/hooks/**/*.tsx",
+    "src/lib/**/*.ts"
+  ],
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "src/components/ui/**"
+  ],
+  "out": "docs",
+  "entryPointStrategy": "expand",
+  "name": "Nebula Ideas Documentation",
+  "includeVersion": true,
+  "plugin": []
+}

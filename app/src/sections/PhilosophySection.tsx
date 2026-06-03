@@ -9,9 +9,9 @@ export default function PhilosophySection() {
 
   useEffect(() => {
     const el = dividerRef.current;
-    if (!el) return;
+    if (!el) {return;}
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setDividerVisible(true); },
+      ([entry]) => { if (entry.isIntersecting) {setDividerVisible(true);} },
       { threshold: 0.5 }
     );
     observer.observe(el);

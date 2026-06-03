@@ -8,6 +8,29 @@ export default mergeConfig(
       globals: true,
       environment: 'jsdom',
       setupFiles: './src/test/setup.ts',
+      include: [
+        'src/**/*.{test,spec}.{ts,tsx,js,jsx}',
+        '../scripts/**/*.{test,spec}.{ts,tsx,js,jsx}'
+      ],
+      coverage: {
+        provider: 'v8',
+        all: true,
+        include: [
+          'src/components/*.{ts,tsx}',
+          'src/hooks/**/*.{ts,tsx}',
+          'src/lib/**/*.{ts,tsx}',
+        ],
+        exclude: [
+          'src/components/ui/**',
+          'src/test/**',
+        ],
+        thresholds: {
+          statements: 85,
+          branches: 85,
+          functions: 85,
+          lines: 85,
+        },
+      },
     },
   })
 );
