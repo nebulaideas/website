@@ -1,4 +1,9 @@
-const { execSync } = require('child_process');
+const childProcess = require('child_process');
+
+const sys = {
+  execSync: (cmd) => childProcess.execSync(cmd)
+};
+
 
 /**
  * Validates and retrieves required environment variables.
@@ -22,7 +27,7 @@ function getEnvConfig() {
  */
 function fetchGithubApi(endpoint) {
   try {
-    const output = execSync(`gh api ${endpoint}`).toString();
+    const output = sys.execSync(`gh api ${endpoint}`).toString();
     return JSON.parse(output);
   } catch (error) {
     throw new Error(`Failed to fetch GitHub API endpoint '${endpoint}': ${error.message}`);
@@ -156,7 +161,28 @@ function submitPRReview(prNumber, state, message) {
   const ghCommand = `gh pr review ${prNumber} ${stateFlag} -b "${escapedMessage}"`;
   
   console.log(`Submitting review state (${state}): ${ghCommand}`);
-  execSync(ghCommand);
+  try {
+    sys.execSync(ghCommand);
+  } catch (error) {
+    const stderr = error.stderr ? error.stderr.toString() : '';
+    const stdout = error.stdout ? error.stdout.toString() : '';
+    const errorMsg = `${error.message}\n${stdout}\n${stderr}`;
+
+    if (state !== 'COMMENT' && (errorMsg.includes('not permitted') || errorMsg.includes('GraphQL:') || errorMsg.includes('permission'))) {
+      console.warn(`Warning: Failed to submit review as ${state} due to permission constraints. Falling back to COMMENT review.`);
+      const fallbackMessage = `⚠️ [Bot fallback from ${state}] ${message}`;
+      const escapedFallback = fallbackMessage.replace(/"/g, '\\"');
+      const fallbackCommand = `gh pr review ${prNumber} --comment -b "${escapedFallback}"`;
+      console.log(`Submitting fallback review: ${fallbackCommand}`);
+      try {
+        sys.execSync(fallbackCommand);
+      } catch (fallbackError) {
+        throw new Error(`Failed to submit fallback review: ${fallbackError.message}`);
+      }
+    } else {
+      throw error;
+    }
+  }
 }
 
 /**
@@ -167,7 +193,7 @@ function submitPRReview(prNumber, state, message) {
  */
 function dismissPreviousChangesRequested(repo, prNumber) {
   try {
-    const reviewsJson = execSync(`gh api repos/${repo}/pulls/${prNumber}/reviews`).toString();
+    const reviewsJson = sys.execSync(`gh api repos/${repo}/pulls/${prNumber}/reviews`).toString();
     const reviews = JSON.parse(reviewsJson);
     const botChangesRequested = reviews.filter(r => {
       const login = r.user.login.toLowerCase();
@@ -176,7 +202,7 @@ function dismissPreviousChangesRequested(repo, prNumber) {
 
     for (const r of botChangesRequested) {
       console.log(`Dismissing blocking review #${r.id}...`);
-      execSync(`gh api -X PUT repos/${repo}/pulls/${prNumber}/reviews/${r.id}/dismissals -f message="Dismissed previous blocking review because the blocking criteria is no longer met."`);
+      sys.execSync(`gh api -X PUT repos/${repo}/pulls/${prNumber}/reviews/${r.id}/dismissals -f message="Dismissed previous blocking review because the blocking criteria is no longer met."`);
     }
   } catch (error) {
     console.warn(`Warning: Failed to dismiss previous reviews: ${error.message}`);
@@ -232,5 +258,6 @@ module.exports = {
   evaluateFeedbackFallback,
   determineReviewState,
   submitPRReview,
-  main
+  main,
+  sys
 };

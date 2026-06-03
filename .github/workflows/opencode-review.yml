@@ -25,12 +25,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run OpenCode Review
-        uses: anomalyco/opencode/github@github-v1.2.24
+        uses: anomalyco/opencode/github@v1.15.13
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          model: deepseek/deepseek-v4-pro
+          model: deepseek/deepseek-v4-flash
           use_github_token: true
           prompt: |
             Act as a Principal Frontend Architect reviewing a Pull Request for "Nebula Ideas", a high-performance React + TypeScript + Vite website.

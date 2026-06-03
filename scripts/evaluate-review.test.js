@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { determineReviewState, parseMetadataBlock, evaluateFeedbackFallback } from './evaluate-review.js';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { determineReviewState, parseMetadataBlock, evaluateFeedbackFallback, submitPRReview, sys } from './evaluate-review.js';
 
 describe('parseMetadataBlock', () => {
   it('should parse metadata block correctly', () => {
@@ -59,5 +59,43 @@ describe('determineReviewState', () => {
   it('should comment when there are 1-2 critical bugs and 0 security issues (non-blocking)', () => {
     expect(determineReviewState('POSITIVE', 2, 0).targetState).toBe('COMMENT');
     expect(determineReviewState('NEUTRAL', 1, 0).targetState).toBe('COMMENT');
+  });
+});
+
+describe('submitPRReview', () => {
+  let execSyncSpy;
+
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    execSyncSpy = vi.spyOn(sys, 'execSync').mockImplementation(() => Buffer.from(''));
+  });
+
+  it('should successfully call execSync with approve flag', () => {
+    submitPRReview('5', 'APPROVE', 'Looks good');
+    expect(execSyncSpy).toHaveBeenCalledWith('gh pr review 5 --approve -b "Looks good"');
+  });
+
+  it('should fallback to comment if approve fails with a permission error', () => {
+    // Mock execSync to fail on the first call (approve) and succeed on the second call (comment)
+    execSyncSpy.mockImplementationOnce(() => {
+      const err = new Error('Command failed: gh pr review 5 --approve');
+      err.stderr = Buffer.from('GraphQL: GitHub Actions is not permitted to approve pull requests. (addPullRequestReview)');
+      throw err;
+    });
+
+    submitPRReview('5', 'APPROVE', 'Looks good');
+
+    expect(execSyncSpy).toHaveBeenCalledTimes(2);
+    expect(execSyncSpy).toHaveBeenNthCalledWith(1, 'gh pr review 5 --approve -b "Looks good"');
+    expect(execSyncSpy).toHaveBeenNthCalledWith(2, 'gh pr review 5 --comment -b "⚠️ [Bot fallback from APPROVE] Looks good"');
+  });
+
+  it('should rethrow error if approve fails with non-permission error', () => {
+    execSyncSpy.mockImplementationOnce(() => {
+      throw new Error('Some other random error');
+    });
+
+    expect(() => submitPRReview('5', 'APPROVE', 'Looks good')).toThrow('Some other random error');
+    expect(execSyncSpy).toHaveBeenCalledTimes(1);
   });
 });
