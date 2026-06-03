@@ -90,7 +90,7 @@ npm run test:run
 ### Run Tests with Coverage
 To generate a coverage report and check against configured thresholds:
 ```bash
-npx vitest run --coverage
+npm run test:coverage
 ```
 The test coverage is configured to cover the core logic layer (`src/components/`, `src/hooks/`, `src/lib/`) while excluding presentational or external elements.
 

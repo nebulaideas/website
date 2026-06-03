@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",
-    "deploy": "npm run test:run && npm run build && npx wrangler pages deploy ./dist",
+    "test:coverage": "vitest run --coverage",
+    "deploy": "npm run test:coverage && npm run build && npx wrangler pages deploy ./dist",
     "pages:dev": "npx wrangler pages dev ./dist",
     "docs": "typedoc --options typedoc.json"
   },

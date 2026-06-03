@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file.
 - Installed `@vitest/coverage-v8` test coverage library.
 
 ### Changed
-- Added `"docs"` script to `package.json` to generate TypeDoc documentation.
+- Added `"docs"` and `"test:coverage"` scripts to `package.json` to generate TypeDoc documentation and run test coverage checks.
 - Updated `eslint.config.js` and `app/.gitignore` to ignore the generated `docs/` and `coverage/` folders.
 - Configured Vitest settings in `app/vitest.config.ts` to include logic and helper files for test coverage while ignoring the presentational sections and pages.
 - Configured a minimum test coverage threshold of **85%** across Statements, Branches, Functions, and Lines.
