@@ -13,7 +13,8 @@
     "test:coverage": "vitest run --coverage",
     "deploy": "npm run test:coverage && npm run build && npx wrangler pages deploy ./dist",
     "pages:dev": "npx wrangler pages dev ./dist",
-    "docs": "typedoc --options typedoc.json"
+    "docs": "typedoc --options typedoc.json",
+    "setup-hooks": "mkdir -p ../.git/hooks && cp ../.git-hooks/pre-commit ../.git/hooks/pre-commit && chmod +x ../.git/hooks/pre-commit"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
