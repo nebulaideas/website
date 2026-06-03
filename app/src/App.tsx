@@ -15,7 +15,7 @@ import FooterCTASection from '@/sections/FooterCTASection';
 function App() {
   return (
     <LanguageProvider>
-      <div className="min-h-screen bg-obsidian-base text-on-surface font-body antialiased selection:bg-nebula-gold selection:text-nebula-navy">
+      <div className="min-h-screen overflow-x-hidden bg-obsidian-base text-on-surface font-body antialiased selection:bg-nebula-gold selection:text-nebula-navy">
         <Navigation />
         <main>
           <HeroSection />

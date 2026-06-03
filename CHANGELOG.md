@@ -26,3 +26,10 @@ All notable changes to this project will be documented in this file.
   - Enabled `prefer-const` rule as an error.
   - Enabled `curly` rule as an error.
 - Updated styling of code to comply with new linter rules.
+- Addressed code review recommendations:
+  - Refactored `useIsMobile` hook (`use-mobile.ts`) to use `mql.matches` and avoid forced synchronous layout reflows on resize.
+  - Refactored `ScrollReveal.tsx` to use a module-level static map `DIRECTION_TRANSFORMS` instead of inline switch checks.
+  - Renamed `useAltCalendly` to `useComplementaryCalendlyUrl` and added JSDoc documentation to make the cross-mapped design intent explicit.
+  - Migrated direct `document.querySelector` modifications in tests to cleaner `vi.spyOn` configurations.
+  - Added `afterEach` environment cleanup to `use-mobile.test.ts` to prevent global window object pollution.
+- Resolved mobile layout bug causing horizontal elastic scroll overflow by setting `overflow-x: hidden` and `width: 100%` on both `html` and `body` in `index.css`, and adding `overflow-x-hidden` wrapper in `App.tsx`.

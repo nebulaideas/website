@@ -65,6 +65,7 @@ No shadcn/ui — the project has fully custom components with a unique design sy
 | `useLenis` | Initialize Lenis for smooth scroll with nav offset |
 | `useScrollPosition` | Track scroll Y for nav frosted-glass transition and scroll indicator fade |
 | `useActiveSection` | IntersectionObserver-based active section detection for nav highlighting |
+| `useComplementaryCalendlyUrl` | Retrieve the Calendly booking URL for the opposite language (e.g., cross-linking) |
 
 ---
 

@@ -119,11 +119,11 @@ describe('Navigation component', () => {
   });
 
   it('should trigger smooth scroll on nav link click', () => {
-    const originalQuerySelector = document.querySelector;
     const mockElement = {
-      getBoundingClientRect: () => ({ top: 100 }),
-    };
-    document.querySelector = vi.fn().mockImplementation((selector) => {
+      getBoundingClientRect: () => ({ top: 100 } as DOMRect),
+    } as unknown as Element;
+    
+    const spy = vi.spyOn(document, 'querySelector').mockImplementation((selector) => {
       if (selector === '#vision') {
         return mockElement;
       }
@@ -139,20 +139,20 @@ describe('Navigation component', () => {
 
     expect(window.scrollTo).toHaveBeenCalled();
     
-    // Restore
-    document.querySelector = originalQuerySelector;
+    spy.mockRestore();
   });
 
   it('should close mobile menu and scroll when mobile nav link is clicked', () => {
     const originalQuerySelector = document.querySelector;
     const mockElement = {
       getBoundingClientRect: () => ({ top: 100 } as DOMRect),
-    };
-    document.querySelector = vi.fn().mockImplementation((selector) => {
+    } as unknown as Element;
+    
+    const spy = vi.spyOn(document, 'querySelector').mockImplementation((selector) => {
       if (selector.startsWith('meta')) {
         return originalQuerySelector.call(document, selector);
       }
-      return mockElement as unknown as Element;
+      return mockElement;
     });
 
     renderNavigation();
@@ -177,7 +177,7 @@ describe('Navigation component', () => {
     expect(overlay).toHaveClass('opacity-0');
     expect(window.scrollTo).toHaveBeenCalled();
 
-    document.querySelector = originalQuerySelector;
+    spy.mockRestore();
   });
 
   it('should toggle language and close menu when mobile language button is clicked', () => {

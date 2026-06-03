@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useIsMobile } from './use-mobile';
 
 describe('useIsMobile', () => {
@@ -11,15 +11,20 @@ describe('useIsMobile', () => {
   });
   const mockRemoveEventListener = vi.fn();
 
+  const originalMatchMedia = window.matchMedia;
+  const originalInnerWidth = window.innerWidth;
+
   beforeEach(() => {
     vi.clearAllMocks();
     
-    // Mock matchMedia
+    // Mock matchMedia dynamically checking window.innerWidth
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       configurable: true,
       value: vi.fn().mockImplementation((query) => ({
-        matches: false,
+        get matches() {
+          return window.innerWidth < 768;
+        },
         media: query,
         onchange: null,
         addListener: vi.fn(),
@@ -28,6 +33,15 @@ describe('useIsMobile', () => {
         removeEventListener: mockRemoveEventListener,
         dispatchEvent: vi.fn(),
       })),
+    });
+  });
+
+  afterEach(() => {
+    window.matchMedia = originalMatchMedia;
+    Object.defineProperty(window, 'innerWidth', {
+      writable: true,
+      configurable: true,
+      value: originalInnerWidth,
     });
   });
 

@@ -70,7 +70,11 @@ export function useLanguage() {
   return context;
 }
 
-export function useAltCalendly() {
+/**
+ * Hook to retrieve the Calendly booking URL for the opposite (complementary) language
+ * than the currently active language. Useful for cross-linking booking pages.
+ */
+export function useComplementaryCalendlyUrl() {
   const { language } = useLanguage();
   return language === 'en'
     ? 'https://cal.com/nebula-ideas/descubrimiento'

@@ -10,6 +10,13 @@ interface ScrollRevealProps {
   once?: boolean;
 }
 
+const DIRECTION_TRANSFORMS = {
+  up: 'translateY(40px)',
+  down: 'translateY(-40px)',
+  left: 'translateX(40px)',
+  right: 'translateX(-40px)',
+} as const;
+
 export default function ScrollReveal({
   children,
   className = '',
@@ -34,13 +41,17 @@ export default function ScrollReveal({
     }
 
     const el = ref.current;
-    if (!el) {return;}
+    if (!el) {
+      return;
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          if (once) {observer.unobserve(el);}
+          if (once) {
+            observer.unobserve(el);
+          }
         } else if (!once) {
           setIsVisible(false);
         }
@@ -52,18 +63,9 @@ export default function ScrollReveal({
     return () => observer.disconnect();
   }, [threshold, once]);
 
-  const getInitialTransform = () => {
-    switch (direction) {
-      case 'up': return 'translateY(40px)';
-      case 'down': return 'translateY(-40px)';
-      case 'left': return 'translateX(40px)';
-      case 'right': return 'translateX(-40px)';
-    }
-  };
-
   const style: React.CSSProperties = {
     opacity: isVisible ? 1 : 0,
-    transform: isVisible ? 'translate(0, 0)' : getInitialTransform(),
+    transform: isVisible ? 'translate(0, 0)' : DIRECTION_TRANSFORMS[direction],
     transition: `opacity ${duration}s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}s, transform ${duration}s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}s`,
     willChange: 'opacity, transform',
   };
