@@ -94,13 +94,13 @@ export const translations = {
     about_label: 'WHO WE ARE',
     about_headline: 'About Us',
     founder1_name: 'Ismael Marin',
-    founder1_role: 'Senior Product Manager & Engineering Manager',
+    founder1_role: 'Head of AI Infrastructure & Co-Founder',
     founder1_bio:
-      '20 years of experience in product and engineering. Senior Product Manager and Engineering Manager at US companies. Creator of open source tools with 2,000+ downloads. Regular voice on [Radio Station] about responsible technology and AI.',
+      'As a technical leader and AI infrastructure engineer, I specialize in bringing software engineering discipline—TDD, Domain-Driven Design, and rigorous evaluation—to the bleeding edge of Agentic AI. I build high-performance, cross-platform CLI tools and safe Rust agent runtimes that transform unpredictable LLMs into secure, production-grade engineering workflows. My philosophy is rooted in decades of battle-tested backend architecture and a strict focus on pragmatic integration, ensuring that AI operates not as a hype-driven shortcut, but as a reliable multiplier that delivers measurable, strategic value to core business systems.',
     founder2_name: 'Carlos (Mumo) Muniz',
-    founder2_role: 'Engineering Manager & People Lead',
+    founder2_role: 'Managing Partner / Head of Engineering & Delivery',
     founder2_bio:
-      'Specialist in operations, team growth, and implementation. Former Engineering Manager and People Lead. 10 years working with Ismael on critical deliveries for companies in Mexico and the USA.',
+      'As a technical leader and team architect, I specialize in eliminating architectural bottlenecks and designing high-impact, resilient systems. I have built integration architectures that collapsed enterprise onboarding timelines from months to days, migrated complex platform authentication with zero downstream code changes, and pioneered disciplined, team-level AI workflows that drastically accelerate time-to-market. My engineering execution is inseparable from my leadership philosophy: I build on a foundation of psychological safety and a "Care to Deliver" principle, proving that high-trust human conditions and exceptional technical outcomes are the exact same thing.',
     partnership_title: 'Partnership',
     partnership_desc:
       "We've worked together since 2014. We've delivered critical integrations for companies in Mexico and the USA. We met as engineer and manager; today we're partners.",
@@ -108,7 +108,7 @@ export const translations = {
     // Philosophy
     philosophy_headline: 'Technology should amplify your team',
     philosophy_body:
-      "We believe AI and automation should be companions to your team, not their replacements. As we say on [Radio Station]: a support chatbot doesn't replace your people \u2014 it enables them to serve after hours, gather useful information, and hand it to the next shift ready to resolve. Well-designed technology reduces friction, not human talent.",
+      "We believe AI and automation should be companions to your team, not their replacements. As we say on [Radio Formula Bajío]: a support chatbot doesn't replace your people \u2014 it enables them to serve after hours, gather useful information, and hand it to the next shift ready to resolve. Well-designed technology reduces friction, not human talent.",
     philosophy_attribution: '\u2014 Nebula Ideas',
 
     // Technology / Stack
@@ -129,7 +129,7 @@ export const translations = {
     blog1_excerpt:
       'A deep dive into our Ruby Skill Bench methodology and why automated validation matters for production code.',
     blog2_category: 'AI & Teams',
-    blog2_title: 'AI as a team companion: lessons from [Radio Station]',
+    blog2_title: 'AI as a team companion: lessons from [Radio Formula Bajío]',
     blog2_excerpt:
       "What we've learned about integrating AI tools alongside human teams without replacing the people that matter.",
     blog3_category: 'Process',
@@ -138,7 +138,7 @@ export const translations = {
       'How we use Design Sprints and validated development to take a concept to a working product in one month.',
 
     // Social Proof
-    stat_radio: 'Regular contributors on [Radio Station]',
+    stat_radio: 'Regular contributors on [Radio Formula Bajío]',
     stat_downloads_label: 'downloads on our open source tools',
     stat_downloads_number: '2,000+',
     stat_years_number: '10',
@@ -163,7 +163,7 @@ export const translations = {
     footer_cta_button: 'Book a Discovery Call',
 
     // Footer
-    footer_copyright: '\u00a9 2024 Nebula Ideas. Engineering Excellence.',
+    footer_copyright: '\u00a9 2026 Nebula Ideas. Engineering Excellence.',
     footer_privacy: 'Privacy Policy',
     footer_linkedin: 'LinkedIn',
     footer_github: 'GitHub',
@@ -175,7 +175,7 @@ export const translations = {
   },
   es: {
     // Navigation
-    nav_vision: 'Nuestra Visión',
+    nav_vision: 'Visión',
     nav_whatwedo: 'Qué Hacemos',
     nav_sprint: 'Sprint de Claridad',
     nav_dna: 'Nuestro ADN',
@@ -248,7 +248,7 @@ export const translations = {
       'Optimización mensual. Mejoramos costos, calidad y adopción basándonos en datos reales. Tu tecnología mejora con el tiempo, no se depreca.',
 
     // Clarity Sprint
-    sprint_headline: 'El Nebula Clarity Sprint',
+    sprint_headline: 'Nebula Clarity Sprint',
     sprint_desc:
       'Una intervención diagnóstica concentrada diseñada para disipar la niebla operativa. Mapeamos tu arquitectura actual, identificamos puntos de fricción sistémica y entregamos un blueprint técnico riguroso para el escalado inteligente.',
     sprint_step1_num: '01',
@@ -268,7 +268,7 @@ export const translations = {
     founder1_name: 'Ismael Marin',
     founder1_role: 'Senior Product Manager y Engineering Manager',
     founder1_bio:
-      '20 años de experiencia en producto e ingeniería. Senior Product Manager y Engineering Manager en empresas de USA. Creador de herramientas open source con 2,000+ descargas. Voz regular en [Radio Station] sobre tecnología e IA responsable.',
+      '20 años de experiencia en producto e ingeniería. Senior Product Manager y Engineering Manager en empresas de USA. Creador de herramientas open source con 2,000+ descargas. Voz regular en [Radio Formula Bajío] sobre tecnología e IA responsable.',
     founder2_name: 'Carlos (Mumo) Muniz',
     founder2_role: 'Engineering Manager y People Lead',
     founder2_bio:
@@ -280,7 +280,7 @@ export const translations = {
     // Philosophy
     philosophy_headline: 'La tecnología debe amplificar a tu equipo',
     philosophy_body:
-      'Creemos que la IA y la automatización deben ser compañeras de tu equipo, no sus sustitutas. Como decimos en [Radio Station]: un chatbot de soporte no reemplaza a tu gente — les permite atender después de horas, recopilar información útil y entregarla al siguiente turno listo para resolver. La tecnología bien diseñada reduce la fricción, no el talento humano.',
+      'Creemos que la IA y la automatización deben ser compañeras de tu equipo, no sus sustitutas. Como decimos en [Radio Formula Bajío]: un chatbot de soporte no reemplaza a tu gente — les permite atender después de horas, recopilar información útil y entregarla al siguiente turno listo para resolver. La tecnología bien diseñada reduce la fricción, no el talento humano.',
     philosophy_attribution: '\u2014 Nebula Ideas',
 
     // Technology
@@ -302,16 +302,16 @@ export const translations = {
     blog1_excerpt:
       'Un análisis profundo de nuestra metodología Ruby Skill Bench y por qué la validación automatizada importa para código en producción.',
     blog2_category: 'IA y Equipos',
-    blog2_title: 'La IA como compañera del equipo: lecciones de [Radio Station]',
+    blog2_title: 'Execution is becoming cheap',
     blog2_excerpt:
-      'Lo que hemos aprendido sobre integrar herramientas de IA junto a equipos humanos sin reemplazar a las personas que importan.',
+      'In my experience, I’m seeing managers handling AI with no real understanding of their own work — giving vague instructions like: “do it fine. Implement best practices.',
     blog3_category: 'Proceso',
     blog3_title: 'De la idea al MVP: nuestro proceso en 4 semanas',
     blog3_excerpt:
       'Cómo usamos Design Sprints y desarrollo validado para llevar un concepto a un producto funcional en un mes.',
 
     // Social Proof
-    stat_radio: 'Contribuidores regulares en [Radio Station]',
+    stat_radio: 'Contribuidores regulares en [Radio Formula Bajío]',
     stat_downloads_label: 'descargas en nuestras herramientas open source',
     stat_downloads_number: '2,000+',
     stat_years_number: '10',
@@ -336,7 +336,7 @@ export const translations = {
     footer_cta_button: 'Agendar una Llamada de Descubrimiento',
 
     // Footer
-    footer_copyright: '\u00a9 2024 Nebula Ideas. Excelencia en Ingeniería.',
+    footer_copyright: '\u00a9 2026 Nebula Ideas. Excelencia en Ingeniería.',
     footer_privacy: 'Aviso de privacidad',
     footer_linkedin: 'LinkedIn',
     footer_github: 'GitHub',

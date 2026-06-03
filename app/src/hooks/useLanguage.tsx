@@ -24,12 +24,34 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     document.documentElement.lang = language;
     localStorage.setItem('nebula-language', language);
 
-    // Update meta description
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', translations[language].seo_description);
-    }
-    document.title = translations[language].seo_title;
+    const title = translations[language].seo_title;
+    const description = translations[language].seo_description;
+
+    document.title = title;
+
+    // Helper to update meta tag by selector, creating it if missing
+    const updateMeta = (selector: string, attr: string, value: string) => {
+      let el = document.querySelector(selector);
+      if (!el) {
+        el = document.createElement('meta');
+        if (selector.includes('property=')) {
+          const match = selector.match(/property="([^"]+)"/);
+          if (match) el.setAttribute('property', match[1]);
+        } else {
+          const match = selector.match(/name="([^"]+)"/);
+          if (match) el.setAttribute('name', match[1]);
+        }
+        document.head.appendChild(el);
+      }
+      el.setAttribute(attr, value);
+    };
+
+    updateMeta('meta[name="description"]', 'content', description);
+    updateMeta('meta[property="og:title"]', 'content', title);
+    updateMeta('meta[property="og:description"]', 'content', description);
+    updateMeta('meta[name="twitter:title"]', 'content', title);
+    updateMeta('meta[name="twitter:description"]', 'content', description);
+    updateMeta('meta[property="og:locale"]', 'content', language === 'en' ? 'en_US' : 'es_MX');
   }, [language]);
 
   const toggleLanguage = useCallback(() => {

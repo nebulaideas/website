@@ -8,7 +8,7 @@ A modern, high-performance web platform built with React, TypeScript, and Vite. 
 
 * **Interactive WebGL Constellation**: Custom 3D particle constellation canvas implemented in [HeroSection.tsx](file:///Users/igmarin/Developer/Personal/Nebula/website/app/src/sections/HeroSection.tsx) that reacts to mouse movement and dynamically disables animations when `prefers-reduced-motion` is active.
 * **Custom Purity-Compliant Scroll Effects**: A performant viewport tracking component ([ScrollReveal.tsx](file:///Users/igmarin/Developer/Personal/Nebula/website/app/src/components/ScrollReveal.tsx)) which utilizes lazy state initializers to avoid synchronous layout-level state updates during the commit/render phase.
-* **Zero-Dependency Translation & Localisation**: Fully client-side context-driven localization hook and provider ([useLanguage.tsx](file:///Users/igmarin/Developer/Personal/Nebula/website/app/src/hooks/useLanguage.tsx)) with dynamic title updates, SEO metadata injection, and persistent language storage synchronization.
+* **Zero-Dependency Translation & Localisation**: Fully client-side context-driven localization hook and provider ([useLanguage.tsx](file:///Users/igmarin/Developer/Personal/Nebula/website/app/src/hooks/useLanguage.tsx)) with dynamic page title updates, persistent language storage synchronization, and real-time localized SEO metadata injection (updating standard descriptions, Open Graph cards, Twitter cards, and HTML lang attributes dynamically on language toggle).
 * **Modern CSS Token Design System**: A comprehensive, accessibility-focused styling layout using Tailwind CSS variables and curated custom color systems defined in [index.css](file:///Users/igmarin/Developer/Personal/Nebula/website/app/src/index.css).
 * **Fully Audited Test Suite**: Configured with Vitest and React Testing Library covering custom hooks, UI render states, scroll behaviors, and styling helper utilities.
 
@@ -112,6 +112,7 @@ This project is configured for deployment to **Cloudflare Pages** using the `wra
 
 3. **Subsequent deployments**:
    Whenever you make modifications and want to push updates, just run:
+
    ```bash
    npm run deploy
    ```
@@ -125,7 +126,26 @@ A workflow is configured in [.github/workflows/deploy.yml](file:///Users/igmarin
 4. Deploy automatically to Cloudflare Pages (only on pushes to `main` and `kimi-2`).
 
 #### GitHub Secrets Setup
+
 To enable automatic deployments via GitHub Actions, add these secrets under **Settings > Secrets and variables > Actions** in your GitHub repository:
 * `CLOUDFLARE_API_TOKEN`: Your Cloudflare API Token (with **Cloudflare Pages — Edit** permission).
 * `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare Account ID.
 
+---
+
+## 📜 Changelog
+
+### [2026-06-03] — SEO & Localization Improvements
+#### Added
+- Added structured Schema.org JSON-LD (type `ProfessionalService`) to `app/index.html` detailing Nebula Ideas co-founders (Ismael Marin & Carlos Muniz) and core services.
+- Added comprehensive Open Graph (`og:type`, `og:url`, `og:title`, `og:description`, `og:site_name`, `og:locale`) and Twitter Card metadata tags.
+- Enabled real-time localization of Open Graph and Twitter Card titles, descriptions, and locale attributes inside `useLanguage.tsx`.
+- Integrated automated JSDOM test suite cleanup in `useLanguage.test.tsx` to prevent test pollution of custom header tags.
+
+#### Changed
+- Repaired Spanish navigation expectations in `Navigation.test.tsx` and `useLanguage.test.tsx` to align with the active translations (`'Visión'`).
+- Adjusted the default fallback meta descriptions in `app/index.html` to represent the consultancy stack (Rails, Go, Rust, Agentic AI/MCP).
+
+#### Removed
+
+- Cleaned up obsolete job-seeker files (`seo.html` and `llms.txt`) from the root folder after successfully porting their relevant business details to the React codebase.

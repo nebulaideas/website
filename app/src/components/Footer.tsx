@@ -53,7 +53,7 @@ export default function Footer() {
           {/* Links Column */}
           <div className="md:col-span-6 flex flex-wrap gap-6 md:justify-end items-start font-tech text-tech-label">
             <a
-              href="https://cal.com/nebula-ideas/discovery"
+              href="mailto:hello@nebulaideas.com"
               target="_blank"
               rel="noopener noreferrer"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200"
@@ -66,17 +66,17 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200"
             >
-              Calendly
+              {t('nav_schedule')}
             </a>
             <a
-              href="#"
+              href="https://github.com/nebulaideas"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200 flex items-center gap-1"
             >
               <Linkedin size={14} />
               {t('footer_linkedin')}
             </a>
             <a
-              href="#"
+              href="https://github.com/nebulaideas"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200 flex items-center gap-1"
             >
               <Github size={14} />

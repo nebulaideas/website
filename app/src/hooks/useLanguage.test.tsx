@@ -7,6 +7,9 @@ beforeEach(() => {
   localStorage.clear();
   document.documentElement.lang = '';
   document.title = '';
+  // Clean up meta tags to prevent test pollution
+  const metas = document.head.querySelectorAll('meta');
+  metas.forEach((meta) => document.head.removeChild(meta));
 });
 
 // Helper component to test useLanguage context
@@ -56,7 +59,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     );
 
     expect(screen.getByTestId('lang')).toHaveTextContent('es');
-    expect(screen.getByTestId('translation')).toHaveTextContent('Nuestra Visión');
+    expect(screen.getByTestId('translation')).toHaveTextContent('Visión');
   });
 
   it('should toggle language from "en" to "es" and back', () => {
@@ -78,7 +81,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     });
 
     expect(screen.getByTestId('lang')).toHaveTextContent('es');
-    expect(screen.getByTestId('translation')).toHaveTextContent('Nuestra Visión');
+    expect(screen.getByTestId('translation')).toHaveTextContent('Visión');
     expect(localStorage.getItem('nebula-language')).toBe('es');
     expect(document.documentElement.lang).toBe('es');
 
@@ -94,10 +97,30 @@ describe('useLanguage hook & LanguageProvider', () => {
   });
 
   it('should update document title and meta description upon change', () => {
-    // Setup dummy meta tag
-    const meta = document.createElement('meta');
-    meta.name = 'description';
-    document.head.appendChild(meta);
+    // Setup dummy meta tags
+    const metaDesc = document.createElement('meta');
+    metaDesc.name = 'description';
+    document.head.appendChild(metaDesc);
+
+    const metaOgTitle = document.createElement('meta');
+    metaOgTitle.setAttribute('property', 'og:title');
+    document.head.appendChild(metaOgTitle);
+
+    const metaOgDesc = document.createElement('meta');
+    metaOgDesc.setAttribute('property', 'og:description');
+    document.head.appendChild(metaOgDesc);
+
+    const metaTwTitle = document.createElement('meta');
+    metaTwTitle.name = 'twitter:title';
+    document.head.appendChild(metaTwTitle);
+
+    const metaTwDesc = document.createElement('meta');
+    metaTwDesc.name = 'twitter:description';
+    document.head.appendChild(metaTwDesc);
+
+    const metaOgLocale = document.createElement('meta');
+    metaOgLocale.setAttribute('property', 'og:locale');
+    document.head.appendChild(metaOgLocale);
 
     render(
       <LanguageProvider>
@@ -106,7 +129,12 @@ describe('useLanguage hook & LanguageProvider', () => {
     );
 
     expect(document.title).toBe('Nebula Ideas | Engineering Excellence');
-    expect(meta.getAttribute('content')).toBe(translations.en.seo_description);
+    expect(metaDesc.getAttribute('content')).toBe(translations.en.seo_description);
+    expect(metaOgTitle.getAttribute('content')).toBe('Nebula Ideas | Engineering Excellence');
+    expect(metaOgDesc.getAttribute('content')).toBe(translations.en.seo_description);
+    expect(metaTwTitle.getAttribute('content')).toBe('Nebula Ideas | Engineering Excellence');
+    expect(metaTwDesc.getAttribute('content')).toBe(translations.en.seo_description);
+    expect(metaOgLocale.getAttribute('content')).toBe('en_US');
 
     // Toggle to Spanish
     const toggleButton = screen.getByTestId('toggle-btn');
@@ -115,9 +143,20 @@ describe('useLanguage hook & LanguageProvider', () => {
     });
 
     expect(document.title).toBe('Nebula Ideas | Excelencia en Ingeniería');
-    expect(meta.getAttribute('content')).toBe(translations.es.seo_description);
+    expect(metaDesc.getAttribute('content')).toBe(translations.es.seo_description);
+    expect(metaOgTitle.getAttribute('content')).toBe('Nebula Ideas | Excelencia en Ingeniería');
+    expect(metaOgDesc.getAttribute('content')).toBe(translations.es.seo_description);
+    expect(metaTwTitle.getAttribute('content')).toBe('Nebula Ideas | Excelencia en Ingeniería');
+    expect(metaTwDesc.getAttribute('content')).toBe(translations.es.seo_description);
+    expect(metaOgLocale.getAttribute('content')).toBe('es_MX');
 
-    document.head.removeChild(meta);
+    // Cleanup
+    document.head.removeChild(metaDesc);
+    document.head.removeChild(metaOgTitle);
+    document.head.removeChild(metaOgDesc);
+    document.head.removeChild(metaTwTitle);
+    document.head.removeChild(metaTwDesc);
+    document.head.removeChild(metaOgLocale);
   });
 });
 

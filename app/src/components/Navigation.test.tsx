@@ -46,7 +46,7 @@ describe('Navigation component', () => {
     });
 
     // Check language labels are updated to Spanish
-    expect(screen.getAllByText('Nuestra Visión')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Visión')[0]).toBeInTheDocument();
     expect(screen.getAllByText('Qué Hacemos')[0]).toBeInTheDocument();
     expect(screen.getByText('Agendar una Llamada')).toBeInTheDocument();
   });
