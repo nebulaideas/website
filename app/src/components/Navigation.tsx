@@ -17,26 +17,36 @@ export default function Navigation() {
   const [activeSection, setActiveSection] = useState('top');
 
   useEffect(() => {
-    const sections = navLinks.map((l) => l.href.slice(1));
-    const observers: IntersectionObserver[] = [];
-
-    sections.forEach((id) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const observer = new IntersectionObserver(
-        ([entry]) => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActiveSection(id);
+            setActiveSection(entry.target.id);
           }
-        },
-        { threshold: 0.2 }
-      );
-      observer.observe(el);
-      observers.push(observer);
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    navLinks.forEach((link) => {
+      const el = document.getElementById(link.href.slice(1));
+      if (el) observer.observe(el);
     });
 
-    return () => observers.forEach((o) => o.disconnect());
+    return () => observer.disconnect();
   }, []);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [mobileOpen]);
 
   const handleNavClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -104,6 +114,8 @@ export default function Navigation() {
               onClick={() => setMobileOpen(!mobileOpen)}
               className="md:hidden text-on-surface p-2"
               aria-label="Toggle menu"
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-menu-overlay"
             >
               {mobileOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -113,6 +125,7 @@ export default function Navigation() {
 
       {/* Mobile Menu Overlay */}
       <div
+        id="mobile-menu-overlay"
         className={`fixed inset-0 z-40 bg-obsidian-base/98 backdrop-blur-lg flex flex-col items-center justify-center gap-8 transition-all duration-300 md:hidden ${
           mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
