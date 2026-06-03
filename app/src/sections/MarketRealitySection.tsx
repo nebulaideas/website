@@ -25,13 +25,7 @@ export default function MarketRealitySection() {
               </p>
               {/* Abstract noise visual */}
               <div className="w-full h-64 bg-surface-container rounded border border-outline-variant relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-surface-container-high via-surface-container to-obsidian-base opacity-80" />
-                <div className="absolute inset-0" style={{
-                  backgroundImage: `radial-gradient(circle at 20% 30%, rgba(212,175,55,0.08) 0%, transparent 40%),
-                                   radial-gradient(circle at 80% 70%, rgba(88,166,255,0.06) 0%, transparent 40%),
-                                   repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(69,71,75,0.1) 10px, rgba(69,71,75,0.1) 11px)`,
-                }} />
-                <div className="absolute inset-0 bg-gradient-to-t from-obsidian-base to-transparent" />
+                <img className="absolute inset-0 object-cover w-full h-full" src="/assets/noise.jpg" alt="" loading="lazy" />
               </div>
             </div>
           </ScrollReveal>

@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useMemo, type ReactNode } from 'react';
 import { translations, type Language, type TranslationKey } from '@/lib/translations';
+import { updateMetaTags } from '@/lib/meta';
 
 interface LanguageContextType {
   language: Language;
@@ -24,12 +25,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     document.documentElement.lang = language;
     localStorage.setItem('nebula-language', language);
 
-    // Update meta description
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', translations[language].seo_description);
-    }
-    document.title = translations[language].seo_title;
+    const title = translations[language].seo_title;
+    const description = translations[language].seo_description;
+
+    updateMetaTags(title, description, language);
   }, [language]);
 
   const toggleLanguage = useCallback(() => {
@@ -43,13 +42,21 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     [language]
   );
 
-  const calendlyUrl =
-    language === 'en'
-      ? 'https://cal.com/nebula-ideas/discovery'
-      : 'https://cal.com/nebula-ideas/descubrimiento';
+  const calendlyUrl = useMemo(
+    () =>
+      language === 'en'
+        ? 'https://cal.com/nebula-ideas/discovery'
+        : 'https://cal.com/nebula-ideas/descubrimiento',
+    [language]
+  );
+
+  const contextValue = useMemo(
+    () => ({ language, toggleLanguage, t, calendlyUrl }),
+    [language, toggleLanguage, t, calendlyUrl]
+  );
 
   return (
-    <LanguageContext.Provider value={{ language, toggleLanguage, t, calendlyUrl }}>
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );

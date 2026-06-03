@@ -3,9 +3,9 @@ import ScrollReveal from '@/components/ScrollReveal';
 import { Terminal } from 'lucide-react';
 
 const stackItems = {
-  app: ['Ruby on Rails', 'Go', 'Rust'],
-  infra: ['Google Cloud Platform (GCP)', 'Kubernetes', 'Terraform'],
-  edge: ['Cloudflare', 'Zero Trust Auth'],
+  app: ['Ruby on Rails', 'Go', 'Rust', 'Python', 'TypeScript'],
+  infra: ['Google Cloud Platform (GCP)', 'Google Kubernetes Engine (GKE)', 'Docker', 'Cloudflare'],
+  edge: ['Cloudflare Access'],
 };
 
 export default function EngineeringDNASection() {

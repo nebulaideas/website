@@ -1,6 +1,8 @@
 import { useLanguage } from '@/hooks/useLanguage';
 import { Globe, Linkedin, Github } from 'lucide-react';
 
+const CURRENT_YEAR = new Date().getFullYear();
+
 export default function Footer() {
   const { language, toggleLanguage, t } = useLanguage();
 
@@ -21,7 +23,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="font-tech text-tech-data text-on-tertiary-container">
-              {t('footer_copyright')}
+              &copy; {CURRENT_YEAR} {t('footer_copyright')}
             </p>
             {/* Language toggle */}
             <div className="flex items-center gap-2 mt-2">
@@ -53,7 +55,7 @@ export default function Footer() {
           {/* Links Column */}
           <div className="md:col-span-6 flex flex-wrap gap-6 md:justify-end items-start font-tech text-tech-label">
             <a
-              href="https://cal.com/nebula-ideas/discovery"
+              href="mailto:hello@nebulaideas.com"
               target="_blank"
               rel="noopener noreferrer"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200"
@@ -66,17 +68,17 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200"
             >
-              Calendly
+              {t('nav_schedule')}
             </a>
             <a
-              href="#"
+              href="https://www.linkedin.com/company/nebulaideas"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200 flex items-center gap-1"
             >
               <Linkedin size={14} />
               {t('footer_linkedin')}
             </a>
             <a
-              href="#"
+              href="https://github.com/nebulaideas"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200 flex items-center gap-1"
             >
               <Github size={14} />
