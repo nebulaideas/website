@@ -58,3 +58,14 @@ jobs:
             CRITICAL INSTRUCTIONS:
             - Focus comments on [Critical Bug], [Architectural Flaw], or [Optimization].
             - Do NOT comment on minor formatting or styling unless it causes runtime degradation or layout breakage.
+            - In your summary review comment, you MUST include a metadata block at the very end in the following exact format (no formatting or code blocks around it):
+              [OPENCODE_VERDICT_METADATA]
+              Verdict: <NEGATIVE | NEUTRAL | POSITIVE>
+              CriticalBugs: <count of critical bugs found>
+              SecurityIssues: <count of security issues found>
+
+      - name: Evaluate Review and Update PR State
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: node scripts/evaluate-review.js

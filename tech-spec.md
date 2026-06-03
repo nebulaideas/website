@@ -114,3 +114,31 @@ Lenis hijacks native scroll for smooth inertia. ScrollReveal's IntersectionObser
 **Blog posts as static placeholders**: The blog section references placeholder articles (no real content, no individual pages). Cards are non-interactive or link to `#`.
 
 **Privacy Policy link**: Links to `#privacy` placeholder — no separate page.
+
+---
+
+## CI/CD, Gating, and Hook Automation
+
+### GitHub Actions Workflows
+
+We use three GitHub Actions workflows in `.github/workflows/` to enforce software quality gates:
+1. **CI Check (`ci.yml`)**:
+   - Triggers: On all PRs and pushes to non-deployment branches.
+   - Purpose: Validates modifications before branch merges.
+   - Core Checks: `npm run lint` and `npm run test:coverage`.
+2. **Deploy Pipeline (`deploy.yml`)**:
+   - Triggers: On pushes and PRs to `main` and `kimi-2`.
+   - Purpose: Validates build and test specs and deploys to Cloudflare Pages.
+   - Core Checks: `npm run lint`, `npm run test:coverage` (enforcing the 85% statement/branch coverage threshold), `npm run build`, and `npx wrangler pages deploy`.
+3. **OpenCode PR Review & Gating (`opencode-review.yml`)**:
+   - Triggers: On pull requests.
+   - Purpose: Executes automated AI code review using the OpenCode reviewer.
+   - Evaluation Step: Runs a custom Node script (`scripts/evaluate-review.js`) that reads reviews, counts critical bugs / security tag occurrences, and executes GitHub CLI (`gh pr review`) to transition PR state:
+     - **Request Changes**: If Verdict is NEGATIVE, any security issues are found, or >2 critical bugs are found.
+     - **Comment**: If minor feedback comments are left but no blocking issues are found.
+     - **Approve**: If Verdict is POSITIVE/APPROVED and there are 0 bugs and 0 security issues.
+
+### Local Git hooks
+- **Hook Template (`.git-hooks/pre-commit`)**: Configured to run `npm run lint` and `npm run test:coverage` inside the `app/` folder before any local commit.
+- **Installer Script**: A setup script in `app/package.json` called `"setup-hooks"` copies this hook to `.git/hooks/pre-commit` and grants executable rights.
+
