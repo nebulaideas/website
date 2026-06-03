@@ -25,7 +25,7 @@ export default function MarketRealitySection() {
               </p>
               {/* Abstract noise visual */}
               <div className="w-full h-64 bg-surface-container rounded border border-outline-variant relative overflow-hidden group">
-                <img className="absolute inset-0 object-cover w-full h-full" src="/assets/noise.jpg" alt="" />
+                <img className="absolute inset-0 object-cover w-full h-full" src="/assets/noise.jpg" alt="" loading="lazy" />
               </div>
             </div>
           </ScrollReveal>

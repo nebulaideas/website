@@ -1,6 +1,6 @@
-/* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useMemo, type ReactNode } from 'react';
 import { translations, type Language, type TranslationKey } from '@/lib/translations';
+import { updateMetaTags } from '@/lib/meta';
 
 interface LanguageContextType {
   language: Language;
@@ -27,28 +27,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     const title = translations[language].seo_title;
     const description = translations[language].seo_description;
 
-    document.title = title;
-
-    // Helper to update meta tag, creating it if missing
-    const updateMeta = (attrKey: 'name' | 'property', attrValue: string, contentValue: string) => {
-      const selector = `meta[${attrKey}="${attrValue}"]`;
-      let el = document.querySelector(selector);
-      if (!el) {
-        el = document.createElement('meta');
-        el.setAttribute(attrKey, attrValue);
-        document.head.appendChild(el);
-      }
-      el.setAttribute('content', contentValue);
-    };
-
-    updateMeta('name', 'description', description);
-    updateMeta('property', 'og:title', title);
-    updateMeta('property', 'og:description', description);
-    updateMeta('name', 'twitter:title', title);
-    updateMeta('name', 'twitter:description', description);
-    updateMeta('property', 'og:locale', language === 'en' ? 'en_US' : 'es_MX');
-    updateMeta('property', 'og:image', 'https://nebulaideas.com/assets/logo.png');
-    updateMeta('name', 'twitter:image', 'https://nebulaideas.com/assets/logo.png');
+    updateMetaTags(title, description, language);
   }, [language]);
 
   const toggleLanguage = useCallback(() => {
@@ -62,13 +41,21 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     [language]
   );
 
-  const calendlyUrl =
-    language === 'en'
-      ? 'https://cal.com/nebula-ideas/discovery'
-      : 'https://cal.com/nebula-ideas/descubrimiento';
+  const calendlyUrl = useMemo(
+    () =>
+      language === 'en'
+        ? 'https://cal.com/nebula-ideas/discovery'
+        : 'https://cal.com/nebula-ideas/descubrimiento',
+    [language]
+  );
+
+  const contextValue = useMemo(
+    () => ({ language, toggleLanguage, t, calendlyUrl }),
+    [language, toggleLanguage, t, calendlyUrl]
+  );
 
   return (
-    <LanguageContext.Provider value={{ language, toggleLanguage, t, calendlyUrl }}>
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );

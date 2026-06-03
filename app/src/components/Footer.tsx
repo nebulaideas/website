@@ -1,6 +1,8 @@
 import { useLanguage } from '@/hooks/useLanguage';
 import { Globe, Linkedin, Github } from 'lucide-react';
 
+const CURRENT_YEAR = new Date().getFullYear();
+
 export default function Footer() {
   const { language, toggleLanguage, t } = useLanguage();
 
@@ -21,7 +23,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="font-tech text-tech-data text-on-tertiary-container">
-              &copy; {new Date().getFullYear()} {t('footer_copyright')}
+              &copy; {CURRENT_YEAR} {t('footer_copyright')}
             </p>
             {/* Language toggle */}
             <div className="flex items-center gap-2 mt-2">
