@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useCallback, useEffect, useMemo, type ReactNode } from 'react';
 import { translations, type Language, type TranslationKey } from '@/lib/translations';
 import { updateMetaTags } from '@/lib/meta';
