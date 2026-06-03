@@ -4,8 +4,8 @@ import { Terminal } from 'lucide-react';
 
 const stackItems = {
   app: ['Ruby on Rails', 'Go', 'Rust', 'Python', 'TypeScript'],
-  infra: ['Google Cloud Platform (GCP)', 'Docker', 'Cloudflare'],
-  edge: ['Google Kubernetes Engine (GKE)', 'Cloudflare Access'],
+  infra: ['Google Cloud Platform (GCP)', 'Google Kubernetes Engine (GKE)', 'Docker', 'Cloudflare'],
+  edge: ['Cloudflare Access'],
 };
 
 export default function EngineeringDNASection() {

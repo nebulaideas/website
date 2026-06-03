@@ -21,7 +21,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="font-tech text-tech-data text-on-tertiary-container">
-              {t('footer_copyright')}
+              &copy; {new Date().getFullYear()} {t('footer_copyright')}
             </p>
             {/* Language toggle */}
             <div className="flex items-center gap-2 mt-2">
@@ -69,7 +69,7 @@ export default function Footer() {
               {t('nav_schedule')}
             </a>
             <a
-              href="https://github.com/nebulaideas"
+              href="https://www.linkedin.com/company/nebulaideas"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200 flex items-center gap-1"
             >
               <Linkedin size={14} />

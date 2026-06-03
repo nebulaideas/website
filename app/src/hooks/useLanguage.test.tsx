@@ -1,15 +1,38 @@
 import { renderHook, act, render, screen } from '@testing-library/react';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { LanguageProvider, useLanguage, useAltCalendly } from './useLanguage';
 import { translations } from '../lib/translations';
+
+const TEST_METAS = [
+  { key: 'name', value: 'description' },
+  { key: 'property', value: 'og:title' },
+  { key: 'property', value: 'og:description' },
+  { key: 'name', value: 'twitter:title' },
+  { key: 'name', value: 'twitter:description' },
+  { key: 'property', value: 'og:locale' },
+  { key: 'property', value: 'og:image' },
+  { key: 'name', value: 'twitter:image' },
+];
+
+function cleanupTestMetas() {
+  TEST_METAS.forEach(({ key, value }) => {
+    const el = document.head.querySelector(`meta[${key}="${value}"]`);
+    if (el) {
+      document.head.removeChild(el);
+    }
+  });
+}
 
 beforeEach(() => {
   localStorage.clear();
   document.documentElement.lang = '';
   document.title = '';
   // Clean up meta tags to prevent test pollution
-  const metas = document.head.querySelectorAll('meta');
-  metas.forEach((meta) => document.head.removeChild(meta));
+  cleanupTestMetas();
+});
+
+afterEach(() => {
+  cleanupTestMetas();
 });
 
 // Helper component to test useLanguage context
@@ -122,6 +145,14 @@ describe('useLanguage hook & LanguageProvider', () => {
     metaOgLocale.setAttribute('property', 'og:locale');
     document.head.appendChild(metaOgLocale);
 
+    const metaOgImage = document.createElement('meta');
+    metaOgImage.setAttribute('property', 'og:image');
+    document.head.appendChild(metaOgImage);
+
+    const metaTwImage = document.createElement('meta');
+    metaTwImage.name = 'twitter:image';
+    document.head.appendChild(metaTwImage);
+
     render(
       <LanguageProvider>
         <TestComponent />
@@ -135,6 +166,8 @@ describe('useLanguage hook & LanguageProvider', () => {
     expect(metaTwTitle.getAttribute('content')).toBe('Nebula Ideas | Engineering Excellence');
     expect(metaTwDesc.getAttribute('content')).toBe(translations.en.seo_description);
     expect(metaOgLocale.getAttribute('content')).toBe('en_US');
+    expect(metaOgImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
+    expect(metaTwImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
 
     // Toggle to Spanish
     const toggleButton = screen.getByTestId('toggle-btn');
@@ -149,14 +182,8 @@ describe('useLanguage hook & LanguageProvider', () => {
     expect(metaTwTitle.getAttribute('content')).toBe('Nebula Ideas | Excelencia en Ingeniería');
     expect(metaTwDesc.getAttribute('content')).toBe(translations.es.seo_description);
     expect(metaOgLocale.getAttribute('content')).toBe('es_MX');
-
-    // Cleanup
-    document.head.removeChild(metaDesc);
-    document.head.removeChild(metaOgTitle);
-    document.head.removeChild(metaOgDesc);
-    document.head.removeChild(metaTwTitle);
-    document.head.removeChild(metaTwDesc);
-    document.head.removeChild(metaOgLocale);
+    expect(metaOgImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
+    expect(metaTwImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
   });
 });
 

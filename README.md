@@ -6,10 +6,10 @@ A modern, high-performance web platform built with React, TypeScript, and Vite. 
 
 ## 🚀 Key Features
 
-* **Interactive WebGL Constellation**: Custom 3D particle constellation canvas implemented in [HeroSection.tsx](file:///Users/igmarin/Developer/Personal/Nebula/website/app/src/sections/HeroSection.tsx) that reacts to mouse movement and dynamically disables animations when `prefers-reduced-motion` is active.
-* **Custom Purity-Compliant Scroll Effects**: A performant viewport tracking component ([ScrollReveal.tsx](file:///Users/igmarin/Developer/Personal/Nebula/website/app/src/components/ScrollReveal.tsx)) which utilizes lazy state initializers to avoid synchronous layout-level state updates during the commit/render phase.
-* **Zero-Dependency Translation & Localisation**: Fully client-side context-driven localization hook and provider ([useLanguage.tsx](file:///Users/igmarin/Developer/Personal/Nebula/website/app/src/hooks/useLanguage.tsx)) with dynamic page title updates, persistent language storage synchronization, and real-time localized SEO metadata injection (updating standard descriptions, Open Graph cards, Twitter cards, and HTML lang attributes dynamically on language toggle).
-* **Modern CSS Token Design System**: A comprehensive, accessibility-focused styling layout using Tailwind CSS variables and curated custom color systems defined in [index.css](file:///Users/igmarin/Developer/Personal/Nebula/website/app/src/index.css).
+* **Interactive WebGL Constellation**: Custom 3D particle constellation canvas implemented in [HeroSection.tsx](app/src/sections/HeroSection.tsx) that reacts to mouse movement and dynamically disables animations when `prefers-reduced-motion` is active.
+* **Custom Purity-Compliant Scroll Effects**: A performant viewport tracking component ([ScrollReveal.tsx](app/src/components/ScrollReveal.tsx)) which utilizes lazy state initializers to avoid synchronous layout-level state updates during the commit/render phase.
+* **Zero-Dependency Translation & Localisation**: Fully client-side context-driven localization hook and provider ([useLanguage.tsx](app/src/hooks/useLanguage.tsx)) with dynamic page title updates, persistent language storage synchronization, and real-time localized SEO metadata injection (updating standard descriptions, Open Graph cards, Twitter cards, and HTML lang attributes dynamically on language toggle).
+* **Modern CSS Token Design System**: A comprehensive, accessibility-focused styling layout using Tailwind CSS variables and curated custom color systems defined in [index.css](app/src/index.css).
 * **Fully Audited Test Suite**: Configured with Vitest and React Testing Library covering custom hooks, UI render states, scroll behaviors, and styling helper utilities.
 
 ---
@@ -119,7 +119,7 @@ This project is configured for deployment to **Cloudflare Pages** using the `wra
 
 ### 🤖 GitHub Actions CI/CD Pipeline
 
-A workflow is configured in [.github/workflows/deploy.yml](file:///Users/igmarin/Developer/Personal/Nebula/website/.github/workflows/deploy.yml) to automatically:
+A workflow is configured in [.github/workflows/deploy.yml](.github/workflows/deploy.yml) to automatically:
 1. Run linting (`npm run lint`).
 2. Run all unit and integration tests (`npm run test:run`).
 3. Build the static distribution bundle (`npm run build`).
