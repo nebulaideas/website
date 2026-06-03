@@ -51,4 +51,23 @@ describe('Footer component', () => {
 
     expect(screen.getByText(/Engineering Excellence/i)).toBeInTheDocument();
   });
+
+  it('should point to the correct language-specific scheduling URL', () => {
+    renderFooter();
+
+    const scheduleLink = screen.getByText('Schedule a Call').closest('a');
+    expect(scheduleLink).toHaveAttribute('href', 'https://cal.com/nebula-ideas/discovery');
+
+    const esBtn = screen.getByRole('button', { name: /ES/i });
+
+    // Switch to Spanish
+    act(() => {
+      esBtn.click();
+    });
+
+    expect(screen.getByText('Agendar una Llamada').closest('a')).toHaveAttribute(
+      'href',
+      'https://cal.com/nebula-ideas/descubrimiento'
+    );
+  });
 });

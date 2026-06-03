@@ -4,7 +4,7 @@ import { Globe, Linkedin, Github } from 'lucide-react';
 const CURRENT_YEAR = new Date().getFullYear();
 
 export default function Footer() {
-  const { language, toggleLanguage, t } = useLanguage();
+  const { language, toggleLanguage, t, calendlyUrl } = useLanguage();
 
   return (
     <footer className="w-full bg-surface-container-lowest border-t border-outline-variant">
@@ -63,7 +63,7 @@ export default function Footer() {
               {t('nav_contact')}
             </a>
             <a
-              href="https://cal.com/nebula-ideas/discovery"
+              href={calendlyUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200"
