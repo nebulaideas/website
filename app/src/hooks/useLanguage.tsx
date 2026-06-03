@@ -16,7 +16,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('nebula-language') as Language | null;
-      if (stored === 'en' || stored === 'es') return stored;
+      if (stored === 'en' || stored === 'es') {return stored;}
     }
     return 'en';
   });

@@ -33,24 +33,28 @@ jobs:
           model: deepseek/deepseek-v4-pro
           use_github_token: true
           prompt: |
-            Act as a Principal Frontend Architect reviewing a Pull Request for a pure React + Vite application that manages "Agnostic Planning Skills".
+            Act as a Principal Frontend Architect reviewing a Pull Request for "Nebula Ideas", a high-performance React + TypeScript + Vite website.
 
-            Analyze the code diff carefully and provide feedback strictly based on these frontend priorities:
+            Analyze the code diff carefully and provide feedback strictly based on these priorities:
 
-            1. SEPARATION OF CONCERNS & STATE MANAGEMENT (Highest Priority):
-               - Ensure that planning logic, execution algorithms, and skill schemas are completely isolated from React UI components (JSX/TSX).
-               - Check that pure logic is extracted into hooks, vanilla functions, or pure classes, keeping components purely presentation-driven.
-               - Look for bad state management patterns (e.g., prop drilling, improper state syncing, or missing cleanup in useEffects).
+            1. PERFORMANCE, RENDERING & EFFECTS (Highest Priority):
+               - Ensure Three.js / WebGL constellation rendering is efficient, properly disposed of, and respects `prefers-reduced-motion`.
+               - Check scroll reveal and animations for layout thrashing (avoiding synchronous layouts, DOM reads, scroll event listener clutter).
+               - Avoid unnecessary re-computations (e.g., dynamic calculations inside component bodies instead of module-level constants or useMemo/useCallback).
 
-            2. FRONTEND PERFORMANCE & LIFECYCLE:
-               - Identify potential re-render bottlenecks caused by heavy planning operations or lack of memoization (useMemo/useCallback) where appropriate.
-               - Ensure execution configurations, prompt structures, or heavy static schemas aren't being re-created inline on every render.
+            2. SEO, ACCESSIBILITY (a11y) & SEO METADATA:
+               - Ensure dynamic metadata updates (Open Graph, Twitter Cards, dynamic titles, locales) are correct and decoupled from raw component logic.
+               - Check structured JSON-LD schema blocks for validation errors or redundant values.
+               - Maintain high semantic standards (semantic HTML5, ARIA roles, language toggles, keyboard usability).
 
-            3. CODE ROBUSTNESS & TYPES:
-               - Ensure strict type definitions (or schema definitions) for skills, inputs, and outputs to prevent runtime crashes.
-               - Look for proper handling of asynchronous processes (loading states, timeouts, and error boundaries for execution failures).
+            3. CLEAN ARCHITECTURE & LOCALIZATION:
+               - Verify that localizations are cleanly managed in translations.ts without hardcoded copy in UI components.
+               - Ensure DOM-mutating hooks (like meta/script injection) are properly modularized, parameterized, and cleaned up.
+
+            4. TEST ROBUSTNESS, HYGIENE & PRESENCE:
+               - Verify that appropriate unit or integration tests are present/added for any new hooks, components, or features introduced in the PR.
+               - Ensure unit tests (Vitest + JSDOM) cleanly mock window/document states and clean up head/body modifications in beforeEach/afterEach hooks.
 
             CRITICAL INSTRUCTIONS:
-            - Do NOT comment on minor stylistic preferences (linting, indentation) unless they directly impact runtime execution.
-            - Do NOT apply heavy backend architecture principles (like DDD, repositories, or strict persistence logic). Focus purely on clean, decoupled, and performant client-side state/logic.
-            - Group your comments by impact: [Critical Bug], [Architectural Flaw], or [Optimization].
+            - Focus comments on [Critical Bug], [Architectural Flaw], or [Optimization].
+            - Do NOT comment on minor formatting or styling unless it causes runtime degradation or layout breakage.

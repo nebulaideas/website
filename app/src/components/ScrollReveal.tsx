@@ -34,13 +34,13 @@ export default function ScrollReveal({
     }
 
     const el = ref.current;
-    if (!el) return;
+    if (!el) {return;}
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          if (once) observer.unobserve(el);
+          if (once) {observer.unobserve(el);}
         } else if (!once) {
           setIsVisible(false);
         }

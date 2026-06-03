@@ -113,4 +113,73 @@ describe('ScrollReveal component', () => {
     // Restore window mock
     window.matchMedia = originalMatchMedia;
   });
+
+  it('should support different reveal directions', () => {
+    const directions = ['down', 'left', 'right'] as const;
+    const expectedTransforms = {
+      down: 'translateY(-40px)',
+      left: 'translateX(40px)',
+      right: 'translateX(-40px)',
+    };
+
+    directions.forEach((direction) => {
+      const { container } = render(
+        <ScrollReveal direction={direction}>
+          <div>Content</div>
+        </ScrollReveal>
+      );
+      const wrapper = container.firstChild as HTMLElement;
+      expect(wrapper.style.transform).toBe(expectedTransforms[direction]);
+    });
+  });
+
+  it('should toggle visibility state if once is false', () => {
+    let observeCallback: (entries: IntersectionObserverEntry[]) => void = () => {};
+    const mockObserve = vi.fn();
+    const mockUnobserve = vi.fn();
+
+    class TestIntersectionObserver {
+      constructor(callback: (entries: IntersectionObserverEntry[]) => void) {
+        observeCallback = callback;
+      }
+      observe = mockObserve;
+      unobserve = mockUnobserve;
+      disconnect = vi.fn();
+    }
+
+    const originalIO = window.IntersectionObserver;
+    Object.defineProperty(window, 'IntersectionObserver', {
+      writable: true,
+      configurable: true,
+      value: TestIntersectionObserver,
+    });
+
+    const { container } = render(
+      <ScrollReveal once={false}>
+        <div>Content</div>
+      </ScrollReveal>
+    );
+
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper.style.opacity).toBe('0');
+
+    // Trigger intersection -> should be visible
+    act(() => {
+      observeCallback([
+        { isIntersecting: true, target: wrapper } as unknown as IntersectionObserverEntry,
+      ]);
+    });
+    expect(wrapper.style.opacity).toBe('1');
+    expect(mockUnobserve).not.toHaveBeenCalled();
+
+    // Trigger non-intersection -> should be invisible again
+    act(() => {
+      observeCallback([
+        { isIntersecting: false, target: wrapper } as unknown as IntersectionObserverEntry,
+      ]);
+    });
+    expect(wrapper.style.opacity).toBe('0');
+
+    window.IntersectionObserver = originalIO;
+  });
 });
