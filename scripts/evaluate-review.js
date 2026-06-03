@@ -123,7 +123,7 @@ function determineReviewState(verdict, criticalBugs, securityIssues) {
     };
   }
 
-  if ((verdict === 'POSITIVE' || verdict === 'APPROVED') && criticalBugs === 0 && securityIssues === 0) {
+  if (criticalBugs === 0 && securityIssues === 0) {
     return {
       targetState: 'APPROVE',
       message: `✅ OpenCode Review: Approved! No critical bugs or security issues found. Everything looks good!`
@@ -160,6 +160,30 @@ function submitPRReview(prNumber, state, message) {
 }
 
 /**
+ * Dismisses any previous CHANGES_REQUESTED reviews left by the bot.
+ * This is crucial to unblock PR merging when the new status is non-blocking (COMMENT or APPROVE).
+ * @param {string} repo 
+ * @param {string} prNumber 
+ */
+function dismissPreviousChangesRequested(repo, prNumber) {
+  try {
+    const reviewsJson = execSync(`gh api repos/${repo}/pulls/${prNumber}/reviews`).toString();
+    const reviews = JSON.parse(reviewsJson);
+    const botChangesRequested = reviews.filter(r => {
+      const login = r.user.login.toLowerCase();
+      return (login === 'github-actions[bot]' || login.includes('opencode')) && r.state === 'CHANGES_REQUESTED';
+    });
+
+    for (const r of botChangesRequested) {
+      console.log(`Dismissing blocking review #${r.id}...`);
+      execSync(`gh api -X PUT repos/${repo}/pulls/${prNumber}/reviews/${r.id}/dismissals -f message="Dismissed previous blocking review because the blocking criteria is no longer met."`);
+    }
+  } catch (error) {
+    console.warn(`Warning: Failed to dismiss previous reviews: ${error.message}`);
+  }
+}
+
+/**
  * Main orchestration entrypoint.
  */
 function main() {
@@ -179,6 +203,11 @@ function main() {
 
     const { targetState, message } = determineReviewState(results.verdict, results.criticalBugs, results.securityIssues);
     console.log(`Determined review action: targetState=${targetState}`);
+
+    // If the new state is non-blocking, clear previous blockages
+    if (targetState === 'COMMENT' || targetState === 'APPROVE') {
+      dismissPreviousChangesRequested(repo, prNumber);
+    }
 
     submitPRReview(prNumber, targetState, message);
     console.log("Successfully submitted PR review status!");

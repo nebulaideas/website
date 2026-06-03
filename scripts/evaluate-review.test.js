@@ -51,13 +51,13 @@ describe('determineReviewState', () => {
     expect(determineReviewState('POSITIVE', 3, 0).targetState).toBe('REQUEST_CHANGES');
   });
 
-  it('should approve for positive verdict with 0 bugs and 0 security issues', () => {
-    const result = determineReviewState('POSITIVE', 0, 0);
-    expect(result.targetState).toBe('APPROVE');
+  it('should approve for any verdict (even NEUTRAL) with 0 bugs and 0 security issues', () => {
+    expect(determineReviewState('POSITIVE', 0, 0).targetState).toBe('APPROVE');
+    expect(determineReviewState('NEUTRAL', 0, 0).targetState).toBe('APPROVE');
   });
 
-  it('should comment for positive/neutral verdict with 1-2 critical bugs and 0 security issues', () => {
-    const result = determineReviewState('POSITIVE', 2, 0);
-    expect(result.targetState).toBe('COMMENT');
+  it('should comment when there are 1-2 critical bugs and 0 security issues (non-blocking)', () => {
+    expect(determineReviewState('POSITIVE', 2, 0).targetState).toBe('COMMENT');
+    expect(determineReviewState('NEUTRAL', 1, 0).targetState).toBe('COMMENT');
   });
 });
