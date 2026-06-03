@@ -86,3 +86,46 @@ Inside the `app` directory, you can run:
 * **`npm run lint`**: Inspects all code files for purity rules, React refresh compliance, and TypeScript typing errors.
 * **`npm run test`**: Launches the Vitest interactive watch mode test runner.
 * **`npm run test:run`**: Executes the test suites a single time (highly useful for CI/CD checks).
+* **`npm run deploy`**: Bundles the application and deploys it directly to Cloudflare Pages using Wrangler.
+* **`npm run pages:dev`**: Runs the Cloudflare Pages local development emulator on the build output.
+
+---
+
+## ☁️ Cloudflare Pages Deployment
+
+This project is configured for deployment to **Cloudflare Pages** using the `wrangler` CLI.
+
+### Step-by-Step Deployment Steps
+
+1. **Authenticate Wrangler** with your Cloudflare account (if you haven't already):
+   ```bash
+   npx wrangler login
+   ```
+
+2. **Deploy the application**:
+   Simply run the following command from the `app` directory:
+   ```bash
+   npm run deploy
+   ```
+
+   *This will run the production build (`npm run build`) and upload the static assets in `./dist` to Cloudflare Pages.*
+
+3. **Subsequent deployments**:
+   Whenever you make modifications and want to push updates, just run:
+   ```bash
+   npm run deploy
+   ```
+
+### 🤖 GitHub Actions CI/CD Pipeline
+
+A workflow is configured in [.github/workflows/deploy.yml](file:///Users/igmarin/Developer/Personal/Nebula/website/.github/workflows/deploy.yml) to automatically:
+1. Run linting (`npm run lint`).
+2. Run all unit and integration tests (`npm run test:run`).
+3. Build the static distribution bundle (`npm run build`).
+4. Deploy automatically to Cloudflare Pages (only on pushes to `main` and `kimi-2`).
+
+#### GitHub Secrets Setup
+To enable automatic deployments via GitHub Actions, add these secrets under **Settings > Secrets and variables > Actions** in your GitHub repository:
+* `CLOUDFLARE_API_TOKEN`: Your Cloudflare API Token (with **Cloudflare Pages — Edit** permission).
+* `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare Account ID.
+
