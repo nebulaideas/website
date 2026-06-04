@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
+import NavLink from '@/components/NavLink';
 import { Menu, X, Globe } from 'lucide-react';
 
 const navLinks = [
@@ -77,16 +78,14 @@ export default function Navigation() {
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center gap-5 lg:gap-6">
             {navLinks.map((link) => (
-              <a
+              <NavLink
                 key={link.key}
+                labelKey={link.key}
                 href={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
-                className={`font-tech text-tech-label uppercase transition-colors duration-200 hover:text-nebula-gold whitespace-nowrap ${
-                  activeSection === link.href.slice(1) ? 'text-nebula-gold' : 'text-on-surface-variant'
-                }`}
-              >
-                {t(link.key)}
-              </a>
+                isActive={activeSection === link.href.slice(1)}
+                variant="desktop"
+                onClick={handleNavClick}
+              />
             ))}
           </div>
 
@@ -131,16 +130,14 @@ export default function Navigation() {
         }`}
       >
         {navLinks.map((link) => (
-          <a
+          <NavLink
             key={link.key}
+            labelKey={link.key}
             href={link.href}
-            onClick={(e) => handleNavClick(e, link.href)}
-            className={`text-2xl font-medium font-headline transition-colors duration-250 hover:text-nebula-gold ${
-              activeSection === link.href.slice(1) ? 'text-nebula-gold' : 'text-on-surface'
-            }`}
-          >
-            {t(link.key)}
-          </a>
+            isActive={activeSection === link.href.slice(1)}
+            variant="mobile"
+            onClick={handleNavClick}
+          />
         ))}
         <button
           onClick={() => {

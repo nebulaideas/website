@@ -140,6 +140,18 @@
     font-weight: 400;
     line-height: 1.4;
   }
+
+  .btn-gold {
+    @apply bg-nebula-gold text-nebula-navy rounded font-tech text-tech-label font-bold hover:bg-nebula-gold-hover transition-all duration-300 hover:-translate-y-1 hover:shadow-gold-strong;
+  }
+
+  .card-base {
+    @apply bg-primary-container border border-outline-variant rounded-lg;
+  }
+
+  .icon-box {
+    @apply bg-surface-dim rounded border border-outline-variant flex items-center justify-center group-hover:border-nebula-gold group-hover:bg-surface-container-high transition-all duration-300;
+  }
 }
 
 @layer utilities {
