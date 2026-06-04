@@ -29,8 +29,8 @@ describe('Navigation component', () => {
     expect(logo).toHaveAttribute('src', '/assets/logo.png');
 
     // Check key nav links exist
-    expect(screen.getAllByText('Our Vision')[0]).toBeInTheDocument();
-    expect(screen.getAllByText('What We Do')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('The Problem')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('What We Help With')[0]).toBeInTheDocument();
     expect(screen.getByText('Schedule a Call')).toBeInTheDocument();
   });
 
@@ -46,8 +46,8 @@ describe('Navigation component', () => {
     });
 
     // Check language labels are updated to Spanish
-    expect(screen.getAllByText('Visión')[0]).toBeInTheDocument();
-    expect(screen.getAllByText('Qué Hacemos')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('El Problema')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Cómo Ayudamos')[0]).toBeInTheDocument();
     expect(screen.getByText('Agendar una Llamada')).toBeInTheDocument();
   });
 
@@ -99,22 +99,22 @@ describe('Navigation component', () => {
     window.IntersectionObserver = LocalMockIntersectionObserver as unknown as typeof IntersectionObserver;
     
     // Add mock elements to document so getElementById returns them
-    const visionEl = document.createElement('div');
-    visionEl.id = 'vision';
-    document.body.appendChild(visionEl);
+    const problemEl = document.createElement('div');
+    problemEl.id = 'why-struggle';
+    document.body.appendChild(problemEl);
     
     renderNavigation();
     
     act(() => {
-      observerCallback([{ isIntersecting: true, target: visionEl }]);
+      observerCallback([{ isIntersecting: true, target: problemEl }]);
     });
     
-    // Now vision link should have active class
-    const visionLinks = screen.getAllByRole('link', { name: /Our Vision/i });
-    expect(visionLinks[0]).toHaveClass('text-nebula-gold');
+    // Now problem link should have active class
+    const problemLinks = screen.getAllByRole('link', { name: /The Problem/i });
+    expect(problemLinks[0]).toHaveClass('text-nebula-gold');
     
     // Clean up
-    document.body.removeChild(visionEl);
+    document.body.removeChild(problemEl);
     window.IntersectionObserver = originalIO;
   });
 
@@ -124,7 +124,7 @@ describe('Navigation component', () => {
     } as unknown as Element;
     
     const spy = vi.spyOn(document, 'querySelector').mockImplementation((selector) => {
-      if (selector === '#vision') {
+      if (selector === '#why-struggle') {
         return mockElement;
       }
       return null;
@@ -132,9 +132,9 @@ describe('Navigation component', () => {
 
     renderNavigation();
 
-    const visionLinks = screen.getAllByText('Our Vision');
+    const problemLinks = screen.getAllByText('The Problem');
     act(() => {
-      visionLinks[0].click();
+      problemLinks[0].click();
     });
 
     expect(window.scrollTo).toHaveBeenCalled();
@@ -167,7 +167,7 @@ describe('Navigation component', () => {
     const overlay = document.getElementById('mobile-menu-overlay');
     expect(overlay).toHaveClass('opacity-100');
 
-    const mobileLinks = screen.getAllByText('Our Vision');
+    const mobileLinks = screen.getAllByText('The Problem');
     // mobileLinks[1] should be the one in the mobile overlay
     act(() => {
       mobileLinks[1].click();
@@ -201,7 +201,7 @@ describe('Navigation component', () => {
     });
 
     // Language should change to Spanish and menu should close
-    expect(screen.getAllByText('Visión')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('El Problema')[0]).toBeInTheDocument();
     expect(overlay).toHaveClass('opacity-0');
   });
 });
