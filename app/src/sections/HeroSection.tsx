@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useCallback } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { ArrowDown } from 'lucide-react';
 import { useConstellationBackground } from '@/hooks/useConstellationBackground';
@@ -19,14 +19,14 @@ export default function HeroSection() {
     lights: true,
   });
 
-  const handleScrollTo = (e: React.MouseEvent, id: string) => {
+  const handleScrollTo = useCallback((e: React.MouseEvent, id: string) => {
     e.preventDefault();
     const target = document.querySelector(id);
     if (target) {
       const top = target.getBoundingClientRect().top + window.scrollY - 64;
       window.scrollTo({ top, behavior: 'smooth' });
     }
-  };
+  }, []);
 
   return (
     <header id="top" className="relative w-full flex flex-col items-center justify-center text-center min-h-[90vh] overflow-hidden">

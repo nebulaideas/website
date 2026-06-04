@@ -116,12 +116,14 @@ export function useConstellationBackground(
     }
 
     // Ambient glow lights
+    let pointLight: THREE.PointLight | null = null;
+    let blueLight: THREE.PointLight | null = null;
     if (enableLights) {
-      const pointLight = new THREE.PointLight(0xd4af37, 0.4, 30);
+      pointLight = new THREE.PointLight(0xd4af37, 0.4, 30);
       pointLight.position.set(8, 5, 5);
       scene.add(pointLight);
 
-      const blueLight = new THREE.PointLight(0x58a6ff, 0.2, 25);
+      blueLight = new THREE.PointLight(0x58a6ff, 0.2, 25);
       blueLight.position.set(-8, -5, 5);
       scene.add(blueLight);
     }
@@ -200,39 +202,17 @@ export function useConstellationBackground(
       renderer.render(scene, camera);
     }
 
-    if (mouseTracking) {
-      const handleMouseMove = (e: MouseEvent) => {
-        mouseRef.current.x = (e.clientX / window.innerWidth - 0.5) * 2;
-        mouseRef.current.y = (e.clientY / window.innerHeight - 0.5) * 2;
-      };
+    const timer = setTimeout(() => setLoaded(true), 300);
+
+    const handleMouseMove = mouseTracking
+      ? (e: MouseEvent) => {
+          mouseRef.current.x = (e.clientX / window.innerWidth - 0.5) * 2;
+          mouseRef.current.y = (e.clientY / window.innerHeight - 0.5) * 2;
+        }
+      : null;
+
+    if (handleMouseMove) {
       window.addEventListener('mousemove', handleMouseMove);
-
-      const resizeObserver = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-          const { width, height } = entry.contentRect;
-          camera.aspect = width / height;
-          camera.updateProjectionMatrix();
-          renderer.setSize(width, height);
-        }
-      });
-      resizeObserver.observe(container);
-
-      const timer = setTimeout(() => setLoaded(true), 300);
-
-      return () => {
-        isActive = false;
-        cancelAnimationFrame(animFrameId);
-        clearTimeout(timer);
-        window.removeEventListener('mousemove', handleMouseMove);
-        resizeObserver.disconnect();
-        lineGeo.dispose();
-        lineMaterial.dispose();
-        particles.forEach((p) => { (p.material as THREE.Material).dispose(); });
-        renderer.dispose();
-        if (container.contains(renderer.domElement)) {
-          container.removeChild(renderer.domElement);
-        }
-      };
     }
 
     const resizeObserver = new ResizeObserver((entries) => {
@@ -248,9 +228,16 @@ export function useConstellationBackground(
     return () => {
       isActive = false;
       cancelAnimationFrame(animFrameId);
+      clearTimeout(timer);
+      if (handleMouseMove) {
+        window.removeEventListener('mousemove', handleMouseMove);
+      }
       resizeObserver.disconnect();
+      sphereGeo.dispose();
       lineGeo.dispose();
       lineMaterial.dispose();
+      pointLight?.dispose();
+      blueLight?.dispose();
       particles.forEach((p) => { (p.material as THREE.Material).dispose(); });
       renderer.dispose();
       if (container.contains(renderer.domElement)) {

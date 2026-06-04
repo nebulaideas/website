@@ -1,8 +1,9 @@
 import { useLanguage } from '@/hooks/useLanguage';
+import type { TranslationKey } from '@/lib/translations';
 
 interface SectionHeaderProps {
-  labelKey?: string;
-  headlineKey: string;
+  labelKey?: TranslationKey;
+  headlineKey: TranslationKey;
   labelColor?: 'gold' | 'muted';
   center?: boolean;
 }
