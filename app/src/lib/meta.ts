@@ -48,3 +48,36 @@ export function updateMetaTags({
   updateMeta('name', 'twitter:creator', '@nebulaideas');
   updateMeta('name', 'twitter:image', 'https://nebulaideas.com/assets/logo.png');
 }
+
+const JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Nebula Ideas',
+  url: 'https://nebulaideas.com',
+  logo: 'https://nebulaideas.com/assets/logo.png',
+  description:
+    'Technology and AI strategy consultancy focused on organizational clarity, measurable outcomes, and practical AI adoption.',
+  foundingDate: '2026',
+  knowsAbout: [
+    'Artificial Intelligence',
+    'Automation',
+    'Technology Strategy',
+    'Engineering Leadership',
+    'Product Strategy',
+    'Organizational Alignment',
+    'Software Architecture',
+  ],
+} as const;
+
+export function injectJsonLd() {
+  if (typeof window === 'undefined') {return;}
+  const id = 'json-ld-org';
+  let el = document.getElementById(id) as HTMLScriptElement | null;
+  if (!el) {
+    el = document.createElement('script');
+    el.id = id;
+    el.type = 'application/ld+json';
+    document.head.appendChild(el);
+  }
+  el.textContent = JSON.stringify(JSON_LD);
+}

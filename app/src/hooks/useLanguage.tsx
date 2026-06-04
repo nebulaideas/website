@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useCallback, useEffect, useMemo, type ReactNode } from 'react';
 import { translations, type Language, type TranslationKey } from '@/lib/translations';
-import { updateMetaTags } from '@/lib/meta';
+import { updateMetaTags, injectJsonLd } from '@/lib/meta';
 
 interface LanguageContextType {
   language: Language;
@@ -33,6 +33,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       siteName: lang.seo_site_name,
       language,
     });
+
+    injectJsonLd();
   }, [language]);
 
   const toggleLanguage = useCallback(() => {
