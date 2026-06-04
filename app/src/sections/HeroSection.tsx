@@ -4,7 +4,7 @@ import { ArrowDown } from 'lucide-react';
 import * as THREE from 'three';
 
 export default function HeroSection() {
-  const { t, calendlyUrl } = useLanguage();
+  const { t } = useLanguage();
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
   const [loaded, setLoaded] = useState(false);
@@ -190,15 +190,6 @@ export default function HeroSection() {
 
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center px-margin-mobile md:px-margin-desktop py-28 md:py-40">
-        {/* Label */}
-        <span
-          className={`font-tech text-tech-label text-nebula-gold uppercase tracking-[0.25em] mb-8 block transition-all duration-700 ${
-            loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`}
-        >
-          {t('hero_label')}
-        </span>
-
         {/* Headline */}
         <h1
           className={`font-display text-display-lg text-on-surface mb-10 tracking-tight leading-[1.05] transition-all duration-700 delay-100 max-w-[900px] ${
@@ -211,7 +202,7 @@ export default function HeroSection() {
 
         {/* Subheadline */}
         <p
-          className={`font-body text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-14 transition-all duration-700 delay-200 leading-relaxed ${
+          className={`font-body text-body-lg text-on-surface-variant max-w-3xl mx-auto mb-6 transition-all duration-700 delay-200 leading-relaxed ${
             loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
           style={{ textShadow: '0 1px 20px rgba(0,0,0,0.5)' }}
@@ -219,23 +210,47 @@ export default function HeroSection() {
           {t('hero_subheadline')}
         </p>
 
+        {/* Supporting text */}
+        <p
+          className={`font-body text-body-md text-on-surface-variant max-w-2xl mx-auto mb-8 transition-all duration-700 delay-250 leading-relaxed ${
+            loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+          }`}
+        >
+          {t('hero_supporting')}
+        </p>
+
+        {/* Tags */}
+        <div
+          className={`flex flex-wrap justify-center gap-3 mb-14 transition-all duration-700 delay-300 ${
+            loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+          }`}
+        >
+          {t('hero_tags').split(' \u00B7 ').map((tag) => (
+            <span
+              key={tag}
+              className="font-tech text-tech-data text-nebula-gold/80 px-3 py-1.5 rounded border border-nebula-gold/20 bg-nebula-gold/5"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+
         {/* CTAs */}
         <div
-          className={`flex flex-col sm:flex-row gap-4 transition-all duration-700 delay-300 ${
+          className={`flex flex-col sm:flex-row gap-4 transition-all duration-700 delay-350 ${
             loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
           <a
-            href={calendlyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#clarity-sprint"
+            onClick={(e) => handleScrollTo(e, '#clarity-sprint')}
             className="bg-nebula-gold text-nebula-navy px-8 py-4 rounded font-tech text-tech-label font-bold hover:bg-nebula-gold-hover transition-all duration-300 hover:-translate-y-1 hover:shadow-gold-hover min-w-[200px]"
           >
             {t('hero_cta_primary')}
           </a>
           <a
-            href="#our-dna"
-            onClick={(e) => handleScrollTo(e, '#our-dna')}
+            href="#schedule"
+            onClick={(e) => handleScrollTo(e, '#schedule')}
             className="bg-transparent border border-outline-variant text-on-surface px-8 py-4 rounded font-tech text-tech-label hover:border-nebula-gold hover:text-nebula-gold transition-colors duration-200 flex items-center justify-center gap-2 min-w-[200px]"
           >
             {t('hero_cta_secondary')}

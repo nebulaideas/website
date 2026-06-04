@@ -3,10 +3,10 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { Menu, X, Globe } from 'lucide-react';
 
 const navLinks = [
-  { key: 'nav_vision', href: '#vision' },
-  { key: 'nav_whatwedo', href: '#what-we-do' },
+  { key: 'nav_problem', href: '#why-struggle' },
+  { key: 'nav_services', href: '#what-we-help' },
   { key: 'nav_sprint', href: '#clarity-sprint' },
-  { key: 'nav_dna', href: '#our-dna' },
+  { key: 'nav_approach', href: '#our-approach' },
   { key: 'nav_blog', href: '#blog' },
   { key: 'nav_contact', href: '#schedule' },
 ] as const;

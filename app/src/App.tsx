@@ -3,12 +3,12 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import HeroSection from '@/sections/HeroSection';
 import SocialProofSection from '@/sections/SocialProofSection';
-import MarketRealitySection from '@/sections/MarketRealitySection';
-import PillarsSection from '@/sections/PillarsSection';
-import EngineeringDNASection from '@/sections/EngineeringDNASection';
+import WhyOrganizationsStruggleSection from '@/sections/WhyOrganizationsStruggleSection';
 import ClaritySprintSection from '@/sections/ClaritySprintSection';
+import WhatWeHelpSection from '@/sections/WhatWeHelpSection';
+import OurApproachSection from '@/sections/OurApproachSection';
+import PrinciplesSection from '@/sections/PrinciplesSection';
 import AboutSection from '@/sections/AboutSection';
-import PhilosophySection from '@/sections/PhilosophySection';
 import BlogSection from '@/sections/BlogSection';
 import FooterCTASection from '@/sections/FooterCTASection';
 
@@ -20,12 +20,12 @@ function App() {
         <main>
           <HeroSection />
           <SocialProofSection />
-          <MarketRealitySection />
-          <PillarsSection />
-          <EngineeringDNASection />
+          <WhyOrganizationsStruggleSection />
           <ClaritySprintSection />
+          <WhatWeHelpSection />
+          <OurApproachSection />
+          <PrinciplesSection />
           <AboutSection />
-          <PhilosophySection />
           <BlogSection />
           <FooterCTASection />
         </main>

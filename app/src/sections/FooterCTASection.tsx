@@ -158,8 +158,11 @@ export default function FooterCTASection() {
         >
           {t('footer_cta_headline')}
         </h2>
-        <p className="font-body text-body-lg text-on-surface-variant mb-10 max-w-2xl mx-auto">
+        <p className="font-body text-body-lg text-on-surface-variant mb-4 max-w-2xl mx-auto">
           {t('footer_cta_desc')}
+        </p>
+        <p className="font-body text-body-md text-on-surface-variant mb-10 max-w-xl mx-auto">
+          {t('footer_cta_body')}
         </p>
         <a
           href={calendlyUrl}

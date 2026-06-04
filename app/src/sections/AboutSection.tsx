@@ -1,6 +1,6 @@
 import { useLanguage } from '@/hooks/useLanguage';
 import ScrollReveal from '@/components/ScrollReveal';
-import { Users } from 'lucide-react';
+import { Users, Lightbulb } from 'lucide-react';
 
 const founders = [
   {
@@ -17,6 +17,14 @@ const founders = [
   },
 ] as const;
 
+const perspectives = [
+  'about_perspective1',
+  'about_perspective2',
+  'about_perspective3',
+  'about_perspective4',
+  'about_perspective5',
+] as const;
+
 export default function AboutSection() {
   const { t } = useLanguage();
 
@@ -24,16 +32,49 @@ export default function AboutSection() {
     <section id="about" className="w-full py-24 bg-surface-container-lowest">
       <div className="container-main">
         <ScrollReveal>
-          <span className="font-tech text-tech-label text-on-surface-variant uppercase tracking-[0.15em] block mb-4">
+          <span className="font-tech text-tech-label text-nebula-gold uppercase tracking-[0.15em] block mb-4">
             {t('about_label')}
           </span>
-          <h2 className="font-headline text-headline-lg text-on-surface">{t('about_headline')}</h2>
+          <h2 className="font-headline text-headline-lg text-on-surface mb-6">
+            {t('about_headline')}
+          </h2>
+        </ScrollReveal>
+
+        {/* Collective narrative */}
+        <ScrollReveal delay={0.1}>
+          <div className="max-w-3xl mb-12">
+            <p className="font-body text-body-lg text-on-surface mb-4">
+              {t('about_intro')}
+            </p>
+            <p className="font-body text-body-md text-on-surface-variant mb-6">
+              {t('about_detail')}
+            </p>
+            <span className="font-tech text-tech-label text-on-surface-variant uppercase tracking-[0.1em] block mb-4">
+              {t('about_perspectives_label')}
+            </span>
+            <div className="flex flex-wrap gap-3">
+              {perspectives.map((key) => (
+                <span
+                  key={key}
+                  className="inline-flex items-center gap-2 bg-primary-container border border-outline-variant px-4 py-2 rounded font-tech text-tech-data text-on-surface"
+                >
+                  <Lightbulb size={14} className="text-nebula-gold" />
+                  {t(key)}
+                </span>
+              ))}
+            </div>
+            <div className="mt-8 bg-primary-container border-l-4 border-nebula-gold p-5">
+              <p className="font-body text-body-md text-on-surface-variant italic">
+                {t('about_insight')}
+              </p>
+            </div>
+          </div>
         </ScrollReveal>
 
         {/* Founder Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           {founders.map((founder, i) => (
-            <ScrollReveal key={founder.nameKey} delay={i * 0.2}>
+            <ScrollReveal key={founder.nameKey} delay={0.2 + i * 0.15}>
               <div className="h-full">
                 <div className="rounded-lg overflow-hidden aspect-[3/4] max-h-[420px] relative border border-outline-variant">
                   <img
@@ -58,7 +99,7 @@ export default function AboutSection() {
         </div>
 
         {/* Partnership Banner */}
-        <ScrollReveal delay={0.3}>
+        <ScrollReveal delay={0.4}>
           <div className="mt-12 bg-primary-container border border-outline-variant rounded-lg p-8 md:p-10 hover:border-nebula-gold/50 transition-colors duration-300">
             <div className="flex items-start gap-4">
               <Users size={32} className="text-nebula-gold flex-shrink-0 mt-1" />
