@@ -25,10 +25,14 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     document.documentElement.lang = language;
     localStorage.setItem('nebula-language', language);
 
-    const title = translations[language].seo_title;
-    const description = translations[language].seo_description;
-
-    updateMetaTags(title, description, language);
+    const lang = translations[language];
+    updateMetaTags({
+      title: lang.seo_title,
+      description: lang.seo_description,
+      ogDescription: lang.seo_og_description,
+      siteName: lang.seo_site_name,
+      language,
+    });
   }, [language]);
 
   const toggleLanguage = useCallback(() => {

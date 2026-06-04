@@ -164,9 +164,12 @@ export const translations = {
     footer_github: 'GitHub',
 
     // SEO
-    seo_title: 'Nebula Ideas | Engineering Excellence',
+    seo_title: 'Nebula Clarity Sprint \u2014 AI & Technology Strategy',
     seo_description:
-      'We help organizations understand where technology is creating friction, align teams around measurable outcomes, and identify practical opportunities for AI and automation.',
+      'Understand where technology creates friction, align teams around outcomes, and identify practical AI and automation opportunities before you build.',
+    seo_og_description:
+      'A focused assessment to uncover friction, align teams, and turn AI, automation, and technology decisions into measurable outcomes.',
+    seo_site_name: 'Nebula Ideas',
   },
   es: {
     // Navigation
@@ -333,9 +336,12 @@ export const translations = {
     footer_github: 'GitHub',
 
     // SEO
-    seo_title: 'Nebula Ideas | Excelencia en Ingenier\u00eda',
+    seo_title: 'Nebula Clarity Sprint \u2014 Estrategia de IA y Tecnolog\u00eda',
     seo_description:
-      'Ayudamos a las organizaciones a entender d\u00f3nde la tecnolog\u00eda crea fricci\u00f3n, alinear equipos en torno a resultados medibles e identificar oportunidades pr\u00e1cticas para IA y automatizaci\u00f3n.',
+      'Entiende d\u00f3nde la tecnolog\u00eda crea fricci\u00f3n, alinea equipos alrededor de resultados e identifica oportunidades pr\u00e1cticas de IA y automatizaci\u00f3n antes de construir.',
+    seo_og_description:
+      'Un diagn\u00f3stico enfocado para descubrir fricci\u00f3n, alinear equipos y convertir decisiones de IA, automatizaci\u00f3n y tecnolog\u00eda en resultados medibles.',
+    seo_site_name: 'Nebula Ideas',
   },
 } as const;
 

@@ -7,10 +7,13 @@ const TEST_METAS = [
   { key: 'name', value: 'description' },
   { key: 'property', value: 'og:title' },
   { key: 'property', value: 'og:description' },
+  { key: 'property', value: 'og:site_name' },
   { key: 'name', value: 'twitter:title' },
   { key: 'name', value: 'twitter:description' },
   { key: 'property', value: 'og:locale' },
   { key: 'property', value: 'og:image' },
+  { key: 'name', value: 'twitter:site' },
+  { key: 'name', value: 'twitter:creator' },
   { key: 'name', value: 'twitter:image' },
 ];
 
@@ -133,6 +136,10 @@ describe('useLanguage hook & LanguageProvider', () => {
     metaOgDesc.setAttribute('property', 'og:description');
     document.head.appendChild(metaOgDesc);
 
+    const metaOgSiteName = document.createElement('meta');
+    metaOgSiteName.setAttribute('property', 'og:site_name');
+    document.head.appendChild(metaOgSiteName);
+
     const metaTwTitle = document.createElement('meta');
     metaTwTitle.name = 'twitter:title';
     document.head.appendChild(metaTwTitle);
@@ -159,12 +166,13 @@ describe('useLanguage hook & LanguageProvider', () => {
       </LanguageProvider>
     );
 
-    expect(document.title).toBe('Nebula Ideas | Engineering Excellence');
+    expect(document.title).toBe(translations.en.seo_title);
     expect(metaDesc.getAttribute('content')).toBe(translations.en.seo_description);
-    expect(metaOgTitle.getAttribute('content')).toBe('Nebula Ideas | Engineering Excellence');
-    expect(metaOgDesc.getAttribute('content')).toBe(translations.en.seo_description);
-    expect(metaTwTitle.getAttribute('content')).toBe('Nebula Ideas | Engineering Excellence');
-    expect(metaTwDesc.getAttribute('content')).toBe(translations.en.seo_description);
+    expect(metaOgTitle.getAttribute('content')).toBe(translations.en.seo_title);
+    expect(metaOgDesc.getAttribute('content')).toBe(translations.en.seo_og_description);
+    expect(metaOgSiteName.getAttribute('content')).toBe(translations.en.seo_site_name);
+    expect(metaTwTitle.getAttribute('content')).toBe(translations.en.seo_title);
+    expect(metaTwDesc.getAttribute('content')).toBe(translations.en.seo_og_description);
     expect(metaOgLocale.getAttribute('content')).toBe('en_US');
     expect(metaOgImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
     expect(metaTwImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
@@ -175,12 +183,13 @@ describe('useLanguage hook & LanguageProvider', () => {
       toggleButton.click();
     });
 
-    expect(document.title).toBe('Nebula Ideas | Excelencia en Ingeniería');
+    expect(document.title).toBe(translations.es.seo_title);
     expect(metaDesc.getAttribute('content')).toBe(translations.es.seo_description);
-    expect(metaOgTitle.getAttribute('content')).toBe('Nebula Ideas | Excelencia en Ingeniería');
-    expect(metaOgDesc.getAttribute('content')).toBe(translations.es.seo_description);
-    expect(metaTwTitle.getAttribute('content')).toBe('Nebula Ideas | Excelencia en Ingeniería');
-    expect(metaTwDesc.getAttribute('content')).toBe(translations.es.seo_description);
+    expect(metaOgTitle.getAttribute('content')).toBe(translations.es.seo_title);
+    expect(metaOgDesc.getAttribute('content')).toBe(translations.es.seo_og_description);
+    expect(metaOgSiteName.getAttribute('content')).toBe(translations.es.seo_site_name);
+    expect(metaTwTitle.getAttribute('content')).toBe(translations.es.seo_title);
+    expect(metaTwDesc.getAttribute('content')).toBe(translations.es.seo_og_description);
     expect(metaOgLocale.getAttribute('content')).toBe('es_MX');
     expect(metaOgImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
     expect(metaTwImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
