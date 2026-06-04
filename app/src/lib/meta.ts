@@ -25,6 +25,9 @@ export function updateMetaTags(title: string, description: string, language: Lan
   updateMeta('name', 'twitter:title', title);
   updateMeta('name', 'twitter:description', description);
   updateMeta('property', 'og:locale', language === 'en' ? 'en_US' : 'es_MX');
+  updateMeta('property', 'og:url', window.location.href);
+  updateMeta('property', 'og:type', 'website');
   updateMeta('property', 'og:image', 'https://nebulaideas.com/assets/logo.png');
+  updateMeta('name', 'twitter:card', 'summary_large_image');
   updateMeta('name', 'twitter:image', 'https://nebulaideas.com/assets/logo.png');
 }
