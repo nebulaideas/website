@@ -125,6 +125,9 @@ export default function Navigation() {
       {/* Mobile Menu Overlay */}
       <div
         id="mobile-menu-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
         className={`fixed inset-0 z-40 bg-obsidian-base/98 backdrop-blur-lg flex flex-col items-center justify-center gap-8 transition-all duration-300 md:hidden ${
           mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
