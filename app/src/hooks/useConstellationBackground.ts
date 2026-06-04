@@ -126,13 +126,19 @@ export function useConstellationBackground(
       scene.add(blueLight);
     }
 
-    // Connection lines
+    // Connection lines — pre-allocated fixed buffer, updated in-place each frame
+    const maxSlots = connectionMaxConnections;
+    const linePositions = new Float32Array(maxSlots * 6); // 2 vertices * 3 coords per connection
+    const lineGeo = new THREE.BufferGeometry();
+    lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+    lineGeo.setDrawRange(0, 0);
     const lineMaterial = new THREE.LineBasicMaterial({
       color: 0xd4af37,
       transparent: true,
       opacity: connectionOpacity,
     });
-    let linesMesh: THREE.LineSegments | null = null;
+    const linesMesh = new THREE.LineSegments(lineGeo, lineMaterial);
+    scene.add(linesMesh);
 
     const cameraTarget = { x: 0, y: 0 };
     let animFrameId: number;
@@ -153,33 +159,30 @@ export function useConstellationBackground(
         if (Math.abs(p.position.z) > bounds.z) {p.userData.velocity.z *= -1;}
       });
 
-      if (linesMesh) {
-        scene.remove(linesMesh);
-        linesMesh.geometry.dispose();
-      }
-
-      const positions: number[] = [];
+      let writeIdx = 0;
       let connectionCount = 0;
 
-      for (let i = 0; i < particles.length && connectionCount < connectionMaxConnections; i++) {
-        for (let j = i + 1; j < particles.length && connectionCount < connectionMaxConnections; j++) {
+      for (let i = 0; i < particles.length && connectionCount < maxSlots; i++) {
+        for (let j = i + 1; j < particles.length && connectionCount < maxSlots; j++) {
           const dist = particles[i].position.distanceTo(particles[j].position);
           if (dist < connectionMaxDist) {
-            positions.push(
-              particles[i].position.x, particles[i].position.y, particles[i].position.z,
-              particles[j].position.x, particles[j].position.y, particles[j].position.z
-            );
+            const idx = writeIdx * 3;
+            const px = particles[i].position;
+            const py = particles[j].position;
+            linePositions[idx]     = px.x;
+            linePositions[idx + 1] = px.y;
+            linePositions[idx + 2] = px.z;
+            linePositions[idx + 3] = py.x;
+            linePositions[idx + 4] = py.y;
+            linePositions[idx + 5] = py.z;
+            writeIdx += 2;
             connectionCount++;
           }
         }
       }
 
-      if (positions.length > 0) {
-        const lineGeo = new THREE.BufferGeometry();
-        lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-        linesMesh = new THREE.LineSegments(lineGeo, lineMaterial);
-        scene.add(linesMesh);
-      }
+      lineGeo.attributes.position.needsUpdate = true;
+      lineGeo.setDrawRange(0, writeIdx);
 
       if (mouseTracking) {
         cameraTarget.x += (mouseRef.current.x * 0.06 - cameraTarget.x) * 0.04;
@@ -222,8 +225,7 @@ export function useConstellationBackground(
         clearTimeout(timer);
         window.removeEventListener('mousemove', handleMouseMove);
         resizeObserver.disconnect();
-        if (linesMesh) {linesMesh.geometry.dispose();}
-        sphereGeo.dispose();
+        lineGeo.dispose();
         lineMaterial.dispose();
         particles.forEach((p) => { (p.material as THREE.Material).dispose(); });
         renderer.dispose();
@@ -247,8 +249,7 @@ export function useConstellationBackground(
       isActive = false;
       cancelAnimationFrame(animFrameId);
       resizeObserver.disconnect();
-      if (linesMesh) {linesMesh.geometry.dispose();}
-      sphereGeo.dispose();
+      lineGeo.dispose();
       lineMaterial.dispose();
       particles.forEach((p) => { (p.material as THREE.Material).dispose(); });
       renderer.dispose();
