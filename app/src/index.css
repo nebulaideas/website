@@ -185,3 +185,16 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .card-base:hover {
+    transform: none;
+  }
+  .icon-box:hover {
+    transform: none;
+  }
+  .btn-gold:hover {
+    transform: none;
+  }
+}

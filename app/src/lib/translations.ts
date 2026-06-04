@@ -18,7 +18,7 @@ export const translations = {
     hero_subheadline:
       'We help organizations understand where technology is creating friction, align teams around measurable outcomes, and identify practical opportunities for AI and automation.',
     hero_supporting:
-      'Before investing in tools, platforms, or large-scale transformations, we help you understand what should be amplified \u2014 and what should be fixed first.',
+      'Before investing in tools, platforms, or large-scale transformations, we help you identify what to amplify \u2014 and what to fix first.',
     hero_tags: 'AI Strategy \u00B7 Automation \u00B7 Architecture \u00B7 Product Thinking \u00B7 Engineering Leadership',
     hero_cta_primary: 'Explore the Clarity Sprint',
     hero_cta_secondary: 'Contact Us',
@@ -116,18 +116,18 @@ export const translations = {
     founder1_name: 'Ismael Marin',
     founder1_role: 'Head of AI Infrastructure & Co-Founder',
     founder1_bio:
-      'As a technical leader and AI infrastructure engineer, I specialize in bringing software engineering discipline\u2014TDD, Domain-Driven Design, and rigorous evaluation\u2014to the bleeding edge of Agentic AI. I build high-performance, cross-platform CLI tools and safe Rust agent runtimes that transform unpredictable LLMs into secure, production-grade engineering workflows. My philosophy is rooted in decades of battle-tested backend architecture and a strict focus on pragmatic integration, ensuring that AI operates not as a hype-driven shortcut, but as a reliable multiplier that delivers measurable, strategic value to core business systems.',
+      'As a technical leader and AI infrastructure engineer, I specialize in bringing software engineering discipline\u2014TDD, Domain-Driven Design, and rigorous evaluation\u2014to the bleeding edge of Agentic AI.\n\nI build high-performance, cross-platform CLI tools and safe Rust agent runtimes that transform unpredictable LLMs into secure, production-grade engineering workflows.\n\nMy approach is grounded in decades of battle-tested backend architecture and a strict focus on pragmatic integration, ensuring that AI operates not as a hype-driven shortcut, but as a reliable multiplier that delivers measurable, strategic value to core business systems.',
     founder2_name: 'Carlos (Mumo) Muniz',
     founder2_role: 'Managing Partner / Head of Engineering & Delivery',
     founder2_bio:
-      'As a technical leader and team architect, I specialize in eliminating architectural bottlenecks and designing high-impact, resilient systems. I have built integration architectures that collapsed enterprise onboarding timelines from months to days, migrated complex platform authentication with zero downstream code changes, and pioneered disciplined, team-level AI workflows that drastically accelerate time-to-market. My engineering execution is inseparable from my leadership philosophy: I build on a foundation of psychological safety and a "Care to Deliver" principle, proving that high-trust human conditions and exceptional technical outcomes are the exact same thing.',
+      'As a technical leader and team architect, I specialize in eliminating architectural bottlenecks and designing high-impact, resilient systems.\n\nI have built integration architectures that collapsed enterprise onboarding timelines from months to days, migrated complex platform authentication with zero downstream code changes, and pioneered disciplined, team-level AI workflows that drastically accelerate time-to-market.\n\nMy engineering approach and leadership philosophy are inseparable: I build on a foundation of psychological safety and a "Care to Deliver" principle, proving that high-trust human conditions and exceptional technical outcomes are the exact same thing.',
     partnership_title: 'Partnership',
     partnership_desc:
       "We've worked together since 2014. We've delivered critical integrations for companies in Mexico and the USA. We met as engineer and manager; today we're partners.",
 
     // Social Proof
     stat_radio: 'Regular contributors on Radio Formula Baj\u00edo',
-    stat_downloads_label: 'downloads on our open source tools',
+    stat_downloads_label: 'downloads across our open source tools',
     stat_downloads_number: '2,000+',
     stat_years_number: '10',
     stat_years_label: 'years building together',
@@ -188,7 +188,7 @@ export const translations = {
     hero_subheadline:
       'Ayudamos a las organizaciones a entender d\u00f3nde la tecnolog\u00eda crea fricci\u00f3n, alinear equipos en torno a resultados medibles e identificar oportunidades pr\u00e1cticas para IA y automatizaci\u00f3n.',
     hero_supporting:
-      'Antes de invertir en herramientas, plataformas o transformaciones a gran escala, te ayudamos a entender qu\u00e9 deber\u00eda amplificarse \u2014 y qu\u00e9 deber\u00eda arreglarse primero.',
+      'Antes de invertir en herramientas, plataformas o transformaciones a gran escala, te ayudamos a identificar qu\u00e9 amplificar \u2014 y qu\u00e9 arreglar primero.',
     hero_tags: 'Estrategia de IA \u00B7 Automatizaci\u00f3n \u00B7 Arquitectura \u00B7 Pensamiento de Producto \u00B7 Liderazgo en Ingenier\u00eda',
     hero_cta_primary: 'Explora el Clarity Sprint',
     hero_cta_secondary: 'Cont\u00e1ctanos',
@@ -288,11 +288,11 @@ export const translations = {
     founder1_name: 'Ismael Marin',
     founder1_role: 'Director de Infraestructura de IA y Co-Fundador',
     founder1_bio:
-      'Como l\u00edder t\u00e9cnico e ingeniero de infraestructura de IA, me especializo en llevar la disciplina de la ingenier\u00eda de software \u2014TDD, Dise\u00f1o Guiado por el Dominio (DDD) y evaluaci\u00f3n rigurosa\u2014 al l\u00edmite de la IA Ag\u00e9ntica. Construyo herramientas CLI multiplataforma de alto rendimiento y entornos de ejecuci\u00f3n de agentes seguros en Rust que transforman LLMs impredecibles en flujos de trabajo de ingenier\u00eda seguros y de nivel de producci\u00f3n. Mi filosof\u00eda est\u00e1 arraigada en d\u00e9cadas de arquitectura backend probada en batalla y un enfoque estricto en la integraci\u00f3n pragm\u00e1tica, asegurando que la IA funcione no como un atajo impulsado por el hype, sino como un multiplicador confiable que ofrece un valor estrat\u00e9gico y medible para los sistemas de negocio principales.',
+      'Como l\u00edder t\u00e9cnico e ingeniero de infraestructura de IA, me especializo en llevar la disciplina de la ingenier\u00eda de software \u2014TDD, Dise\u00f1o Guiado por el Dominio (DDD) y evaluaci\u00f3n rigurosa\u2014 a la vanguardia de la IA Ag\u00e9ntica.\n\nConstruyo herramientas CLI multiplataforma de alto rendimiento y entornos de ejecuci\u00f3n de agentes seguros en Rust que transforman LLMs impredecibles en flujos de trabajo de ingenier\u00eda seguros y de nivel de producci\u00f3n.\n\nMi enfoque est\u00e1 arraigado en d\u00e9cadas de arquitectura backend probada en batalla y un enfoque estricto en la integraci\u00f3n pragm\u00e1tica, asegurando que la IA funcione no como un atajo impulsado por el hype, sino como un multiplicador confiable que ofrece un valor estrat\u00e9gico y medible para los sistemas de negocio principales.',
     founder2_name: 'Carlos (Mumo) Muniz',
     founder2_role: 'Socio Director / Director de Ingenier\u00eda y Entrega',
     founder2_bio:
-      'Como l\u00edder t\u00e9cnico y arquitecto de equipos, me especializo en eliminar cuellos de botella arquitect\u00f3nicos y dise\u00f1ar sistemas resilientes de alto impacto. He construido arquitecturas de integraci\u00f3n que redujeron los tiempos de incorporaci\u00f3n de empresas de meses a d\u00edas, migr\u00e9 autenticaci\u00f3n de plataformas complejas sin cambios en el c\u00f3digo descendente y fui pionero en flujos de trabajo de IA disciplinados a nivel de equipo que aceleran dr\u00e1sticamente el tiempo de comercializaci\u00f3n. Mi ejecuci\u00f3n de ingenier\u00eda es inseparable de mi filosof\u00eda de liderazgo: construyo sobre una base de seguridad psicol\u00f3gica y el principio de "Cuidado al Entregar" (Care to Deliver), demostrando que las condiciones humanas de alta confianza y los resultados t\u00e9cnicos excepcionales son exactamente la misma cosa.',
+      'Como l\u00edder t\u00e9cnico y arquitecto de equipos, me especializo en eliminar cuellos de botella arquitect\u00f3nicos y dise\u00f1ar sistemas resilientes de alto impacto.\n\nHe construido arquitecturas de integraci\u00f3n que redujeron los tiempos de incorporaci\u00f3n de empresas de meses a d\u00edas, migr\u00e9 autenticaci\u00f3n de plataformas complejas sin cambios en el c\u00f3digo descendente y fui pionero en flujos de trabajo de IA disciplinados a nivel de equipo que aceleran dr\u00e1sticamente el time-to-market.\n\nMi enfoque de ingenier\u00eda y filosof\u00eda de liderazgo son inseparables: construyo sobre una base de seguridad psicol\u00f3gica y el principio de "Cuidado al Entregar" (Care to Deliver), demostrando que las condiciones humanas de alta confianza y los resultados t\u00e9cnicos excepcionales son exactamente la misma cosa.',
     partnership_title: 'Alianza',
     partnership_desc:
       'Trabajamos juntos desde 2014. Hemos entregado integraciones cr\u00edticas para empresas en M\u00e9xico y USA. Nos conocimos como ingeniero y manager; hoy somos socios.',

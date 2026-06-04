@@ -6,8 +6,9 @@ import { useConstellationBackground } from '@/hooks/useConstellationBackground';
 export default function HeroSection() {
   const { t } = useLanguage();
   const canvasContainerRef = useRef<HTMLDivElement>(null);
+  const particleCount = typeof window !== 'undefined' && window.innerWidth < 768 ? 35 : 70;
   const { loaded } = useConstellationBackground(canvasContainerRef, {
-    particleCount: 70,
+    particleCount,
     goldRatio: 0.6,
     goldOpacity: 0.6,
     blueOpacity: 0.25,
