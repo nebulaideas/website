@@ -8,8 +8,7 @@ const navLinks = [
   { key: 'nav_services', href: '#what-we-help' },
   { key: 'nav_sprint', href: '#clarity-sprint' },
   { key: 'nav_approach', href: '#our-approach' },
-  { key: 'nav_blog', href: '#blog' },
-  { key: 'nav_contact', href: '#schedule' },
+  { key: 'nav_blog', href: '#blog' }
 ] as const;
 
 export default function Navigation() {
@@ -76,7 +75,7 @@ export default function Navigation() {
           </a>
 
           {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-5 lg:gap-6">
+          <div className={`hidden md:flex items-center ${language === 'es' ? 'gap-4 lg:gap-5' : 'gap-5 lg:gap-6'}`}>
             {navLinks.map((link) => (
               <NavLink
                 key={link.key}
@@ -90,7 +89,7 @@ export default function Navigation() {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-4 md:gap-6">
+          <div className={`flex items-center ${language === 'es' ? 'gap-3 md:gap-4' : 'gap-4 md:gap-6'}`}>
             <button
               onClick={toggleLanguage}
               className="hidden lg:flex items-center gap-1.5 font-tech text-tech-label text-on-surface-variant hover:text-nebula-gold transition-colors duration-200 cursor-pointer"
@@ -128,10 +127,12 @@ export default function Navigation() {
         role="dialog"
         aria-modal="true"
         aria-label="Navigation menu"
+        onClick={() => setMobileOpen(false)}
         className={`fixed inset-0 z-40 bg-obsidian-base/98 backdrop-blur-lg flex flex-col items-center justify-center gap-8 transition-all duration-300 md:hidden ${
           mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       >
+        <div className="flex flex-col items-center justify-center gap-8" onClick={(e) => e.stopPropagation()}>
         {navLinks.map((link) => (
           <NavLink
             key={link.key}
@@ -142,16 +143,22 @@ export default function Navigation() {
             onClick={handleNavClick}
           />
         ))}
-        <button
-          onClick={() => {
-            toggleLanguage();
-            setMobileOpen(false);
-          }}
-          className="mt-4 flex items-center gap-2 px-6 py-3 rounded border border-nebula-gold text-nebula-gold font-tech font-semibold"
-        >
-          <Globe size={16} />
-          {language === 'en' ? t('nav_toggle_es') : t('nav_toggle_en')}
-        </button>
+        <div className="flex items-center gap-4 mt-4">
+          <span className="font-tech text-tech-label text-on-surface-variant">
+            {language === 'en' ? 'EN' : 'ES'}
+          </span>
+          <button
+            onClick={() => {
+              toggleLanguage();
+              setMobileOpen(false);
+            }}
+            className="flex items-center gap-2 px-6 py-3 rounded border border-nebula-gold text-nebula-gold font-tech font-semibold"
+          >
+            <Globe size={16} />
+            {language === 'en' ? t('nav_toggle_es') : t('nav_toggle_en')}
+          </button>
+        </div>
+        </div>
       </div>
     </>
   );

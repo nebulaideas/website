@@ -27,7 +27,7 @@ export default function BlogSection() {
   const { t } = useLanguage();
 
   return (
-    <section id="blog" className="w-full py-24 bg-obsidian-base">
+    <section id="blog" className="w-full py-24 md:py-32 bg-surface-container-high">
       <div className="container-main">
         <ScrollReveal>
           <span className="font-tech text-tech-label text-nebula-gold uppercase tracking-[0.15em] block mb-4">

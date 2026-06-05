@@ -31,7 +31,7 @@ export default function WhatWeHelpSection() {
   const { t } = useLanguage();
 
   return (
-    <SectionShell id="what-we-help" className="py-24 bg-surface-container-lowest">
+    <SectionShell id="what-we-help" className="py-24 md:py-32 bg-surface-container-lowest">
       <SectionHeader labelKey="services_label" headlineKey="services_headline" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">

@@ -6,12 +6,12 @@ export default function OurApproachSection() {
   const { t } = useLanguage();
 
   return (
-    <SectionShell id="our-approach" className="py-24 md:py-32 bg-surface border-y border-outline-variant/30" containerClassName="max-w-[800px] text-center">
+    <SectionShell id="our-approach" className="py-24 md:py-32 bg-surface-container-high border-y border-outline-variant/30" containerClassName="max-w-content-narrow text-center">
       <ScrollReveal>
         <span className="font-tech text-tech-label text-nebula-gold uppercase tracking-[0.15em] block mb-4">
           {t('approach_headline')}
         </span>
-        <h2 className="text-[clamp(1.75rem,4vw,2.75rem)] font-bold text-on-surface leading-tight tracking-tight font-display mb-2">
+        <h2 className="font-display text-headline-lg-mobile md:text-headline-lg font-bold text-on-surface leading-tight tracking-tight mb-2 line-clamp-2 md:line-clamp-none">
           {t('approach_sub')}
         </h2>
       </ScrollReveal>

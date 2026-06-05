@@ -204,4 +204,26 @@ describe('Navigation component', () => {
     expect(screen.getAllByText('El Problema')[0]).toBeInTheDocument();
     expect(overlay).toHaveClass('opacity-0');
   });
+
+  it('should close mobile menu when clicking outside the menu overlay', () => {
+    renderNavigation();
+
+    // Open mobile menu
+    const toggleButton = screen.getByLabelText('Toggle menu');
+    act(() => {
+      toggleButton.click();
+    });
+
+    const overlay = document.getElementById('mobile-menu-overlay');
+    expect(overlay).toHaveClass('opacity-100');
+
+    // Click on the overlay (outside the inner content div)
+    act(() => {
+      overlay?.click();
+    });
+
+    // Menu should close
+    expect(overlay).toHaveClass('opacity-0');
+  });
+
 });

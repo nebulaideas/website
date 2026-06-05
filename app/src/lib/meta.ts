@@ -44,11 +44,11 @@ export function updateMetaTags({
   updateMeta('property', 'og:locale', language === 'en' ? 'en_US' : 'es_MX');
   updateMeta('property', 'og:url', window.location.href);
   updateMeta('property', 'og:type', 'website');
-  updateMeta('property', 'og:image', 'https://nebulaideas.com/assets/logo.png');
+  updateMeta('property', 'og:image', 'https://nebulaideas.com/assets/og_image.jpg');
   updateMeta('name', 'twitter:card', 'summary_large_image');
   updateMeta('name', 'twitter:site', '@nebulaideas');
   updateMeta('name', 'twitter:creator', '@nebulaideas');
-  updateMeta('name', 'twitter:image', 'https://nebulaideas.com/assets/logo.png');
+  updateMeta('name', 'twitter:image', 'https://nebulaideas.com/assets/og_image.jpg');
 
   // Add canonical URL
   let canonicalLink = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
@@ -65,7 +65,7 @@ const JSON_LD = {
   '@type': 'Organization',
   name: 'Nebula Ideas',
   url: 'https://nebulaideas.com',
-  logo: 'https://nebulaideas.com/assets/logo.png',
+  logo: 'https://nebulaideas.com/assets/logo.jpg',
   description:
     'Technology and AI strategy consultancy focused on organizational clarity, measurable outcomes, and practical AI adoption.',
   foundingDate: '2026',
@@ -96,6 +96,29 @@ const JSON_LD = {
     'Design Thinking',
     'Remote Software Engineering',
   ],
+} as const;
+
+const SERVICE_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Nebula Ideas Technology Consulting',
+  description: 'Technology and AI strategy consultancy focused on organizational clarity, measurable outcomes, and practical AI adoption.',
+  provider: {
+    '@type': 'Organization',
+    name: 'Nebula Ideas',
+    url: 'https://nebulaideas.com',
+  },
+  serviceType: [
+    'AI Strategy Consulting',
+    'Technology Assessment',
+    'Software Architecture',
+    'Engineering Leadership',
+  ],
+  areaServed: {
+    '@type': 'Country',
+    name: ['Mexico', 'United States'],
+  },
+  availableLanguage: ['English', 'Spanish'],
 } as const;
 
 const FAQ_JSON_LD = {
@@ -159,4 +182,15 @@ export function injectJsonLd() {
     document.head.appendChild(faqEl);
   }
   faqEl.textContent = JSON.stringify(FAQ_JSON_LD);
+
+  // Inject Service schema
+  const serviceId = 'json-ld-service';
+  let serviceEl = document.getElementById(serviceId) as HTMLScriptElement | null;
+  if (!serviceEl) {
+    serviceEl = document.createElement('script');
+    serviceEl.id = serviceId;
+    serviceEl.type = 'application/ld+json';
+    document.head.appendChild(serviceEl);
+  }
+  serviceEl.textContent = JSON.stringify(SERVICE_JSON_LD);
 }

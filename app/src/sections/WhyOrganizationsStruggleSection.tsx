@@ -15,14 +15,14 @@ export default function WhyOrganizationsStruggleSection() {
   const { t } = useLanguage();
 
   return (
-    <SectionShell id="why-struggle" className="py-24 bg-surface-container-lowest border-y border-outline-variant/30" containerClassName="max-w-4xl">
+    <SectionShell id="why-struggle" className="py-24 md:py-32 bg-surface-container-high border-y border-outline-variant/30" containerClassName="max-w-content-default">
       <ScrollReveal>
         <h2 className="font-headline text-headline-lg text-on-surface mb-10">
           {t('struggle_headline')}
         </h2>
       </ScrollReveal>
 
-      <ScrollReveal delay={0.1}>
+      <ScrollReveal delay={0.05}>
         <p className="font-body text-body-lg text-on-surface mb-2">
           {t('struggle_lede1')}
         </p>
@@ -31,13 +31,13 @@ export default function WhyOrganizationsStruggleSection() {
         </p>
       </ScrollReveal>
 
-      <ScrollReveal delay={0.15}>
+      <ScrollReveal delay={0.1}>
         <p className="font-body text-body-md text-on-surface-variant mb-12 max-w-3xl">
           {t('struggle_body')}
         </p>
       </ScrollReveal>
 
-      <ScrollReveal delay={0.2}>
+      <ScrollReveal delay={0.15}>
         <span className="font-tech text-tech-label text-on-surface-variant uppercase tracking-[0.1em] block mb-6">
           {t('struggle_results_label')}
         </span>
@@ -54,7 +54,7 @@ export default function WhyOrganizationsStruggleSection() {
         </ul>
       </ScrollReveal>
 
-      <ScrollReveal delay={0.3}>
+      <ScrollReveal delay={0.2}>
         <div className="card-base border-l-4 border-nebula-gold p-8">
           <p className="font-body text-body-lg text-on-surface mb-2">
             {t('struggle_amplify')}

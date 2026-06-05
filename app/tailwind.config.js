@@ -103,6 +103,12 @@ module.exports = {
         'margin-desktop': '64px',
         'max-width': '1280px',
       },
+      maxWidth: {
+        'content-narrow': '672px',
+        'content-default': '896px',
+        'content-wide': '1152px',
+        'content-full': '1280px',
+      },
       boxShadow: {
         'card': '0 4px 24px rgba(10, 25, 47, 0.06)',
         'card-hover': '0 8px 32px rgba(10, 25, 47, 0.12)',

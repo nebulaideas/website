@@ -6,7 +6,7 @@ export default function SocialProofSection() {
   const { t } = useLanguage();
 
   return (
-    <section className="w-full py-12 md:py-16 border-y border-outline-variant/30 bg-surface-container-low">
+    <section className="w-full py-12 md:py-16 border-y border-outline-variant/30 bg-surface-container-lowest">
       <div className="container-main">
         <ScrollReveal>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">

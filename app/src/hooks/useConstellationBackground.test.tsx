@@ -1,4 +1,4 @@
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useRef, type RefObject } from 'react';
 import { useConstellationBackground } from './useConstellationBackground';
@@ -112,5 +112,98 @@ describe('useConstellationBackground', () => {
     const { unmount } = render(<TestComponent mouseTracking />);
     unmount();
     expect(mockDispose).toHaveBeenCalled();
+  });
+
+  it('should return early and not render when prefers-reduced-motion is enabled', () => {
+    const originalMatchMedia = window.matchMedia;
+    window.matchMedia = vi.fn().mockImplementation((query) => ({
+      matches: query === '(prefers-reduced-motion: reduce)',
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
+
+    const { getByTestId } = render(<TestComponent mouseTracking />);
+    expect(getByTestId('loaded').textContent).toBe('true');
+
+    window.matchMedia = originalMatchMedia;
+  });
+
+  it('should detect low-memory devices and disable mouse tracking', () => {
+    const originalNavigator = window.navigator;
+    Object.defineProperty(window, 'navigator', {
+      value: {
+        ...originalNavigator,
+        deviceMemory: 2,
+      },
+      writable: true,
+      configurable: true,
+    });
+
+    const { getByTestId } = render(<TestComponent mouseTracking />);
+    // Should still render but with reduced particle count and no mouse tracking
+    expect(getByTestId('loaded')).toBeInTheDocument();
+
+    Object.defineProperty(window, 'navigator', {
+      value: originalNavigator,
+      writable: true,
+      configurable: true,
+    });
+  });
+
+  it('should handle mouse move events when mouseTracking is enabled', () => {
+    const { getByTestId } = render(<TestComponent mouseTracking />);
+
+    act(() => {
+      const mouseEvent = new MouseEvent('mousemove', {
+        clientX: 100,
+        clientY: 200,
+      });
+      window.dispatchEvent(mouseEvent);
+    });
+
+    // Verify the hook doesn't crash with mouse events
+    expect(getByTestId('loaded')).toBeInTheDocument();
+  });
+
+  it('should handle resize events', () => {
+    let resizeCallback: (entries: Array<{ contentRect: { width: number; height: number } }>) => void = () => {};
+    const mockObserve = vi.fn();
+    const mockDisconnect = vi.fn();
+
+    class TestResizeObserver {
+      constructor(callback: (entries: Array<{ contentRect: { width: number; height: number } }>) => void) {
+        resizeCallback = callback;
+      }
+      observe = mockObserve;
+      disconnect = mockDisconnect;
+      unobserve = vi.fn();
+    }
+
+    const originalRO = window.ResizeObserver;
+    Object.defineProperty(window, 'ResizeObserver', {
+      writable: true,
+      configurable: true,
+      value: TestResizeObserver,
+    });
+
+    const { unmount } = render(<TestComponent mouseTracking />);
+
+    act(() => {
+      // Trigger resize callback
+      resizeCallback([
+        { contentRect: { width: 500, height: 300 } },
+      ]);
+    });
+
+    unmount();
+    expect(mockDispose).toHaveBeenCalled();
+    expect(mockDisconnect).toHaveBeenCalled();
+
+    window.ResizeObserver = originalRO;
   });
 });

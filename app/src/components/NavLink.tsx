@@ -10,7 +10,7 @@ interface NavLinkProps {
 }
 
 const desktopClasses =
-  'font-tech text-tech-label uppercase transition-colors duration-200 hover:text-nebula-gold whitespace-nowrap';
+  'font-tech text-tech-label uppercase transition-colors duration-200 hover:text-nebula-gold whitespace-nowrap max-w-[140px] lg:max-w-none truncate';
 const mobileClasses =
   'text-2xl font-medium font-headline transition-colors duration-250 hover:text-nebula-gold';
 

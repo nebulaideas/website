@@ -24,9 +24,20 @@ interface ConstellationConfig {
 export function useConstellationBackground(
   containerRef: RefObject<HTMLDivElement | null>,
   config: ConstellationConfig = {}
-): { loaded: boolean } {
+): { loaded: boolean; shouldRender: boolean } {
   const mouseRef = useRef({ x: 0, y: 0 });
-  const [loaded, setLoaded] = useState(false);
+
+  // Check for reduced motion preference
+  const prefersReducedMotion = typeof window !== 'undefined'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    : false;
+
+  const [loaded, setLoaded] = useState(prefersReducedMotion);
+
+  // Detect low-memory devices
+  const isLowMemoryDevice = typeof navigator !== 'undefined' &&
+    'deviceMemory' in navigator &&
+    ((navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8) < 4;
 
   const {
     particleCount = 70,
@@ -47,11 +58,18 @@ export function useConstellationBackground(
     blueOpacity = 0.25,
   } = config;
 
+  // Optimize for low-memory devices
+  const optimizedParticleCount = isLowMemoryDevice ? Math.min(particleCount, 40) : particleCount;
+  const optimizedMouseTracking = isLowMemoryDevice ? false : mouseTracking;
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container) {return;}
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Disable completely if reduced motion is preferred
+    if (prefersReducedMotion) {
+      return;
+    }
 
     const scene = new THREE.Scene();
     if (fogColor !== undefined) {
@@ -76,7 +94,7 @@ export function useConstellationBackground(
     const particles: THREE.Mesh[] = [];
     const sphereGeo = new THREE.SphereGeometry(particleSize, 6, 6);
 
-    for (let i = 0; i < particleCount; i++) {
+    for (let i = 0; i < optimizedParticleCount; i++) {
       const isGold = Math.random() > 1 - goldRatio;
       const mat = new THREE.MeshBasicMaterial({
         color: isGold ? 0xd4af37 : 0x58a6ff,
@@ -186,7 +204,7 @@ export function useConstellationBackground(
       lineGeo.attributes.position.needsUpdate = true;
       lineGeo.setDrawRange(0, writeIdx);
 
-      if (mouseTracking) {
+      if (optimizedMouseTracking) {
         cameraTarget.x += (mouseRef.current.x * 0.06 - cameraTarget.x) * 0.04;
         cameraTarget.y += (mouseRef.current.y * 0.06 - cameraTarget.y) * 0.04;
         camera.rotation.x = cameraTarget.y;
@@ -196,15 +214,11 @@ export function useConstellationBackground(
       renderer.render(scene, camera);
     }
 
-    if (!prefersReducedMotion) {
-      animate();
-    } else {
-      renderer.render(scene, camera);
-    }
+    animate();
 
     const timer = setTimeout(() => setLoaded(true), 300);
 
-    const handleMouseMove = mouseTracking
+    const handleMouseMove = optimizedMouseTracking
       ? (e: MouseEvent) => {
           mouseRef.current.x = (e.clientX / window.innerWidth - 0.5) * 2;
           mouseRef.current.y = (e.clientY / window.innerHeight - 0.5) * 2;
@@ -244,7 +258,7 @@ export function useConstellationBackground(
         container.removeChild(renderer.domElement);
       }
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [containerRef, prefersReducedMotion, optimizedParticleCount, optimizedMouseTracking, particleSize, cameraZ, fogColor, fogDensity, clearAlpha, clearColor, connectionOpacity, connectionMaxDist, connectionMaxConnections, distribution, enableLights, goldRatio, goldOpacity, blueOpacity]);
 
-  return { loaded };
+  return { loaded, shouldRender: !prefersReducedMotion };
 }

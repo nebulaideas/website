@@ -35,7 +35,7 @@ export default function PrinciplesSection() {
   const { t } = useLanguage();
 
   return (
-    <SectionShell id="principles" className="py-24 bg-surface-container-high border-b border-outline-variant/30">
+    <SectionShell id="principles" className="py-24 md:py-32 bg-surface-container-lowest border-b border-outline-variant/30">
       <SectionHeader labelKey="principles_label" headlineKey="principles_headline" labelColor="muted" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">

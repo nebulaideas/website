@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import ScrollReveal from '@/components/ScrollReveal';
 import SectionShell from '@/components/SectionShell';
 import SectionHeader from '@/components/SectionHeader';
-import { Users, Lightbulb } from 'lucide-react';
+import { Users, Lightbulb, ChevronDown } from 'lucide-react';
 
 const founders = [
   {
@@ -29,13 +30,26 @@ const perspectives = [
 
 export default function AboutSection() {
   const { t } = useLanguage();
+  const [expandedBios, setExpandedBios] = useState<Set<number>>(new Set());
+
+  const toggleBio = (index: number) => {
+    setExpandedBios((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
+  };
 
   return (
-    <SectionShell id="about" className="py-24 bg-surface-container-lowest">
+    <SectionShell id="about" className="py-24 md:py-32 bg-obsidian-base">
       <SectionHeader labelKey="about_label" headlineKey="about_headline" />
 
       <ScrollReveal delay={0.1}>
-        <div className="max-w-3xl mb-12">
+        <div className="max-w-content-default mb-12">
           <p className="font-body text-body-lg text-on-surface mb-4">
             {t('about_intro')}
           </p>
@@ -82,9 +96,22 @@ export default function AboutSection() {
               <p className="font-tech text-tech-label text-on-surface-variant mt-1">
                 {t(founder.roleKey)}
               </p>
-              <p className="font-body text-body-md text-on-surface-variant mt-3">
-                {t(founder.bioKey)}
-              </p>
+              <div className="mt-3">
+                <p className={`font-body text-body-md text-on-surface-variant ${
+                  expandedBios.has(i) ? '' : 'line-clamp-3'
+                }`}>
+                  {t(founder.bioKey)}
+                </p>
+                <button
+                  onClick={() => toggleBio(i)}
+                  className="mt-2 flex items-center gap-1 text-nebula-gold font-tech text-tech-label hover:text-nebula-gold-hover transition-colors duration-200"
+                >
+                  {expandedBios.has(i) ? 'Read less' : 'Read more'}
+                  <ChevronDown size={14} className={`transition-transform duration-200 ${
+                    expandedBios.has(i) ? 'rotate-180' : ''
+                  }`} />
+                </button>
+              </div>
             </div>
           </ScrollReveal>
         ))}

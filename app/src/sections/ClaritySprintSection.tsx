@@ -36,13 +36,13 @@ export default function ClaritySprintSection() {
   const { t, calendlyUrl } = useLanguage();
 
   return (
-    <SectionShell id="clarity-sprint" className="py-28 md:py-32 bg-surface-container-high border-t border-outline-variant/50" containerClassName="max-w-5xl">
+    <SectionShell id="clarity-sprint" className="py-28 md:py-32 bg-obsidian-base border-t border-outline-variant/50" containerClassName="max-w-content-wide">
       <ScrollReveal>
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-xl md:max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center justify-center p-4 bg-obsidian-base rounded-full border border-outline-variant mb-8 hover:border-nebula-gold transition-colors duration-300">
             <SearchCheck size={32} className="text-nebula-gold" />
           </div>
-          <h2 className="font-display text-[40px] md:text-[56px] text-on-surface mb-4 tracking-tight">
+          <h2 className="font-display text-headline-lg-mobile md:text-headline-lg text-on-surface mb-4 tracking-tight line-clamp-2 md:line-clamp-none">
             {t('sprint_headline')}
           </h2>
           <p className="font-headline text-headline-md text-nebula-gold mb-6">

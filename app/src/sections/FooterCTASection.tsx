@@ -6,8 +6,7 @@ import { useConstellationBackground } from '@/hooks/useConstellationBackground';
 export default function FooterCTASection() {
   const { t, calendlyUrl } = useLanguage();
   const canvasContainerRef = useRef<HTMLDivElement>(null);
-
-  useConstellationBackground(canvasContainerRef, {
+  const { shouldRender } = useConstellationBackground(canvasContainerRef, {
     particleCount: 50,
     particleSize: 0.1,
     cameraZ: 25,
@@ -25,7 +24,10 @@ export default function FooterCTASection() {
 
   return (
     <section id="schedule" className="relative w-full py-28 md:py-36 bg-obsidian-base text-center overflow-hidden">
-      <div ref={canvasContainerRef} className="absolute inset-0 z-0" aria-hidden="true" />
+      {shouldRender && (
+        <div ref={canvasContainerRef} className="absolute inset-0 z-0" aria-hidden="true" />
+      )}
+      <div className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_top,_rgba(212,175,55,0.08)_0%,_transparent_50%)] pointer-events-none" />
 
       <div className="container-main max-w-3xl relative z-10">
         <h2

@@ -27,7 +27,7 @@ describe('Footer component', () => {
     expect(screen.getByRole('button', { name: /ES/i })).toBeInTheDocument();
 
     // Check contact and schedule links
-    expect(screen.getByText('Contact')).toBeInTheDocument();
+    expect(screen.getByText('Email Us')).toBeInTheDocument();
     expect(screen.getByText('Schedule a Call')).toBeInTheDocument();
   });
 

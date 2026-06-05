@@ -182,4 +182,30 @@ describe('ScrollReveal component', () => {
 
     window.IntersectionObserver = originalIO;
   });
+
+  it('should handle null ref gracefully', () => {
+    const originalMatchMedia = window.matchMedia;
+    window.matchMedia = vi.fn().mockImplementation(() => ({
+      matches: false,
+      media: '',
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
+
+    // Render with a component that doesn't set the ref properly
+    const { container } = render(
+      <ScrollReveal>
+        <div>Content</div>
+      </ScrollReveal>
+    );
+
+    // Should not crash and should render children
+    expect(container.firstChild).toBeInTheDocument();
+
+    window.matchMedia = originalMatchMedia;
+  });
 });

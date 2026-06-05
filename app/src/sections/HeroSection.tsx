@@ -7,7 +7,7 @@ export default function HeroSection() {
   const { t } = useLanguage();
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const particleCount = typeof window !== 'undefined' && window.innerWidth < 768 ? 35 : 70;
-  const { loaded } = useConstellationBackground(canvasContainerRef, {
+  const { loaded, shouldRender } = useConstellationBackground(canvasContainerRef, {
     particleCount,
     goldRatio: 0.6,
     goldOpacity: 0.6,
@@ -31,12 +31,14 @@ export default function HeroSection() {
 
   return (
     <header id="top" className="relative w-full flex flex-col items-center justify-center text-center min-h-[90vh] overflow-hidden">
-      <div ref={canvasContainerRef} className="absolute inset-0 z-0" aria-hidden="true" />
-      <div className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-surface-container-high/30 via-transparent to-transparent pointer-events-none" />
+      {shouldRender && (
+        <div ref={canvasContainerRef} className="absolute inset-0 z-0" aria-hidden="true" />
+      )}
+      <div className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_top,_rgba(212,175,55,0.1)_0%,_transparent_50%)] pointer-events-none" />
 
-      <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center px-margin-mobile md:px-margin-desktop py-28 md:py-40">
+      <div className="relative z-10 max-w-content-wide mx-auto flex flex-col items-center px-margin-mobile md:px-margin-desktop py-28 md:py-40">
         <h1
-          className={`font-display text-display-lg text-on-surface mb-10 tracking-tight leading-[1.05] transition-all duration-700 delay-100 max-w-[900px] ${
+          className={`font-display text-display-lg text-on-surface mb-10 tracking-tight leading-[1.05] transition-all duration-700 delay-100 max-w-[900px] line-clamp-3 md:line-clamp-none ${
             loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
           style={{ textShadow: '0 2px 40px rgba(0,0,0,0.6), 0 0 80px rgba(1,4,9,0.8)' }}
