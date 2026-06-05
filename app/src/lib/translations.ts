@@ -3,10 +3,10 @@ export type Language = 'en' | 'es';
 export const translations = {
   en: {
     // Navigation
-    nav_vision: 'Our Vision',
-    nav_whatwedo: 'What We Do',
+    nav_problem: 'The Problem',
+    nav_services: 'What We Help With',
     nav_sprint: 'Clarity Sprint',
-    nav_dna: 'Our DNA',
+    nav_approach: 'Our Approach',
     nav_blog: 'Blog',
     nav_contact: 'Contact',
     nav_toggle_es: 'ES',
@@ -14,111 +14,124 @@ export const translations = {
     nav_schedule: 'Schedule a Call',
 
     // Hero
-    hero_label: 'Strategic Engineering',
-    hero_headline: 'Measurable technology for businesses that grow.',
+    hero_headline: 'Technology and AI should create clarity, not complexity.',
     hero_subheadline:
-      'We reduce the risk of your technology investment with validated processes, clear metrics, and functional deliverables. We design technology that amplifies your team, not replaces it.',
-    hero_cta_primary: 'Schedule a Clarity Call',
-    hero_cta_secondary: 'Explore Our Stack',
+      'We help organizations understand where technology is creating friction, align teams around measurable outcomes, and identify practical opportunities for AI and automation.',
+    hero_supporting:
+      'Before investing in tools, platforms, or large-scale transformations, we help you identify what to amplify \u2014 and what to fix first.',
+    hero_tags: 'AI Strategy \u00B7 Automation \u00B7 Architecture \u00B7 Product Thinking \u00B7 Engineering Leadership',
+    hero_cta_primary: 'Explore the Clarity Sprint',
+    hero_cta_secondary: 'Contact Us',
 
-    // Market Reality
-    vision_label_hype: 'The Hype',
-    vision_title_hype: 'Visual Noise & Saturation',
-    vision_desc_hype:
-      'The current landscape is flooded with superficial wrappers and disconnected features. Organizations are drowning in disjointed tools that lack a cohesive architectural strategy, leading to systemic fragility.',
-    vision_label_friction: 'The Friction',
-    vision_title_friction: 'Architectural Debt',
-    vision_silo_title: 'Isolated Data Silos',
-    vision_silo_desc: 'Models deployed without secure access to unified organizational truth.',
-    vision_fragile_title: 'Fragile Integrations',
-    vision_fragile_desc: 'Ad-hoc connections that break under scale or minor schema changes.',
-    vision_gov_title: 'Governance Void',
-    vision_gov_desc: 'Lack of auditable pipelines and controlled execution environments.',
-    vision_quote: '"Before scaling automation, you must first understand the system it intends to amplify."',
-    vision_quote_label: 'Core Principle 00',
+    // Why Organizations Struggle With AI
+    struggle_headline: 'Why Organizations Struggle With AI',
+    struggle_lede1: 'Most organizations do not have an AI problem.',
+    struggle_lede2: 'They have a clarity problem.',
+    struggle_body:
+      'Teams are moving fast, tools keep multiplying, priorities compete for attention, and pressure to \u201cadopt AI\u201d grows every day.',
+    struggle_results_label: 'The result is often predictable:',
+    struggle_result1: 'Automation applied to inefficient processes',
+    struggle_result2: 'AI initiatives without measurable outcomes',
+    struggle_result3: 'Teams working toward different goals',
+    struggle_result4: 'Growing technical and operational complexity',
+    struggle_result5: 'Increasing costs without proportional value',
+    struggle_amplify: 'Technology amplifies systems.',
+    struggle_amplify_result: 'If the system lacks clarity, technology amplifies confusion.',
 
-    // Architectural Pillars
-    pillars_label: 'Methodology',
-    pillars_headline: 'Architectural Pillars',
-    pillar1_label: 'Pillar 01',
-    pillar1_title: 'Structural Design',
-    pillar1_desc: 'We design systems from the ground up, prioritizing robust data modeling and clean component boundaries over rapid, disposable prototyping.',
-    pillar2_label: 'Pillar 02',
-    pillar2_title: 'Deterministic Execution',
-    pillar2_desc: 'Replacing probabilistic black boxes with auditable, deterministic pipelines where control flow is explicit and predictable.',
-    pillar3_label: 'Pillar 03',
-    pillar3_title: 'Immutable Security',
-    pillar3_desc: 'Security is not an overlay. It is baked into the infrastructure layer, ensuring data provenance and isolation at scale.',
-    pillar4_label: 'Pillar 04',
-    pillar4_title: 'Scalable Pathways',
-    pillar4_desc: 'Building clear migration and scaling paths, ensuring the architecture can absorb new operational requirements without fundamental rewrites.',
-
-    // Engineering DNA
-    dna_label: 'Stack',
-    dna_headline: 'Our Engineering DNA',
-    dna_desc:
-      'We select tools for their performance, safety, and operational maturity. Our stack reflects a commitment to building systems that endure.',
-    dna_metrics: 'System metrics: 99.99% Uptime SLA capable infrastructure.',
-    dna_filename: 'nebula_core_stack.yml',
-    dna_layer_app: 'Application Layer',
-    dna_layer_infra: 'Infrastructure & Cloud',
-    dna_layer_edge: 'Edge & Security',
-
-    // Services (combined into DNA context)
-    service1_title: 'Technology Context Assessment',
-    service1_desc:
-      "One-week audit. We understand your workflows, measure your baseline, and deliver a prioritized plan. You'll know exactly where to invest first.",
-    service2_title: 'Workflow Implementation',
-    service2_desc:
-      'Validated development. We build the systems, integrate the tools, and validate with metrics. We deliver working code, not presentations.',
-    service3_title: 'Continuous Support',
-    service3_desc:
-      "Monthly optimization. We improve costs, quality, and adoption based on real data. Your technology improves over time, it doesn't depreciate.",
-
-    // Clarity Sprint
+    // Nebula Clarity Sprint
     sprint_headline: 'The Nebula Clarity Sprint',
+    sprint_sub: 'Understand before you automate.',
     sprint_desc:
-      'A concentrated diagnostic engagement designed to cut through operational fog. We map your current architecture, identify systemic friction points, and deliver a rigorous technical blueprint for intelligent scaling.',
-    sprint_step1_num: '01',
-    sprint_step1_title: 'Audit & Discovery',
-    sprint_step1_desc: 'Deep-dive analysis of existing infrastructure, data flow, and bottlenecks.',
-    sprint_step2_num: '02',
-    sprint_step2_title: 'Structural Mapping',
-    sprint_step2_desc: 'Designing the target architecture focusing on stability and integration points.',
-    sprint_step3_num: '03',
-    sprint_step3_title: 'Execution Blueprint',
-    sprint_step3_desc: 'Delivery of a deterministic technical roadmap with clear phased implementation.',
-    sprint_cta: 'Book Your Clarity Sprint',
+      'The Nebula Clarity Sprint is a focused assessment designed to identify where technology, AI, automation, and organizational processes can create meaningful value.',
+    sprint_approach: 'Instead of starting with tools, we start with understanding.',
+    sprint_eval_label: 'What we evaluate',
+    sprint_eval1_title: 'Business Context',
+    sprint_eval1_desc: 'Objectives, priorities, constraints, stakeholders, and desired outcomes.',
+    sprint_eval2_title: 'Operational Reality',
+    sprint_eval2_desc: 'How work actually flows across teams, systems, and processes.',
+    sprint_eval3_title: 'Technology Landscape',
+    sprint_eval3_desc: 'Architecture, integrations, dependencies, technical debt, and scalability considerations.',
+    sprint_eval4_title: 'AI & Automation Opportunities',
+    sprint_eval4_desc:
+      'Areas where AI can augment people, improve decision-making, reduce friction, or accelerate delivery.',
+    sprint_deliverable_label: 'What you receive',
+    sprint_deliverable1: 'Current-state assessment',
+    sprint_deliverable2: 'Key risks and bottlenecks',
+    sprint_deliverable3: 'Opportunity map',
+    sprint_deliverable4: 'AI and automation recommendations',
+    sprint_deliverable5: 'Prioritized roadmap',
+    sprint_deliverable6: 'Strategic implementation guidance',
+    sprint_deliverable_footer: 'A clear path forward based on your reality\u2014not industry hype.',
+    sprint_cta: 'Schedule a Discovery Call',
 
-    // About
-    about_label: 'WHO WE ARE',
-    about_headline: 'About Us',
+    // What We Help With
+    services_label: 'SERVICES',
+    services_headline: 'What We Help With',
+    service1_title: 'AI & Automation Strategy',
+    service1_desc: 'Identify where AI can create measurable value before investing in implementation.',
+    service2_title: 'Architecture & Technical Assessment',
+    service2_desc:
+      'Understand technical debt, system constraints, scalability concerns, and modernization opportunities.',
+    service3_title: 'Product & Process Alignment',
+    service3_desc: 'Connect business goals, team execution, and technology decisions.',
+    service4_title: 'Engineering Leadership & Advisory',
+    service4_desc: 'Support organizational growth, technical decision-making, and operational maturity.',
+
+    // Our Approach
+    approach_headline: 'Our Approach',
+    approach_sub: 'Work With AI. Not Around It.',
+    approach_body1: 'We believe the best results come from combining human judgment with technological capabilities.',
+    approach_body2: 'AI is not a replacement for people.',
+    approach_body3: 'AI is an amplifier.',
+    approach_body4: 'The goal is not to remove humans from the process.',
+    approach_body5: 'The goal is to help humans make better decisions, move faster, and focus on higher-value work.',
+
+    // Principles That Guide Us
+    principles_label: 'PRINCIPLES',
+    principles_headline: 'Principles That Guide Us',
+    principle1_title: 'Understand Before Amplifying',
+    principle1_desc: 'Technology amplifies existing systems. Improve understanding first.',
+    principle2_title: 'Outcomes Over Activity',
+    principle2_desc: 'Measure impact, not motion.',
+    principle3_title: 'Human-Centered Automation',
+    principle3_desc: 'Keep people where judgment creates value.',
+    principle4_title: 'Continuous Evolution',
+    principle4_desc: 'Prefer practical progress over large-scale disruption.',
+
+    // About Nebula
+    about_label: 'ABOUT',
+    about_headline: 'About Nebula',
+    about_intro:
+      'Nebula Ideas was founded by experienced technology leaders who have spent decades building products, scaling systems, leading teams, and navigating organizational complexity.',
+    about_detail:
+      'We have worked across startups, enterprise organizations, product companies, consulting environments, and engineering leadership roles.',
+    about_perspectives_label: 'Our perspective combines:',
+    about_perspective1: 'Software Engineering',
+    about_perspective2: 'Product Thinking',
+    about_perspective3: 'Organizational Design',
+    about_perspective4: 'AI & Automation',
+    about_perspective5: 'Technical Leadership',
+    about_insight:
+      'Most importantly, we understand that technology only creates value when people can successfully adopt and use it.',
     founder1_name: 'Ismael Marin',
     founder1_role: 'Head of AI Infrastructure & Co-Founder',
     founder1_bio:
-      'As a technical leader and AI infrastructure engineer, I specialize in bringing software engineering discipline—TDD, Domain-Driven Design, and rigorous evaluation—to the bleeding edge of Agentic AI. I build high-performance, cross-platform CLI tools and safe Rust agent runtimes that transform unpredictable LLMs into secure, production-grade engineering workflows. My philosophy is rooted in decades of battle-tested backend architecture and a strict focus on pragmatic integration, ensuring that AI operates not as a hype-driven shortcut, but as a reliable multiplier that delivers measurable, strategic value to core business systems.',
+      'As a technical leader and AI infrastructure engineer, I specialize in bringing software engineering discipline\u2014TDD, Domain-Driven Design, and rigorous evaluation\u2014to the bleeding edge of Agentic AI.\n\nI build high-performance, cross-platform CLI tools and safe Rust agent runtimes that transform unpredictable LLMs into secure, production-grade engineering workflows.\n\nMy approach is grounded in decades of battle-tested backend architecture and a strict focus on pragmatic integration, ensuring that AI operates not as a hype-driven shortcut, but as a reliable multiplier that delivers measurable, strategic value to core business systems.',
     founder2_name: 'Carlos (Mumo) Muniz',
     founder2_role: 'Managing Partner / Head of Engineering & Delivery',
     founder2_bio:
-      'As a technical leader and team architect, I specialize in eliminating architectural bottlenecks and designing high-impact, resilient systems. I have built integration architectures that collapsed enterprise onboarding timelines from months to days, migrated complex platform authentication with zero downstream code changes, and pioneered disciplined, team-level AI workflows that drastically accelerate time-to-market. My engineering execution is inseparable from my leadership philosophy: I build on a foundation of psychological safety and a "Care to Deliver" principle, proving that high-trust human conditions and exceptional technical outcomes are the exact same thing.',
+      'As a technical leader and team architect, I specialize in eliminating architectural bottlenecks and designing high-impact, resilient systems.\n\nI have built integration architectures that collapsed enterprise onboarding timelines from months to days, migrated complex platform authentication with zero downstream code changes, and pioneered disciplined, team-level AI workflows that drastically accelerate time-to-market.\n\nMy engineering approach and leadership philosophy are inseparable: I build on a foundation of psychological safety and a "Care to Deliver" principle, proving that high-trust human conditions and exceptional technical outcomes are the exact same thing.',
     partnership_title: 'Partnership',
     partnership_desc:
       "We've worked together since 2014. We've delivered critical integrations for companies in Mexico and the USA. We met as engineer and manager; today we're partners.",
 
-    // Philosophy
-    philosophy_headline: 'Technology should amplify your team',
-    philosophy_body:
-      "We believe AI and automation should be companions to your team, not their replacements. As we say on Radio Formula Bajío: a support chatbot doesn't replace your people \u2014 it enables them to serve after hours, gather useful information, and hand it to the next shift ready to resolve. Well-designed technology reduces friction, not human talent.",
-    philosophy_attribution: '\u2014 Nebula Ideas',
-
-    // Technology / Stack
-    tech_opensource_title: 'Open Source',
-    tech_opensource_desc:
-      'Rails AI Bridge \u2014 2,000+ downloads for AI context in Rails. Ruby Skill Bench \u2014 automated validation of AI-generated code quality.',
-    tech_stack_title: 'Languages & Frameworks',
-    tech_stack_desc: 'Ruby on Rails, Go. Continuous learning: Rust for embedded systems and high performance.',
-    tech_infra_title: 'Infrastructure',
-    tech_infra_desc: 'Google Cloud, Cloudflare. AWS when the client requires it.',
+    // Social Proof
+    stat_radio: 'Regular contributors on Radio Formula Baj\u00edo',
+    stat_downloads_label: 'downloads across our open source tools',
+    stat_downloads_number: '2,000+',
+    stat_years_number: '10',
+    stat_years_label: 'years building together',
+    stat_geo: 'We work with companies in Mexico and the USA',
 
     // Blog
     blog_label: 'INSIGHTS',
@@ -129,7 +142,7 @@ export const translations = {
     blog1_excerpt:
       'A deep dive into our Ruby Skill Bench methodology and why automated validation matters for production code.',
     blog2_category: 'AI & Teams',
-    blog2_title: 'AI as a team companion: lessons from Radio Formula Bajío',
+    blog2_title: 'AI as a team companion: lessons from Radio Formula Baj\u00edo',
     blog2_excerpt:
       "What we've learned about integrating AI tools alongside human teams without replacing the people that matter.",
     blog3_category: 'Process',
@@ -137,30 +150,12 @@ export const translations = {
     blog3_excerpt:
       'How we use Design Sprints and validated development to take a concept to a working product in one month.',
 
-    // Social Proof
-    stat_radio: 'Regular contributors on Radio Formula Bajío',
-    stat_downloads_label: 'downloads on our open source tools',
-    stat_downloads_number: '2,000+',
-    stat_years_number: '10',
-    stat_years_label: 'years building together',
-    stat_geo: 'We work with companies in Mexico and the USA',
-
-    // Process
-    process_step1_title: 'We understand your product and workflows',
-    process_step1_desc:
-      'We use Design Thinking and Design Sprint to align the team and objectives before writing code.',
-    process_step2_title: 'We measure your current baseline',
-    process_step2_desc: 'We apply benchmarks to know exactly where you are today. No guesses.',
-    process_step3_title: 'We design and implement improvements',
-    process_step3_desc: 'We build with TDD, functional deliverables, and continuous validation.',
-    process_step4_title: 'We validate results with metrics',
-    process_step4_desc: 'We measure real impact: adoption, costs, quality, team velocity.',
-
     // Contact / Footer CTA
-    footer_cta_headline: 'Ready to engineer the future?',
+    footer_cta_headline: 'Ready to understand what technology is amplifying in your organization?',
     footer_cta_desc:
-      "Stop accumulating architectural debt with superficial solutions. Let's build a foundation of calm confidence.",
-    footer_cta_button: 'Book a Discovery Call',
+      'Before your next AI initiative, automation project, or architectural investment, start with clarity.',
+    footer_cta_body: "Let's identify where the real opportunities are.",
+    footer_cta_button: 'Schedule a Discovery Call',
 
     // Footer
     footer_copyright: 'Nebula Ideas. Engineering Excellence.',
@@ -169,16 +164,19 @@ export const translations = {
     footer_github: 'GitHub',
 
     // SEO
-    seo_title: 'Nebula Ideas | Engineering Excellence',
+    seo_title: 'Nebula Clarity Sprint \u2014 AI & Technology Strategy',
     seo_description:
-      'We architect intelligent, scalable systems that solve complex business problems. Eschewing the hype, we build structural foundations for decision-makers who demand precision and system reliability.',
+      'Understand where technology creates friction, align teams around outcomes, and identify practical AI and automation opportunities before you build.',
+    seo_og_description:
+      'A focused assessment to uncover friction, align teams, and turn AI, automation, and technology decisions into measurable outcomes.',
+    seo_site_name: 'Nebula Ideas',
   },
   es: {
     // Navigation
-    nav_vision: 'Visión',
-    nav_whatwedo: 'Qué Hacemos',
+    nav_problem: 'El Problema',
+    nav_services: 'C\u00f3mo Ayudamos',
     nav_sprint: 'Sprint de Claridad',
-    nav_dna: 'Nuestro ADN',
+    nav_approach: 'Nuestro Enfoque',
     nav_blog: 'Blog',
     nav_contact: 'Contacto',
     nav_toggle_es: 'ES',
@@ -186,165 +184,164 @@ export const translations = {
     nav_schedule: 'Agendar una Llamada',
 
     // Hero
-    hero_label: 'Ingeniería Estratégica',
-    hero_headline: 'Tecnología medible para negocios que crecen.',
+    hero_headline: 'La tecnolog\u00eda y la IA deber\u00edan crear claridad, no complejidad.',
     hero_subheadline:
-      'Reducimos el riesgo de tu inversión tecnológica con procesos validados, métricas claras y entregables funcionales. Diseñamos tecnología que amplifica a tu equipo, no que lo reemplaza.',
-    hero_cta_primary: 'Agenda una Llamada de Claridad',
-    hero_cta_secondary: 'Explora Nuestro Stack',
+      'Ayudamos a las organizaciones a entender d\u00f3nde la tecnolog\u00eda crea fricci\u00f3n, alinear equipos en torno a resultados medibles e identificar oportunidades pr\u00e1cticas para IA y automatizaci\u00f3n.',
+    hero_supporting:
+      'Antes de invertir en herramientas, plataformas o transformaciones a gran escala, te ayudamos a identificar qu\u00e9 amplificar \u2014 y qu\u00e9 arreglar primero.',
+    hero_tags: 'Estrategia de IA \u00B7 Automatizaci\u00f3n \u00B7 Arquitectura \u00B7 Pensamiento de Producto \u00B7 Liderazgo en Ingenier\u00eda',
+    hero_cta_primary: 'Explora el Clarity Sprint',
+    hero_cta_secondary: 'Cont\u00e1ctanos',
 
-    // Market Reality
-    vision_label_hype: 'El Hype',
-    vision_title_hype: 'Ruido Visual y Saturación',
-    vision_desc_hype:
-      'El panorama actual está inundado de envoltorios superficiales y características desconectadas. Las organizaciones se ahogan en herramientas disjuntas que carecen de una estrategia arquitectónica cohesiva, llevando a fragilidad sistémica.',
-    vision_label_friction: 'La Fricción',
-    vision_title_friction: 'Deuda Arquitectónica',
-    vision_silo_title: 'Silos de Datos Aislados',
-    vision_silo_desc: 'Modelos desplegados sin acceso seguro a la verdad organizacional unificada.',
-    vision_fragile_title: 'Integraciones Frágiles',
-    vision_fragile_desc: 'Conexiones ad-hoc que se rompen bajo escala o cambios menores de esquema.',
-    vision_gov_title: 'Vacío de Gobernanza',
-    vision_gov_desc: 'Falta de pipelines auditables y entornos de ejecución controlados.',
-    vision_quote: '"Antes de escalar la automatización, primero debes entender el sistema que pretende amplificar."',
-    vision_quote_label: 'Principio Core 00',
+    // Why Organizations Struggle With AI
+    struggle_headline: 'Por qu\u00e9 las Organizaciones Luchan con la IA',
+    struggle_lede1: 'La mayor\u00eda de las organizaciones no tienen un problema de IA.',
+    struggle_lede2: 'Tienen un problema de claridad.',
+    struggle_body:
+      'Los equipos se mueven r\u00e1pido, las herramientas se multiplican, las prioridades compiten por atenci\u00f3n y la presi\u00f3n de \u201cadoptar IA\u201d crece cada d\u00eda.',
+    struggle_results_label: 'El resultado suele ser predecible:',
+    struggle_result1: 'Automatizaci\u00f3n aplicada a procesos ineficientes',
+    struggle_result2: 'Iniciativas de IA sin resultados medibles',
+    struggle_result3: 'Equipos trabajando hacia objetivos diferentes',
+    struggle_result4: 'Complejidad t\u00e9cnica y operativa creciente',
+    struggle_result5: 'Costos crecientes sin valor proporcional',
+    struggle_amplify: 'La tecnolog\u00eda amplifica los sistemas.',
+    struggle_amplify_result: 'Si el sistema carece de claridad, la tecnolog\u00eda amplifica la confusi\u00f3n.',
 
-    // Architectural Pillars
-    pillars_label: 'Metodología',
-    pillars_headline: 'Pilares Arquitectónicos',
-    pillar1_label: 'Pilar 01',
-    pillar1_title: 'Diseño Estructural',
-    pillar1_desc: 'Diseñamos sistemas desde cero, priorizando el modelado robusto de datos y límites de componentes limpios sobre la prototipación rápida y desechable.',
-    pillar2_label: 'Pilar 02',
-    pillar2_title: 'Ejecución Determinista',
-    pillar2_desc: 'Reemplazando cajas negras probabilísticas con pipelines auditables y deterministas donde el flujo de control es explícito y predecible.',
-    pillar3_label: 'Pilar 03',
-    pillar3_title: 'Seguridad Inmutable',
-    pillar3_desc: 'La seguridad no es una capa superpuesta. Está integrada en la capa de infraestructura, asegurando procedencia de datos y aislamiento a escala.',
-    pillar4_label: 'Pilar 04',
-    pillar4_title: 'Caminos Escalables',
-    pillar4_desc: 'Construyendo rutas claras de migración y escalado, asegurando que la arquitectura pueda absorber nuevos requisitos operacionales sin reescrituras fundamentales.',
-
-    // Engineering DNA
-    dna_label: 'Stack',
-    dna_headline: 'Nuestro ADN de Ingeniería',
-    dna_desc:
-      'Seleccionamos herramientas por su rendimiento, seguridad y madurez operacional. Nuestro stack refleja un compromiso de construir sistemas que perduren.',
-    dna_metrics: 'Métricas del sistema: infraestructura capaz de 99.99% Uptime SLA.',
-    dna_filename: 'nebula_core_stack.yml',
-    dna_layer_app: 'Capa de Aplicación',
-    dna_layer_infra: 'Infraestructura y Cloud',
-    dna_layer_edge: 'Edge y Seguridad',
-
-    // Services
-    service1_title: 'Evaluación de Contexto Tecnológico',
-    service1_desc:
-      'Auditoría de una semana. Entendemos tus workflows, medimos tu baseline y entregamos un plan priorizado. Sabrás exactamente dónde invertir primero.',
-    service2_title: 'Implementación de Flujos de Trabajo',
-    service2_desc:
-      'Desarrollo validado. Construimos los sistemas, integramos las herramientas y validamos con métricas. Entregamos código funcionando, no presentaciones.',
-    service3_title: 'Acompañamiento Continuo',
-    service3_desc:
-      'Optimización mensual. Mejoramos costos, calidad y adopción basándonos en datos reales. Tu tecnología mejora con el tiempo, no se depreca.',
-
-    // Clarity Sprint
+    // Nebula Clarity Sprint
     sprint_headline: 'Nebula Clarity Sprint',
+    sprint_sub: 'Entiende antes de automatizar.',
     sprint_desc:
-      'Una intervención diagnóstica concentrada diseñada para disipar la niebla operativa. Mapeamos tu arquitectura actual, identificamos puntos de fricción sistémica y entregamos un blueprint técnico riguroso para el escalado inteligente.',
-    sprint_step1_num: '01',
-    sprint_step1_title: 'Auditoría y Descubrimiento',
-    sprint_step1_desc: 'Análisis profundo de la infraestructura existente, flujo de datos y cuellos de botella.',
-    sprint_step2_num: '02',
-    sprint_step2_title: 'Mapeo Estructural',
-    sprint_step2_desc: 'Diseño de la arquitectura objetivo enfocándose en estabilidad y puntos de integración.',
-    sprint_step3_num: '03',
-    sprint_step3_title: 'Blueprint de Ejecución',
-    sprint_step3_desc: 'Entrega de un roadmap técnico determinista con implementación faseada y clara.',
-    sprint_cta: 'Reserva tu Clarity Sprint',
+      'El Nebula Clarity Sprint es una evaluaci\u00f3n enfocada dise\u00f1ada para identificar d\u00f3nde la tecnolog\u00eda, la IA, la automatizaci\u00f3n y los procesos organizacionales pueden crear valor significativo.',
+    sprint_approach: 'En lugar de empezar con herramientas, empezamos con entendimiento.',
+    sprint_eval_label: 'Qu\u00e9 evaluamos',
+    sprint_eval1_title: 'Contexto de Negocio',
+    sprint_eval1_desc: 'Objetivos, prioridades, restricciones, stakeholders y resultados deseados.',
+    sprint_eval2_title: 'Realidad Operativa',
+    sprint_eval2_desc: 'C\u00f3mo fluye el trabajo realmente entre equipos, sistemas y procesos.',
+    sprint_eval3_title: 'Panorama Tecnol\u00f3gico',
+    sprint_eval3_desc:
+      'Arquitectura, integraciones, dependencias, deuda t\u00e9cnica y consideraciones de escalabilidad.',
+    sprint_eval4_title: 'Oportunidades de IA y Automatizaci\u00f3n',
+    sprint_eval4_desc:
+      '\u00c1reas donde la IA puede aumentar a las personas, mejorar la toma de decisiones, reducir fricci\u00f3n o acelerar la entrega.',
+    sprint_deliverable_label: 'Qu\u00e9 recibes',
+    sprint_deliverable1: 'Evaluaci\u00f3n del estado actual',
+    sprint_deliverable2: 'Riesgos clave y cuellos de botella',
+    sprint_deliverable3: 'Mapa de oportunidades',
+    sprint_deliverable4: 'Recomendaciones de IA y automatizaci\u00f3n',
+    sprint_deliverable5: 'Hoja de ruta priorizada',
+    sprint_deliverable6: 'Gu\u00eda de implementaci\u00f3n estrat\u00e9gica',
+    sprint_deliverable_footer: 'Un camino claro basado en tu realidad, no en el hype de la industria.',
+    sprint_cta: 'Agenda una Llamada de Descubrimiento',
 
-    // About
-    about_label: 'QUIENES SOMOS',
-    about_headline: 'Nosotros',
+    // What We Help With
+    services_label: 'SERVICIOS',
+    services_headline: 'C\u00f3mo Ayudamos',
+    service1_title: 'Estrategia de IA y Automatizaci\u00f3n',
+    service1_desc: 'Identifica d\u00f3nde la IA puede crear valor medible antes de invertir en implementaci\u00f3n.',
+    service2_title: 'Evaluaci\u00f3n de Arquitectura y Tecnolog\u00eda',
+    service2_desc:
+      'Comprende la deuda t\u00e9cnica, restricciones del sistema, preocupaciones de escalabilidad y oportunidades de modernizaci\u00f3n.',
+    service3_title: 'Alineaci\u00f3n de Producto y Procesos',
+    service3_desc: 'Conecta objetivos de negocio, ejecuci\u00f3n del equipo y decisiones tecnol\u00f3gicas.',
+    service4_title: 'Liderazgo y Asesor\u00eda en Ingenier\u00eda',
+    service4_desc: 'Apoya el crecimiento organizacional, la toma de decisiones t\u00e9cnicas y la madurez operativa.',
+
+    // Our Approach
+    approach_headline: 'Nuestro Enfoque',
+    approach_sub: 'Trabaja con IA. No al rev\u00e9s.',
+    approach_body1:
+      'Creemos que los mejores resultados provienen de combinar el juicio humano con las capacidades tecnol\u00f3gicas.',
+    approach_body2: 'La IA no es un reemplazo para las personas.',
+    approach_body3: 'La IA es un amplificador.',
+    approach_body4: 'El objetivo no es eliminar a los humanos del proceso.',
+    approach_body5: 'El objetivo es ayudar a las personas a tomar mejores decisiones, moverse m\u00e1s r\u00e1pido y enfocarse en trabajo de mayor valor.',
+
+    // Principles That Guide Us
+    principles_label: 'PRINCIPIOS',
+    principles_headline: 'Principios que nos Gu\u00edan',
+    principle1_title: 'Entender Antes de Amplificar',
+    principle1_desc: 'La tecnolog\u00eda amplifica sistemas existentes. Mejora la comprensi\u00f3n primero.',
+    principle2_title: 'Resultados sobre Actividad',
+    principle2_desc: 'Mide impacto, no movimiento.',
+    principle3_title: 'Automatizaci\u00f3n Centrada en Humanos',
+    principle3_desc: 'Mant\u00e9n a las personas donde el juicio crea valor.',
+    principle4_title: 'Evoluci\u00f3n Continua',
+    principle4_desc: 'Prefiere progreso pr\u00e1ctico sobre disrupci\u00f3n a gran escala.',
+
+    // About Nebula
+    about_label: 'NOSOTROS',
+    about_headline: 'Sobre Nebula',
+    about_intro:
+      'Nebula Ideas fue fundada por l\u00edderes tecnol\u00f3gicos con experiencia que han pasado d\u00e9cadas construyendo productos, escalando sistemas, liderando equipos y navegando la complejidad organizacional.',
+    about_detail:
+      'Hemos trabajado en startups, empresas, compa\u00f1\u00edas de producto, entornos de consultor\u00eda y roles de liderazgo en ingenier\u00eda.',
+    about_perspectives_label: 'Nuestra perspectiva combina:',
+    about_perspective1: 'Ingenier\u00eda de Software',
+    about_perspective2: 'Pensamiento de Producto',
+    about_perspective3: 'Dise\u00f1o Organizacional',
+    about_perspective4: 'IA y Automatizaci\u00f3n',
+    about_perspective5: 'Liderazgo T\u00e9cnico',
+    about_insight:
+      'Lo m\u00e1s importante es que entendemos que la tecnolog\u00eda solo crea valor cuando las personas pueden adoptarla y usarla exitosamente.',
     founder1_name: 'Ismael Marin',
     founder1_role: 'Director de Infraestructura de IA y Co-Fundador',
     founder1_bio:
-      'Como líder técnico e ingeniero de infraestructura de IA, me especializo en llevar la disciplina de la ingeniería de software —TDD, Diseño Guiado por el Dominio (DDD) y evaluación rigurosa— al límite de la IA Agéntica. Construyo herramientas CLI multiplataforma de alto rendimiento y entornos de ejecución de agentes seguros en Rust que transforman LLMs impredecibles en flujos de trabajo de ingeniería seguros y de nivel de producción. Mi filosofía está arraigada en décadas de arquitectura backend probada en batalla y un enfoque estricto en la integración pragmática, asegurando que la IA funcione no como un atajo impulsado por el hype, sino como un multiplicador confiable que ofrece un valor estratégico y medible para los sistemas de negocio principales. Voz regular en Radio Fórmula Bajío sobre tecnología e IA responsable.',
+      'Como l\u00edder t\u00e9cnico e ingeniero de infraestructura de IA, me especializo en llevar la disciplina de la ingenier\u00eda de software \u2014TDD, Dise\u00f1o Guiado por el Dominio (DDD) y evaluaci\u00f3n rigurosa\u2014 a la vanguardia de la IA Ag\u00e9ntica.\n\nConstruyo herramientas CLI multiplataforma de alto rendimiento y entornos de ejecuci\u00f3n de agentes seguros en Rust que transforman LLMs impredecibles en flujos de trabajo de ingenier\u00eda seguros y de nivel de producci\u00f3n.\n\nMi enfoque est\u00e1 arraigado en d\u00e9cadas de arquitectura backend probada en batalla y un enfoque estricto en la integraci\u00f3n pragm\u00e1tica, asegurando que la IA funcione no como un atajo impulsado por el hype, sino como un multiplicador confiable que ofrece un valor estrat\u00e9gico y medible para los sistemas de negocio principales.',
     founder2_name: 'Carlos (Mumo) Muniz',
-    founder2_role: 'Socio Director / Director de Ingeniería y Entrega',
+    founder2_role: 'Socio Director / Director de Ingenier\u00eda y Entrega',
     founder2_bio:
-      'Como líder técnico y arquitecto de equipos, me especializo en eliminar cuellos de botella arquitectónicos y diseñar sistemas resilientes de alto impacto. He construido arquitecturas de integración que redujeron los tiempos de incorporación de empresas de meses a días, migré autenticación de plataformas complejas sin cambios en el código descendente y fui pionero en flujos de trabajo de IA disciplinados a nivel de equipo que aceleran drásticamente el tiempo de comercialización. Mi ejecución de ingeniería es inseparable de mi filosofía de liderazgo: construyo sobre una base de seguridad psicológica y el principio de "Cuidado al Entregar" (Care to Deliver), demostrando que las condiciones humanas de alta confianza y los resultados técnicos excepcionales son exactamente la misma cosa. 10 años trabajando con Ismael en entregas críticas para empresas en México y USA.',
+      'Como l\u00edder t\u00e9cnico y arquitecto de equipos, me especializo en eliminar cuellos de botella arquitect\u00f3nicos y dise\u00f1ar sistemas resilientes de alto impacto.\n\nHe construido arquitecturas de integraci\u00f3n que redujeron los tiempos de incorporaci\u00f3n de empresas de meses a d\u00edas, migr\u00e9 autenticaci\u00f3n de plataformas complejas sin cambios en el c\u00f3digo descendente y fui pionero en flujos de trabajo de IA disciplinados a nivel de equipo que aceleran dr\u00e1sticamente el time-to-market.\n\nMi enfoque de ingenier\u00eda y filosof\u00eda de liderazgo son inseparables: construyo sobre una base de seguridad psicol\u00f3gica y el principio de "Cuidado al Entregar" (Care to Deliver), demostrando que las condiciones humanas de alta confianza y los resultados t\u00e9cnicos excepcionales son exactamente la misma cosa.',
     partnership_title: 'Alianza',
     partnership_desc:
-      'Trabajamos juntos desde 2014. Hemos entregado integraciones críticas para empresas en México y USA. Nos conocimos como ingeniero y manager; hoy somos socios.',
+      'Trabajamos juntos desde 2014. Hemos entregado integraciones cr\u00edticas para empresas en M\u00e9xico y USA. Nos conocimos como ingeniero y manager; hoy somos socios.',
 
-    // Philosophy
-    philosophy_headline: 'La tecnología debe amplificar a tu equipo',
-    philosophy_body:
-      'Creemos que la IA y la automatización deben ser compañeras de tu equipo, no sus sustitutas. Como decimos en Radio Fórmula Bajío: un chatbot de soporte no reemplaza a tu gente — les permite atender después de horas, recopilar información útil y entregarla al siguiente turno listo para resolver. La tecnología bien diseñada reduce la fricción, no el talento humano.',
-    philosophy_attribution: '\u2014 Nebula Ideas',
-
-    // Technology
-    tech_opensource_title: 'Open Source',
-    tech_opensource_desc:
-      'Rails AI Bridge — 2,000+ descargas para contexto de IA en Rails. Ruby Skill Bench — validación automatizada de calidad de código generado por IA.',
-    tech_stack_title: 'Lenguajes y Frameworks',
-    tech_stack_desc:
-      'Ruby on Rails, Go. En formación continua: Rust para sistemas embebidos y alto rendimiento.',
-    tech_infra_title: 'Infraestructura',
-    tech_infra_desc: 'Google Cloud, Cloudflare. AWS cuando el cliente lo requiere.',
+    // Social Proof
+    stat_radio: 'Contribuidores regulares en Radio F\u00f3rmula Baj\u00edo',
+    stat_downloads_label: 'descargas en nuestras herramientas open source',
+    stat_downloads_number: '2,000+',
+    stat_years_number: '10',
+    stat_years_label: 'a\u00f1os construyendo juntos',
+    stat_geo: 'Trabajamos con empresas en M\u00e9xico y USA',
 
     // Blog
     blog_label: 'INSIGHTS',
     blog_headline: 'Lo que pensamos',
-    blog_cta: 'Ver todos los artículos',
-    blog1_category: 'IA y Calidad de Código',
-    blog1_title: 'Cómo medimos la calidad del código generado por IA',
+    blog_cta: 'Ver todos los art\u00edculos',
+    blog1_category: 'IA y Calidad de C\u00f3digo',
+    blog1_title: 'C\u00f3mo medimos la calidad del c\u00f3digo generado por IA',
     blog1_excerpt:
-      'Un análisis profundo de nuestra metodología Ruby Skill Bench y por qué la validación automatizada importa para código en producción.',
+      'Un an\u00e1lisis profundo de nuestra metodolog\u00eda Ruby Skill Bench y por qu\u00e9 la validaci\u00f3n automatizada importa para c\u00f3digo en producci\u00f3n.',
     blog2_category: 'IA y Equipos',
-    blog2_title: 'La IA como compañera de equipo: lecciones de Radio Fórmula Bajío',
+    blog2_title: 'La IA como compa\u00f1era de equipo: lecciones de Radio F\u00f3rmula Baj\u00edo',
     blog2_excerpt:
-      'Lo que hemos aprendido sobre la integración de herramientas de IA junto a equipos humanos sin reemplazar a las personas que importan.',
+      'Lo que hemos aprendido sobre la integraci\u00f3n de herramientas de IA junto a equipos humanos sin reemplazar a las personas que importan.',
     blog3_category: 'Proceso',
     blog3_title: 'De la idea al MVP: nuestro proceso en 4 semanas',
     blog3_excerpt:
-      'Cómo usamos Design Sprints y desarrollo validado para llevar un concepto a un producto funcional en un mes.',
-
-    // Social Proof
-    stat_radio: 'Contribuidores regulares en Radio Fórmula Bajío',
-    stat_downloads_label: 'descargas en nuestras herramientas open source',
-    stat_downloads_number: '2,000+',
-    stat_years_number: '10',
-    stat_years_label: 'años construyendo juntos',
-    stat_geo: 'Trabajamos con empresas en México y USA',
-
-    // Process
-    process_step1_title: 'Entendemos tu producto y workflows',
-    process_step1_desc:
-      'Usamos Design Thinking y Design Sprint para alinear equipo y objetivos antes de escribir código.',
-    process_step2_title: 'Medimos tu baseline actual',
-    process_step2_desc: 'Aplicamos benchmarks para saber exactamente dónde estás hoy. Sin adivinanzas.',
-    process_step3_title: 'Diseñamos e implementamos mejoras',
-    process_step3_desc: 'Construimos con TDD, entregables funcionales y validación continua.',
-    process_step4_title: 'Validamos resultados con métricas',
-    process_step4_desc: 'Medimos impacto real: adopción, costos, calidad, velocidad del equipo.',
+      'C\u00f3mo usamos Design Sprints y desarrollo validado para llevar un concepto a un producto funcional en un mes.',
 
     // Contact / Footer CTA
-    footer_cta_headline: '¿Listo para diseñar el futuro?',
+    footer_cta_headline: '\u00bfListo para entender lo que la tecnolog\u00eda est\u00e1 amplificando en tu organizaci\u00f3n?',
     footer_cta_desc:
-      'Deja de acumular deuda arquitectónica con soluciones superficiales. Construyamos una base de confianza serena.',
+      'Antes de tu pr\u00f3xima iniciativa de IA, proyecto de automatizaci\u00f3n o inversi\u00f3n arquitect\u00f3nica, empieza con claridad.',
+    footer_cta_body: 'Identifiquemos d\u00f3nde est\u00e1n las oportunidades reales.',
     footer_cta_button: 'Agendar una Llamada de Descubrimiento',
 
     // Footer
-    footer_copyright: 'Nebula Ideas. Excelencia en Ingeniería.',
+    footer_copyright: 'Nebula Ideas. Excelencia en Ingenier\u00eda.',
     footer_privacy: 'Aviso de privacidad',
     footer_linkedin: 'LinkedIn',
     footer_github: 'GitHub',
 
     // SEO
-    seo_title: 'Nebula Ideas | Excelencia en Ingeniería',
+    seo_title: 'Nebula Clarity Sprint \u2014 Estrategia de IA y Tecnolog\u00eda',
     seo_description:
-      'Diseñamos sistemas inteligentes y escalables que resuelven problemas complejos de negocio. Evitando el hype, construimos bases estructurales para líderes que exigen precisión y confiabilidad.',
+      'Entiende d\u00f3nde la tecnolog\u00eda crea fricci\u00f3n, alinea equipos alrededor de resultados e identifica oportunidades pr\u00e1cticas de IA y automatizaci\u00f3n antes de construir.',
+    seo_og_description:
+      'Un diagn\u00f3stico enfocado para descubrir fricci\u00f3n, alinear equipos y convertir decisiones de IA, automatizaci\u00f3n y tecnolog\u00eda en resultados medibles.',
+    seo_site_name: 'Nebula Ideas',
   },
 } as const;
 

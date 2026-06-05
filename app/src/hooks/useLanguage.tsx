@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useCallback, useEffect, useMemo, type ReactNode } from 'react';
 import { translations, type Language, type TranslationKey } from '@/lib/translations';
-import { updateMetaTags } from '@/lib/meta';
+import { updateMetaTags, injectJsonLd } from '@/lib/meta';
 
 interface LanguageContextType {
   language: Language;
@@ -25,10 +25,16 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     document.documentElement.lang = language;
     localStorage.setItem('nebula-language', language);
 
-    const title = translations[language].seo_title;
-    const description = translations[language].seo_description;
+    const lang = translations[language];
+    updateMetaTags({
+      title: lang.seo_title,
+      description: lang.seo_description,
+      ogDescription: lang.seo_og_description,
+      siteName: lang.seo_site_name,
+      language,
+    });
 
-    updateMetaTags(title, description, language);
+    injectJsonLd();
   }, [language]);
 
   const toggleLanguage = useCallback(() => {

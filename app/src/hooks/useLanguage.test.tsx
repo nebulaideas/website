@@ -7,10 +7,13 @@ const TEST_METAS = [
   { key: 'name', value: 'description' },
   { key: 'property', value: 'og:title' },
   { key: 'property', value: 'og:description' },
+  { key: 'property', value: 'og:site_name' },
   { key: 'name', value: 'twitter:title' },
   { key: 'name', value: 'twitter:description' },
   { key: 'property', value: 'og:locale' },
   { key: 'property', value: 'og:image' },
+  { key: 'name', value: 'twitter:site' },
+  { key: 'name', value: 'twitter:creator' },
   { key: 'name', value: 'twitter:image' },
 ];
 
@@ -42,7 +45,7 @@ function TestComponent() {
     <div>
       <span data-testid="lang">{language}</span>
       <span data-testid="calendly">{calendlyUrl}</span>
-      <span data-testid="translation">{t('nav_vision')}</span>
+      <span data-testid="translation">{t('nav_problem')}</span>
       <button onClick={toggleLanguage} data-testid="toggle-btn">Toggle</button>
     </div>
   );
@@ -69,7 +72,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     );
 
     expect(screen.getByTestId('lang')).toHaveTextContent('en');
-    expect(screen.getByTestId('translation')).toHaveTextContent('Our Vision');
+    expect(screen.getByTestId('translation')).toHaveTextContent('The Problem');
   });
 
   it('should load initial language from localStorage if present', () => {
@@ -82,7 +85,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     );
 
     expect(screen.getByTestId('lang')).toHaveTextContent('es');
-    expect(screen.getByTestId('translation')).toHaveTextContent('Visión');
+    expect(screen.getByTestId('translation')).toHaveTextContent('El Problema');
   });
 
   it('should toggle language from "en" to "es" and back', () => {
@@ -96,7 +99,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     
     // Initial English
     expect(screen.getByTestId('lang')).toHaveTextContent('en');
-    expect(screen.getByTestId('translation')).toHaveTextContent('Our Vision');
+    expect(screen.getByTestId('translation')).toHaveTextContent('The Problem');
 
     // Toggle to Spanish
     act(() => {
@@ -104,7 +107,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     });
 
     expect(screen.getByTestId('lang')).toHaveTextContent('es');
-    expect(screen.getByTestId('translation')).toHaveTextContent('Visión');
+    expect(screen.getByTestId('translation')).toHaveTextContent('El Problema');
     expect(localStorage.getItem('nebula-language')).toBe('es');
     expect(document.documentElement.lang).toBe('es');
 
@@ -114,7 +117,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     });
 
     expect(screen.getByTestId('lang')).toHaveTextContent('en');
-    expect(screen.getByTestId('translation')).toHaveTextContent('Our Vision');
+    expect(screen.getByTestId('translation')).toHaveTextContent('The Problem');
     expect(localStorage.getItem('nebula-language')).toBe('en');
     expect(document.documentElement.lang).toBe('en');
   });
@@ -132,6 +135,10 @@ describe('useLanguage hook & LanguageProvider', () => {
     const metaOgDesc = document.createElement('meta');
     metaOgDesc.setAttribute('property', 'og:description');
     document.head.appendChild(metaOgDesc);
+
+    const metaOgSiteName = document.createElement('meta');
+    metaOgSiteName.setAttribute('property', 'og:site_name');
+    document.head.appendChild(metaOgSiteName);
 
     const metaTwTitle = document.createElement('meta');
     metaTwTitle.name = 'twitter:title';
@@ -159,12 +166,13 @@ describe('useLanguage hook & LanguageProvider', () => {
       </LanguageProvider>
     );
 
-    expect(document.title).toBe('Nebula Ideas | Engineering Excellence');
+    expect(document.title).toBe(translations.en.seo_title);
     expect(metaDesc.getAttribute('content')).toBe(translations.en.seo_description);
-    expect(metaOgTitle.getAttribute('content')).toBe('Nebula Ideas | Engineering Excellence');
-    expect(metaOgDesc.getAttribute('content')).toBe(translations.en.seo_description);
-    expect(metaTwTitle.getAttribute('content')).toBe('Nebula Ideas | Engineering Excellence');
-    expect(metaTwDesc.getAttribute('content')).toBe(translations.en.seo_description);
+    expect(metaOgTitle.getAttribute('content')).toBe(translations.en.seo_title);
+    expect(metaOgDesc.getAttribute('content')).toBe(translations.en.seo_og_description);
+    expect(metaOgSiteName.getAttribute('content')).toBe(translations.en.seo_site_name);
+    expect(metaTwTitle.getAttribute('content')).toBe(translations.en.seo_title);
+    expect(metaTwDesc.getAttribute('content')).toBe(translations.en.seo_og_description);
     expect(metaOgLocale.getAttribute('content')).toBe('en_US');
     expect(metaOgImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
     expect(metaTwImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
@@ -175,12 +183,13 @@ describe('useLanguage hook & LanguageProvider', () => {
       toggleButton.click();
     });
 
-    expect(document.title).toBe('Nebula Ideas | Excelencia en Ingeniería');
+    expect(document.title).toBe(translations.es.seo_title);
     expect(metaDesc.getAttribute('content')).toBe(translations.es.seo_description);
-    expect(metaOgTitle.getAttribute('content')).toBe('Nebula Ideas | Excelencia en Ingeniería');
-    expect(metaOgDesc.getAttribute('content')).toBe(translations.es.seo_description);
-    expect(metaTwTitle.getAttribute('content')).toBe('Nebula Ideas | Excelencia en Ingeniería');
-    expect(metaTwDesc.getAttribute('content')).toBe(translations.es.seo_description);
+    expect(metaOgTitle.getAttribute('content')).toBe(translations.es.seo_title);
+    expect(metaOgDesc.getAttribute('content')).toBe(translations.es.seo_og_description);
+    expect(metaOgSiteName.getAttribute('content')).toBe(translations.es.seo_site_name);
+    expect(metaTwTitle.getAttribute('content')).toBe(translations.es.seo_title);
+    expect(metaTwDesc.getAttribute('content')).toBe(translations.es.seo_og_description);
     expect(metaOgLocale.getAttribute('content')).toBe('es_MX');
     expect(metaOgImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
     expect(metaTwImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');

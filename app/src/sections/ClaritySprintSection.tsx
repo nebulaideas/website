@@ -1,61 +1,115 @@
 import { useLanguage } from '@/hooks/useLanguage';
 import ScrollReveal from '@/components/ScrollReveal';
-import { SearchCheck } from 'lucide-react';
+import SectionShell from '@/components/SectionShell';
+import FeatureCard from '@/components/FeatureCard';
+import { SearchCheck, ClipboardCheck, CheckCircle2 } from 'lucide-react';
 
-const steps = [
-  { numKey: 'sprint_step1_num', titleKey: 'sprint_step1_title', descKey: 'sprint_step1_desc' },
-  { numKey: 'sprint_step2_num', titleKey: 'sprint_step2_title', descKey: 'sprint_step2_desc' },
-  { numKey: 'sprint_step3_num', titleKey: 'sprint_step3_title', descKey: 'sprint_step3_desc' },
+const evalAreas = [
+  {
+    titleKey: 'sprint_eval1_title',
+    descKey: 'sprint_eval1_desc',
+  },
+  {
+    titleKey: 'sprint_eval2_title',
+    descKey: 'sprint_eval2_desc',
+  },
+  {
+    titleKey: 'sprint_eval3_title',
+    descKey: 'sprint_eval3_desc',
+  },
+  {
+    titleKey: 'sprint_eval4_title',
+    descKey: 'sprint_eval4_desc',
+  },
+] as const;
+
+const deliverables = [
+  'sprint_deliverable1',
+  'sprint_deliverable2',
+  'sprint_deliverable3',
+  'sprint_deliverable4',
+  'sprint_deliverable5',
+  'sprint_deliverable6',
 ] as const;
 
 export default function ClaritySprintSection() {
   const { t, calendlyUrl } = useLanguage();
 
   return (
-    <section id="clarity-sprint" className="w-full py-28 md:py-32 bg-surface-container-high border-t border-outline-variant/50">
-      <div className="container-main max-w-4xl text-center">
-        <ScrollReveal>
+    <SectionShell id="clarity-sprint" className="py-28 md:py-32 bg-surface-container-high border-t border-outline-variant/50" containerClassName="max-w-5xl">
+      <ScrollReveal>
+        <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center justify-center p-4 bg-obsidian-base rounded-full border border-outline-variant mb-8 hover:border-nebula-gold transition-colors duration-300">
             <SearchCheck size={32} className="text-nebula-gold" />
           </div>
-          <h2 className="font-display text-[40px] md:text-[56px] text-on-surface mb-6 tracking-tight">
+          <h2 className="font-display text-[40px] md:text-[56px] text-on-surface mb-4 tracking-tight">
             {t('sprint_headline')}
           </h2>
-          <p className="font-body text-body-lg text-on-surface-variant mb-12 max-w-2xl mx-auto">
+          <p className="font-headline text-headline-md text-nebula-gold mb-6">
+            {t('sprint_sub')}
+          </p>
+          <p className="font-body text-body-lg text-on-surface-variant mb-4">
             {t('sprint_desc')}
           </p>
-        </ScrollReveal>
-
-        {/* Process Steps */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 text-left">
-          {steps.map((step, i) => (
-            <ScrollReveal key={step.numKey} delay={i * 0.15}>
-              <div className="border-t-2 border-outline-variant pt-6 relative hover:border-nebula-gold transition-colors duration-300 group">
-                <span className="absolute top-[-14px] left-0 bg-surface-container-high pr-2 font-tech text-nebula-gold text-tech-label">
-                  {t(step.numKey)}
-                </span>
-                <h3 className="font-headline text-[18px] text-on-surface mb-2 group-hover:text-nebula-gold transition-colors duration-300">
-                  {t(step.titleKey)}
-                </h3>
-                <p className="font-body text-[14px] text-on-surface-variant">
-                  {t(step.descKey)}
-                </p>
-              </div>
-            </ScrollReveal>
-          ))}
+          <p className="font-body text-body-md text-on-surface-variant italic">
+            {t('sprint_approach')}
+          </p>
         </div>
+      </ScrollReveal>
 
-        <ScrollReveal delay={0.3}>
-          <a
-            href={calendlyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block bg-transparent border-2 border-nebula-gold text-nebula-gold px-10 py-4 rounded font-tech text-tech-label hover:bg-nebula-gold hover:text-nebula-navy transition-all duration-300 hover:shadow-gold-hover hover:-translate-y-1"
-          >
-            {t('sprint_cta')}
-          </a>
-        </ScrollReveal>
-      </div>
-    </section>
+      <ScrollReveal delay={0.1}>
+        <div className="mb-16">
+          <div className="flex items-center gap-3 mb-8">
+            <ClipboardCheck size={20} className="text-nebula-gold" />
+            <span className="font-tech text-tech-label text-nebula-gold uppercase tracking-[0.15em]">
+              {t('sprint_eval_label')}
+            </span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {evalAreas.map((area, i) => (
+              <FeatureCard
+                key={area.titleKey}
+                title={t(area.titleKey)}
+                description={t(area.descKey)}
+                variant="minimal"
+                delay={0.15 + i * 0.1}
+              />
+            ))}
+          </div>
+        </div>
+      </ScrollReveal>
+
+      <ScrollReveal delay={0.2}>
+        <div className="card-base bg-obsidian-base p-8 md:p-10 mb-12">
+          <span className="font-tech text-tech-label text-syntax-green uppercase tracking-[0.15em] block mb-6">
+            {t('sprint_deliverable_label')}
+          </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {deliverables.map((key) => (
+              <div key={key} className="flex items-center gap-3">
+                <CheckCircle2 size={18} className="text-syntax-green flex-shrink-0" />
+                <span className="font-body text-body-md text-on-surface">{t(key)}</span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 pt-6 border-t border-outline-variant">
+            <p className="font-body text-body-md text-on-surface-variant italic">
+              {t('sprint_deliverable_footer')}
+            </p>
+          </div>
+        </div>
+      </ScrollReveal>
+
+      <ScrollReveal delay={0.3} className="text-center">
+        <a
+          href={calendlyUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-gold inline-block px-10 py-4"
+        >
+          {t('sprint_cta')}
+        </a>
+      </ScrollReveal>
+    </SectionShell>
   );
 }

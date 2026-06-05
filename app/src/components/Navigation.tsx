@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
+import NavLink from '@/components/NavLink';
 import { Menu, X, Globe } from 'lucide-react';
 
 const navLinks = [
-  { key: 'nav_vision', href: '#vision' },
-  { key: 'nav_whatwedo', href: '#what-we-do' },
+  { key: 'nav_problem', href: '#why-struggle' },
+  { key: 'nav_services', href: '#what-we-help' },
   { key: 'nav_sprint', href: '#clarity-sprint' },
-  { key: 'nav_dna', href: '#our-dna' },
+  { key: 'nav_approach', href: '#our-approach' },
   { key: 'nav_blog', href: '#blog' },
   { key: 'nav_contact', href: '#schedule' },
 ] as const;
@@ -77,16 +78,14 @@ export default function Navigation() {
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center gap-5 lg:gap-6">
             {navLinks.map((link) => (
-              <a
+              <NavLink
                 key={link.key}
+                labelKey={link.key}
                 href={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
-                className={`font-tech text-tech-label uppercase transition-colors duration-200 hover:text-nebula-gold whitespace-nowrap ${
-                  activeSection === link.href.slice(1) ? 'text-nebula-gold' : 'text-on-surface-variant'
-                }`}
-              >
-                {t(link.key)}
-              </a>
+                isActive={activeSection === link.href.slice(1)}
+                variant="desktop"
+                onClick={handleNavClick}
+              />
             ))}
           </div>
 
@@ -126,21 +125,22 @@ export default function Navigation() {
       {/* Mobile Menu Overlay */}
       <div
         id="mobile-menu-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
         className={`fixed inset-0 z-40 bg-obsidian-base/98 backdrop-blur-lg flex flex-col items-center justify-center gap-8 transition-all duration-300 md:hidden ${
           mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       >
         {navLinks.map((link) => (
-          <a
+          <NavLink
             key={link.key}
+            labelKey={link.key}
             href={link.href}
-            onClick={(e) => handleNavClick(e, link.href)}
-            className={`text-2xl font-medium font-headline transition-colors duration-250 hover:text-nebula-gold ${
-              activeSection === link.href.slice(1) ? 'text-nebula-gold' : 'text-on-surface'
-            }`}
-          >
-            {t(link.key)}
-          </a>
+            isActive={activeSection === link.href.slice(1)}
+            variant="mobile"
+            onClick={handleNavClick}
+          />
         ))}
         <button
           onClick={() => {
