@@ -124,6 +124,8 @@ export const translations = {
     partnership_title: 'Partnership',
     partnership_desc:
       "We've worked together since 2014. We've delivered critical integrations for companies in Mexico and the USA. We met as engineer and manager; today we're partners.",
+    bio_read_more: 'Read more',
+    bio_read_less: 'Read less',
 
     // Social Proof
     stat_radio: 'Regular contributors on Radio Formula Baj\u00edo',
@@ -304,6 +306,8 @@ export const translations = {
     stat_years_number: '10',
     stat_years_label: 'a\u00f1os construyendo juntos',
     stat_geo: 'Trabajamos con empresas en M\u00e9xico y USA',
+    bio_read_more: 'Leer m\u00e1s',
+    bio_read_less: 'Leer menos',
 
     // Blog
     blog_label: 'INSIGHTS',

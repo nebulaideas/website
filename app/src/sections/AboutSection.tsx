@@ -97,16 +97,22 @@ export default function AboutSection() {
                 {t(founder.roleKey)}
               </p>
               <div className="mt-3">
-                <p className={`font-body text-body-md text-on-surface-variant ${
-                  expandedBios.has(i) ? '' : 'line-clamp-3'
-                }`}>
+                <p
+                  id={`bio-${i}`}
+                  className={`font-body text-body-md text-on-surface-variant ${
+                    expandedBios.has(i) ? '' : 'line-clamp-3'
+                  }`}
+                >
                   {t(founder.bioKey)}
                 </p>
                 <button
                   onClick={() => toggleBio(i)}
+                  aria-expanded={expandedBios.has(i)}
+                  aria-controls={`bio-${i}`}
+                  aria-label={`${expandedBios.has(i) ? 'Collapse' : 'Expand'} ${t(founder.nameKey)} bio`}
                   className="mt-2 flex items-center gap-1 text-nebula-gold font-tech text-tech-label hover:text-nebula-gold-hover transition-colors duration-200"
                 >
-                  {expandedBios.has(i) ? 'Read less' : 'Read more'}
+                  {expandedBios.has(i) ? t('bio_read_less') : t('bio_read_more')}
                   <ChevronDown size={14} className={`transition-transform duration-200 ${
                     expandedBios.has(i) ? 'rotate-180' : ''
                   }`} />

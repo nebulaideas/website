@@ -114,10 +114,16 @@ const SERVICE_JSON_LD = {
     'Software Architecture',
     'Engineering Leadership',
   ],
-  areaServed: {
-    '@type': 'Country',
-    name: ['Mexico', 'United States'],
-  },
+  areaServed: [
+    {
+      '@type': 'Country',
+      name: 'Mexico',
+    },
+    {
+      '@type': 'Country',
+      name: 'United States',
+    },
+  ],
   availableLanguage: ['English', 'Spanish'],
 } as const;
 

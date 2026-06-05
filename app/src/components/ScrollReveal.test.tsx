@@ -183,7 +183,7 @@ describe('ScrollReveal component', () => {
     window.IntersectionObserver = originalIO;
   });
 
-  it('should handle null ref gracefully', () => {
+  it('should render children successfully', () => {
     const originalMatchMedia = window.matchMedia;
     window.matchMedia = vi.fn().mockImplementation(() => ({
       matches: false,
@@ -196,14 +196,13 @@ describe('ScrollReveal component', () => {
       dispatchEvent: vi.fn(),
     }));
 
-    // Render with a component that doesn't set the ref properly
     const { container } = render(
       <ScrollReveal>
         <div>Content</div>
       </ScrollReveal>
     );
 
-    // Should not crash and should render children
+    // Should render children without crashing
     expect(container.firstChild).toBeInTheDocument();
 
     window.matchMedia = originalMatchMedia;
