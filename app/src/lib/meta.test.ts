@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { updateMetaTags } from './meta';
+import { updateMetaTags, injectJsonLd } from './meta';
 
 describe('updateMetaTags', () => {
   beforeEach(() => {
@@ -75,5 +75,77 @@ describe('updateMetaTags', () => {
     expect(mockEscape).toHaveBeenCalled();
 
     globalThis.CSS = originalCSS;
+  });
+});
+
+describe('injectJsonLd', () => {
+  beforeEach(() => {
+    document.head.innerHTML = '';
+    vi.restoreAllMocks();
+  });
+
+  it('should create Organization JSON-LD script element', () => {
+    injectJsonLd();
+
+    const orgScript = document.getElementById('json-ld-org');
+    expect(orgScript).toBeInTheDocument();
+    expect(orgScript).toHaveAttribute('type', 'application/ld+json');
+
+    const content = JSON.parse(orgScript?.textContent || '{}');
+    expect(content['@type']).toBe('Organization');
+    expect(content.name).toBe('Nebula Ideas');
+  });
+
+  it('should create FAQ JSON-LD script element', () => {
+    injectJsonLd();
+
+    const faqScript = document.getElementById('json-ld-faq');
+    expect(faqScript).toBeInTheDocument();
+    expect(faqScript).toHaveAttribute('type', 'application/ld+json');
+
+    const content = JSON.parse(faqScript?.textContent || '{}');
+    expect(content['@type']).toBe('FAQPage');
+    expect(Array.isArray(content.mainEntity)).toBe(true);
+  });
+
+  it('should create Service JSON-LD script element', () => {
+    injectJsonLd();
+
+    const serviceScript = document.getElementById('json-ld-service');
+    expect(serviceScript).toBeInTheDocument();
+    expect(serviceScript).toHaveAttribute('type', 'application/ld+json');
+
+    const content = JSON.parse(serviceScript?.textContent || '{}');
+    expect(content['@type']).toBe('Service');
+    expect(content.name).toBe('Nebula Ideas Technology Consulting');
+  });
+
+  it('should be idempotent - no duplicates on repeated calls', () => {
+    injectJsonLd();
+    injectJsonLd();
+    injectJsonLd();
+
+    const orgScripts = document.querySelectorAll('#json-ld-org');
+    const faqScripts = document.querySelectorAll('#json-ld-faq');
+    const serviceScripts = document.querySelectorAll('#json-ld-service');
+
+    expect(orgScripts.length).toBe(1);
+    expect(faqScripts.length).toBe(1);
+    expect(serviceScripts.length).toBe(1);
+  });
+
+  it('should update existing script elements instead of creating duplicates', () => {
+    injectJsonLd();
+
+    const orgScript = document.getElementById('json-ld-org') as HTMLScriptElement;
+    const originalContent = orgScript?.textContent;
+
+    injectJsonLd();
+
+    const orgScriptAfter = document.getElementById('json-ld-org') as HTMLScriptElement;
+    expect(orgScriptAfter?.textContent).toBe(originalContent);
+
+    const orgScripts = document.querySelectorAll('#json-ld-org');
+    expect(orgScripts.length).toBe(1);
   });
 });

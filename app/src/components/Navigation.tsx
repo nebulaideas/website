@@ -143,6 +143,15 @@ export default function Navigation() {
             onClick={handleNavClick}
           />
         ))}
+        <a
+          href={calendlyUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => setMobileOpen(false)}
+          className="bg-nebula-gold text-nebula-navy px-8 py-3 rounded font-tech text-tech-label font-bold hover:bg-nebula-gold-hover transition-all duration-300 hover:scale-[1.02] hover:shadow-gold-strong"
+        >
+          {t('nav_schedule')}
+        </a>
         <div className="flex items-center gap-4 mt-4">
           <span className="font-tech text-tech-label text-on-surface-variant">
             {language === 'en' ? 'EN' : 'ES'}

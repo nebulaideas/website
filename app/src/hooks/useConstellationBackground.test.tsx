@@ -71,7 +71,7 @@ function TestComponent({
   distribution?: 'uniform' | 'galaxy';
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const { loaded } = useConstellationBackground(ref as RefObject<HTMLDivElement | null>, {
+  const { loaded, shouldRender } = useConstellationBackground(ref as RefObject<HTMLDivElement | null>, {
     particleCount: 5,
     mouseTracking,
     distribution,
@@ -82,6 +82,7 @@ function TestComponent({
     <div>
       <div ref={ref} data-testid="container" />
       <span data-testid="loaded">{loaded ? 'true' : 'false'}</span>
+      <span data-testid="shouldRender">{shouldRender ? 'true' : 'false'}</span>
     </div>
   );
 }
@@ -129,6 +130,7 @@ describe('useConstellationBackground', () => {
 
     const { getByTestId } = render(<TestComponent mouseTracking />);
     expect(getByTestId('loaded').textContent).toBe('true');
+    expect(getByTestId('shouldRender').textContent).toBe('false');
 
     window.matchMedia = originalMatchMedia;
   });

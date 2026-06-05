@@ -31,7 +31,7 @@ describe('Navigation component', () => {
     // Check key nav links exist
     expect(screen.getAllByText('The Problem')[0]).toBeInTheDocument();
     expect(screen.getAllByText('What We Help With')[0]).toBeInTheDocument();
-    expect(screen.getByText('Schedule a Call')).toBeInTheDocument();
+    expect(screen.getAllByText('Schedule a Call')).toHaveLength(2); // Desktop and mobile
   });
 
   it('should toggle language between English and Spanish when language selector is clicked', () => {
@@ -48,7 +48,7 @@ describe('Navigation component', () => {
     // Check language labels are updated to Spanish
     expect(screen.getAllByText('El Problema')[0]).toBeInTheDocument();
     expect(screen.getAllByText('Cómo Ayudamos')[0]).toBeInTheDocument();
-    expect(screen.getByText('Agendar una Llamada')).toBeInTheDocument();
+    expect(screen.getAllByText('Agendar una Llamada')).toHaveLength(2); // Desktop and mobile
   });
 
   it('should toggle mobile menu when hamburger button is clicked', () => {
