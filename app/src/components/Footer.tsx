@@ -31,31 +31,6 @@ export default function Footer() {
             >
               hello@nebulaideas.com
             </a>
-            {/* Language toggle */}
-            <div className="flex items-center gap-2 mt-2">
-              <button
-                onClick={() => language !== 'en' && toggleLanguage()}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold font-tech tracking-wide border transition-all duration-200 ${
-                  language === 'en'
-                    ? 'border-nebula-gold bg-nebula-gold/10 text-nebula-gold'
-                    : 'border-outline-variant text-on-surface-variant hover:border-nebula-gold hover:text-nebula-gold'
-                }`}
-              >
-                <Globe size={12} />
-                EN
-              </button>
-              <button
-                onClick={() => language !== 'es' && toggleLanguage()}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold font-tech tracking-wide border transition-all duration-200 ${
-                  language === 'es'
-                    ? 'border-nebula-gold bg-nebula-gold/10 text-nebula-gold'
-                    : 'border-outline-variant text-on-surface-variant hover:border-nebula-gold hover:text-nebula-gold'
-                }`}
-              >
-                <Globe size={12} />
-                ES
-              </button>
-            </div>
           </div>
 
           {/* Links Column */}
@@ -90,8 +65,33 @@ export default function Footer() {
               <Github size={14} />
               {t('footer.github')}
             </a>
-          </div>
+            {/* Language toggle */}
+            <div className="flex items-center gap-2 w-full mt-2 md:justify-end">
+              <button
+                onClick={() => language !== 'en' && toggleLanguage()}
+                className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold font-tech tracking-wide border transition-all duration-200 leading-none ${
+                  language === 'en'
+                    ? 'border-nebula-gold bg-nebula-gold/10 text-nebula-gold'
+                    : 'border-outline-variant text-on-surface-variant hover:border-nebula-gold hover:text-nebula-gold'
+                }`}
+              >
+                <Globe size={12} className="translate-y-[0.5px]" />
+                EN
+              </button>
+              <button
+                onClick={() => language !== 'es' && toggleLanguage()}
+                className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold font-tech tracking-wide border transition-all duration-200 leading-none ${
+                  language === 'es'
+                    ? 'border-nebula-gold bg-nebula-gold/10 text-nebula-gold'
+                    : 'border-outline-variant text-on-surface-variant hover:border-nebula-gold hover:text-nebula-gold'
+                }`}
+              >
+                <Globe size={12} className="translate-y-[0.5px]" />
+                ES
+              </button>
+            </div>
         </div>
+      </div>
       </div>
     </footer>
   );
