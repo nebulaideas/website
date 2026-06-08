@@ -45,8 +45,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       siteName: resolve(lang, 'seo.site_name'),
       language,
     });
+  }, [language]);
 
-    injectJsonLd();
+  useEffect(() => {
+    injectJsonLd(language);
   }, [language]);
 
   const toggleLanguage = useCallback(() => {

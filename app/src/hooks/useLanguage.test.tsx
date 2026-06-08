@@ -26,16 +26,25 @@ function cleanupTestMetas() {
   });
 }
 
+function cleanupTestScripts() {
+  const orgScript = document.getElementById('json-ld-org');
+  if (orgScript) { document.head.removeChild(orgScript); }
+  const faqScript = document.getElementById('json-ld-faq');
+  if (faqScript) { document.head.removeChild(faqScript); }
+}
+
 beforeEach(() => {
   localStorage.clear();
   document.documentElement.lang = '';
   document.title = '';
   // Clean up meta tags to prevent test pollution
   cleanupTestMetas();
+  cleanupTestScripts();
 });
 
 afterEach(() => {
   cleanupTestMetas();
+  cleanupTestScripts();
 });
 
 // Helper component to test useLanguage context

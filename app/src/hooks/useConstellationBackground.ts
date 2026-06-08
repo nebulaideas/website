@@ -236,8 +236,6 @@ export function useConstellationBackground(
       sphereGeo.dispose();
       lineGeo.dispose();
       lineMaterial.dispose();
-      pointLight?.dispose();
-      blueLight?.dispose();
       particles.forEach((p) => { (p.material as THREE.Material).dispose(); });
       renderer.dispose();
       if (container.contains(renderer.domElement)) {

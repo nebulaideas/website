@@ -76,6 +76,20 @@ export const translations = {
       og_description:
         'A focused Clarity Sprint to help organizations understand their current reality, identify friction, and uncover practical opportunities for AI, automation, and operational improvement.',
       site_name: 'Nebula Ideas',
+      json_ld_description:
+        'Nebula Ideas helps organizations identify the value AI can create, uncover what should improve before automation, and build a clear path forward.',
+      faq_what_is_question: 'What is the Nebula Clarity Sprint?',
+      faq_what_is_answer:
+        'The Nebula Clarity Sprint helps organizations understand their current reality, identify friction, and uncover practical opportunities for AI, automation, and operational improvement before investing in a solution.',
+      faq_duration_question: 'How long does the Clarity Sprint take?',
+      faq_duration_answer:
+        'The Clarity Sprint is designed to be efficient and focused, typically completed within 1-2 weeks depending on organizational complexity and scope.',
+      faq_deliverables_question: 'What deliverables do I receive?',
+      faq_deliverables_answer:
+        'You receive a clear view of the current situation, key risks and points of friction, prioritized opportunities, practical recommendations for next steps, guidance on AI and automation, and an initial action plan.',
+      faq_location_question: 'Do you work with organizations outside of Mexico?',
+      faq_location_answer:
+        'Yes, we work with companies in both Mexico and the USA. Our team is bilingual and can deliver services in English and Spanish.',
     },
   },
   es: {
@@ -145,6 +159,20 @@ export const translations = {
       og_description:
         'Un Clarity Sprint enfocado en ayudar a las organizaciones a entender su situación actual, identificar fricciones y descubrir oportunidades prácticas para IA, automatización y mejora operativa.',
       site_name: 'Nebula Ideas',
+      json_ld_description:
+        'Nebula Ideas ayuda a las organizaciones a identificar el valor que la IA puede aportar, descubrir qué se debe mejorar antes de automatizar y construir un camino claro hacia adelante.',
+      faq_what_is_question: '¿Qué es el Nebula Clarity Sprint?',
+      faq_what_is_answer:
+        'El Nebula Clarity Sprint ayuda a las organizaciones a entender su situación actual, identificar fricciones y descubrir oportunidades prácticas para IA, automatización y mejora operativa antes de invertir en una solución.',
+      faq_duration_question: '¿Cuánto tiempo toma el Clarity Sprint?',
+      faq_duration_answer:
+        'El Clarity Sprint está diseñado para ser eficiente y enfocado. Generalmente se completa en 1 o 2 semanas, dependiendo de la complejidad y el alcance de la organización.',
+      faq_deliverables_question: '¿Qué entregables recibo?',
+      faq_deliverables_answer:
+        'Recibes una visión clara de la situación actual, los principales riesgos y puntos de fricción, oportunidades priorizadas, recomendaciones prácticas para los siguientes pasos, orientación sobre IA y automatización, y un plan de acción inicial.',
+      faq_location_question: '¿Trabajan con organizaciones fuera de México?',
+      faq_location_answer:
+        'Sí, trabajamos con empresas tanto en México como en Estados Unidos. Nuestro equipo es bilingüe y puede ofrecer servicios en inglés y español.',
     },
   },
 } as const;

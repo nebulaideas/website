@@ -1,11 +1,11 @@
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback, useMemo } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useConstellationBackground } from '@/hooks/useConstellationBackground';
 
 export default function HeroSection() {
   const { t } = useLanguage();
   const canvasContainerRef = useRef<HTMLDivElement>(null);
-  const particleCount = typeof window !== 'undefined' && window.innerWidth < 768 ? 35 : 70;
+  const particleCount = useMemo(() => window.innerWidth < 768 ? 35 : 70, []);
   const { loaded } = useConstellationBackground(canvasContainerRef, {
     particleCount,
     goldRatio: 0.6,
