@@ -63,6 +63,7 @@ export default function BeyondClaritySprintSection() {
             title={t(service.titleKey)}
             description={t(service.descKey)}
             delay={i * 0.1}
+            centered
           />
         ))}
       </div>
