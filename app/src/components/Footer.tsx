@@ -25,6 +25,12 @@ export default function Footer() {
             <p className="font-tech text-tech-data text-on-tertiary-container">
               &copy; {CURRENT_YEAR} {t('footer_copyright')}
             </p>
+            <a
+              href="mailto:hello@nebulaideas.com"
+              className="font-tech text-tech-data text-nebula-gold hover:text-nebula-gold-hover transition-colors duration-200"
+            >
+              hello@nebulaideas.com
+            </a>
             {/* Language toggle */}
             <div className="flex items-center gap-2 mt-2">
               <button
