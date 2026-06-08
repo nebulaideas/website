@@ -7,7 +7,9 @@ function resolve(lang: Record<string, unknown>, path: string): string {
   const parts = path.split('.');
   let current: unknown = lang;
   for (const part of parts) {
-    if (current == null || typeof current !== 'object') return path;
+    if (current === null || current === undefined || typeof current !== 'object') {
+      return path;
+    }
     current = (current as Record<string, unknown>)[part];
   }
   return typeof current === 'string' ? current : path;
