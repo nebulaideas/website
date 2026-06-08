@@ -1,7 +1,7 @@
 import { renderHook, act, render, screen } from '@testing-library/react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { LanguageProvider, useLanguage, useComplementaryCalendlyUrl } from './useLanguage';
-import { translations } from '../lib/translations';
+import { translations, type TranslationKey } from '../lib/translations';
 
 const TEST_METAS = [
   { key: 'name', value: 'description' },
@@ -134,7 +134,7 @@ describe('useLanguage hook & LanguageProvider', () => {
   it('should fall back to the path string when a translation key is missing', () => {
     function MissingKeyTester() {
       const { t } = useLanguage();
-      return <span data-testid="missing">{t('nonexistent.key' as any)}</span>;
+      return <span data-testid="missing">{t('nonexistent.key' as unknown as TranslationKey)}</span>;
     }
     render(
       <LanguageProvider>
