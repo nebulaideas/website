@@ -70,11 +70,11 @@ export const translations = {
       github: 'GitHub',
     },
     seo: {
-      title: 'Nebula Clarity Sprint \u2014 AI & Technology Strategy',
+      title: 'Nebula Ideas — AI is an amplifier.',
       description:
-        'Understand where technology creates friction, align teams around outcomes, and identify practical AI and automation opportunities before you build.',
+        'Nebula Ideas helps organizations identify the value AI can create, uncover what should improve before automation, and build a clear path forward.',
       og_description:
-        'A focused assessment to uncover friction, align teams, and turn AI, automation, and technology decisions into measurable outcomes.',
+        'A focused Clarity Sprint to help organizations understand their current reality, identify friction, and uncover practical opportunities for AI, automation, and operational improvement.',
       site_name: 'Nebula Ideas',
     },
   },
@@ -139,11 +139,11 @@ export const translations = {
       github: 'GitHub',
     },
     seo: {
-      title: 'Nebula Clarity Sprint \u2014 Estrategia de IA y Tecnolog\u00eda',
+      title: 'Nebula Ideas — La IA es un multiplicador.',
       description:
-        'Entiende d\u00f3nde la tecnolog\u00eda crea fricci\u00f3n, alinea equipos alrededor de resultados e identifica oportunidades pr\u00e1cticas de IA y automatizaci\u00f3n antes de construir.',
+        'Nebula Ideas ayuda a las organizaciones a identificar el valor que la IA puede aportar, descubrir qué se debe mejorar antes de automatizar y construir un camino claro hacia adelante.',
       og_description:
-        'Un diagn\u00f3stico enfocado para descubrir fricci\u00f3n, alinear equipos y convertir decisiones de IA, automatizaci\u00f3n y tecnolog\u00eda en resultados medibles.',
+        'Un Clarity Sprint enfocado en ayudar a las organizaciones a entender su situación actual, identificar fricciones y descubrir oportunidades prácticas para IA, automatización y mejora operativa.',
       site_name: 'Nebula Ideas',
     },
   },

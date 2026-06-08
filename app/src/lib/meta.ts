@@ -34,7 +34,7 @@ export function updateMetaTags({
   document.title = title;
 
   updateMeta('name', 'description', description);
-  updateMeta('name', 'keywords', 'AI strategy, automation consulting, technology assessment, software architecture, engineering leadership, product thinking, organizational clarity, Sprint Design, Design Thinking, remote software engineering');
+  updateMeta('name', 'keywords', 'Nebula Ideas, AI strategy, Clarity Sprint, automation consulting, technology assessment, software architecture, engineering leadership, product thinking, organizational clarity, AI amplifier');
   updateMeta('name', 'author', 'Nebula Ideas');
   updateMeta('property', 'og:title', title);
   updateMeta('property', 'og:description', ogDescription);
@@ -67,7 +67,7 @@ const JSON_LD = {
   url: 'https://nebulaideas.com',
   logo: 'https://nebulaideas.com/assets/logo.png',
   description:
-    'Technology and AI strategy consultancy focused on organizational clarity, measurable outcomes, and practical AI adoption.',
+    'Nebula Ideas helps organizations identify the value AI can create, uncover what should improve before automation, and build a clear path forward.',
   foundingDate: '2026',
   address: {
     '@type': 'PostalAddress',
@@ -77,7 +77,7 @@ const JSON_LD = {
   contactPoint: {
     '@type': 'ContactPoint',
     contactType: 'sales',
-    email: 'contact@nebulaideas.com',
+    email: 'hello@nebulaideas.com',
     availableLanguage: ['English', 'Spanish'],
   },
   sameAs: [
@@ -107,7 +107,7 @@ const FAQ_JSON_LD = {
       name: 'What is the Nebula Clarity Sprint?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'The Nebula Clarity Sprint is a focused assessment designed to identify where technology, AI, automation, and organizational processes can create meaningful value. It evaluates business context, operational reality, technology landscape, and AI opportunities.',
+        text: 'The Nebula Clarity Sprint helps organizations understand their current reality, identify friction, and uncover practical opportunities for AI, automation, and operational improvement before investing in a solution.',
       },
     },
     {
@@ -123,7 +123,7 @@ const FAQ_JSON_LD = {
       name: 'What deliverables do I receive?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'You receive a current-state assessment, key risks and bottlenecks, an opportunity map, AI and automation recommendations, a prioritized roadmap, and strategic implementation guidance.',
+        text: 'You receive a clear view of the current situation, key risks and points of friction, prioritized opportunities, practical recommendations for next steps, guidance on AI and automation, and an initial action plan.',
       },
     },
     {
