@@ -1,6 +1,5 @@
 import { useRef, useCallback } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
-import { ArrowDown } from 'lucide-react';
 import { useConstellationBackground } from '@/hooks/useConstellationBackground';
 
 export default function HeroSection() {

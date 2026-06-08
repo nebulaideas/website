@@ -3,7 +3,7 @@ import ScrollReveal from '@/components/ScrollReveal';
 import SectionShell from '@/components/SectionShell';
 import SectionHeader from '@/components/SectionHeader';
 import FeatureCard from '@/components/FeatureCard';
-import { SearchCheck, ClipboardCheck, CheckCircle2 } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
 const evalAreas = [
   { titleKey: 'sprint.eval.1.title', descKey: 'sprint.eval.1.desc' },
