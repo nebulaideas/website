@@ -49,7 +49,7 @@ describe('Navigation component', () => {
     // Check language labels are updated to Spanish
     expect(screen.getAllByText('Inicio')[0]).toBeInTheDocument();
     expect(screen.getAllByText('Sprint de Claridad')[0]).toBeInTheDocument();
-    expect(screen.getAllByText('Más Allá del Clarity Sprint')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Más allá del Clarity Sprint')[0]).toBeInTheDocument();
     expect(screen.getByText('Agendar una Llamada')).toBeInTheDocument();
   });
 

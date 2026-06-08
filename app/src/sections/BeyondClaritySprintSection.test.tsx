@@ -23,9 +23,9 @@ describe('BeyondClaritySprintSection', () => {
 
   it('should render approach narrative', () => {
     renderSection();
-    expect(screen.getByText('Clarity is usually where the work begins.')).toBeInTheDocument();
-    expect(screen.getByText(/shared understanding of your current reality/)).toBeInTheDocument();
-    expect(screen.getByText(/What happens next depends/)).toBeInTheDocument();
+    expect(screen.getByText('Clarity is not the destination. It\u2019s the beginning.')).toBeInTheDocument();
+    expect(screen.getByText('The Clarity Sprint creates a shared understanding of your current reality, opportunities, and constraints.')).toBeInTheDocument();
+    expect(screen.getByText(/What comes next depends/)).toBeInTheDocument();
     expect(screen.getByText(/Some organizations need guidance/)).toBeInTheDocument();
     expect(screen.getByText(/areas where we frequently help/)).toBeInTheDocument();
   });
