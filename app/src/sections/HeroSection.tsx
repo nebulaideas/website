@@ -45,7 +45,7 @@ export default function HeroSection() {
         </h1>
 
         <h2
-          className={`text-headline-md text-on-surface-variant max-w-3xl mx-auto mb-6 transition-all duration-700 delay-200 leading-relaxed ${
+          className={`font-headline text-headline-md text-on-surface-variant max-w-3xl mx-auto mb-6 transition-all duration-700 delay-200 leading-relaxed ${
             loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
           style={{ textShadow: '0 1px 20px rgba(0,0,0,0.5)' }}

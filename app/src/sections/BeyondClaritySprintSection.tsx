@@ -40,16 +40,16 @@ export default function BeyondClaritySprintSection() {
           <p className="font-headline text-headline-md text-nebula-gold">
             {t('approach_sub')}
           </p>
-          <p className="font-body text-body-lg text-on-surface-variant leading-relaxed">
+          <p className="font-body text-body-lg text-on-surface-variant leading-relaxed text-justify">
             {t('approach_body1')}
           </p>
-          <p className="font-body text-body-lg text-on-surface-variant leading-relaxed">
+          <p className="font-body text-body-lg text-on-surface-variant leading-relaxed text-justify">
             {t('approach_body2')}
           </p>
-          <p className="font-body text-body-lg text-on-surface-variant leading-relaxed">
+          <p className="font-body text-body-lg text-on-surface-variant leading-relaxed text-justify">
             {t('approach_body3')}
           </p>
-          <p className="font-body text-body-lg text-on-surface-variant leading-relaxed">
+          <p className="font-body text-body-lg text-on-surface-variant leading-relaxed text-justify">
             {t('approach_body4')}
           </p>
         </div>

@@ -19,7 +19,7 @@ export default function SectionHeader({ labelKey, headlineKey, labelColor = 'gol
           {t(labelKey)}
         </span>
       )}
-      <h2 className="font-headline text-headline-lg text-on-surface">
+      <h2 className="font-display text-[clamp(1.75rem,4vw,3.5rem)] text-on-surface tracking-tight">
         {t(headlineKey)}
       </h2>
     </div>

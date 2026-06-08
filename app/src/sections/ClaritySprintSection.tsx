@@ -1,6 +1,7 @@
 import { useLanguage } from '@/hooks/useLanguage';
 import ScrollReveal from '@/components/ScrollReveal';
 import SectionShell from '@/components/SectionShell';
+import SectionHeader from '@/components/SectionHeader';
 import FeatureCard from '@/components/FeatureCard';
 import { SearchCheck, ClipboardCheck, CheckCircle2 } from 'lucide-react';
 
@@ -37,15 +38,14 @@ export default function ClaritySprintSection() {
 
   return (
     <SectionShell id="clarity-sprint" className="py-28 md:py-32 bg-surface-container-high border-t border-outline-variant/50" containerClassName="max-w-5xl">
+      <SectionHeader headlineKey="sprint_headline" />
+
       <ScrollReveal>
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="font-display text-[40px] md:text-[56px] text-on-surface mb-4 tracking-tight">
-            {t('sprint_headline')}
-          </h2>
           <h3 className="font-headline text-headline-md text-nebula-gold mb-6">
             {t('sprint_sub')}
           </h3>
-          <p className="font-body text-body-lg text-on-surface-variant mb-4">
+          <p className="font-body text-body-lg text-on-surface-variant text-justify">
             {t('sprint_desc')}
           </p>
         </div>
@@ -88,7 +88,7 @@ export default function ClaritySprintSection() {
             ))}
           </div>
           <div className="mt-8 pt-6 border-t border-outline-variant">
-            <p className="font-body text-body-md text-on-surface-variant italic">
+            <p className="font-body text-body-md text-on-surface-variant italic text-justify">
               {t('sprint_deliverable_footer')}
             </p>
           </div>
