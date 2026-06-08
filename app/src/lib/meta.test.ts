@@ -61,6 +61,19 @@ describe('updateMetaTags', () => {
     expect(ogDescMetaUpdated).toHaveAttribute('content', 'Updated og description');
   });
 
+  it('should use CSS.escape fallback if CSS is undefined', () => {
+    const originalCSS = globalThis.CSS;
+    // @ts-expect-error deleting CSS to test fallback
+    delete globalThis.CSS;
+
+    updateMetaTags({ title: 'No CSS', description: 'Fallback path', language: 'en', ...defaults });
+
+    const descMeta = document.querySelector('meta[name="description"]');
+    expect(descMeta).toHaveAttribute('content', 'Fallback path');
+
+    globalThis.CSS = originalCSS;
+  });
+
   it('should use CSS.escape fallback if CSS.escape is defined', () => {
     const originalCSS = globalThis.CSS;
 

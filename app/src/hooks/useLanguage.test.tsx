@@ -131,6 +131,19 @@ describe('useLanguage hook & LanguageProvider', () => {
     expect(document.documentElement.lang).toBe('en');
   });
 
+  it('should fall back to the path string when a translation key is missing', () => {
+    function MissingKeyTester() {
+      const { t } = useLanguage();
+      return <span data-testid="missing">{t('nonexistent.key' as any)}</span>;
+    }
+    render(
+      <LanguageProvider>
+        <MissingKeyTester />
+      </LanguageProvider>
+    );
+    expect(screen.getByTestId('missing')).toHaveTextContent('nonexistent.key');
+  });
+
   it('should update document title and meta description upon change', () => {
     // Setup dummy meta tags
     const metaDesc = document.createElement('meta');
