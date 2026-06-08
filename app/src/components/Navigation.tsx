@@ -4,12 +4,9 @@ import NavLink from '@/components/NavLink';
 import { Menu, X, Globe } from 'lucide-react';
 
 const navLinks = [
-  { key: 'nav_problem', href: '#why-struggle' },
-  { key: 'nav_services', href: '#what-we-help' },
+  { key: 'nav_home', href: '#top' },
   { key: 'nav_sprint', href: '#clarity-sprint' },
-  { key: 'nav_approach', href: '#our-approach' },
-  { key: 'nav_blog', href: '#blog' },
-  { key: 'nav_contact', href: '#schedule' },
+  { key: 'nav_services', href: '#beyond-clarity-sprint' },
 ] as const;
 
 export default function Navigation() {

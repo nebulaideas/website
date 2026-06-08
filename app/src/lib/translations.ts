@@ -3,10 +3,9 @@ export type Language = 'en' | 'es';
 export const translations = {
   en: {
     // Navigation
-    nav_problem: 'The Problem',
-    nav_services: 'What We Help With',
+    nav_home: 'Home',
+    nav_services: 'Beyond the Clarity Sprint',
     nav_sprint: 'Clarity Sprint',
-    nav_approach: 'Our Approach',
     nav_blog: 'Blog',
     nav_contact: 'Contact',
     nav_toggle_es: 'ES',
@@ -14,12 +13,11 @@ export const translations = {
     nav_schedule: 'Schedule a Call',
 
     // Hero
-    hero_headline: 'Technology and AI should create clarity, not complexity.',
-    hero_subheadline:
-      'We help organizations understand where technology is creating friction, align teams around measurable outcomes, and identify practical opportunities for AI and automation.',
+    hero_headline: 'AI is an amplifier.',
+    hero_subheadline: 'Understand before you amplify.',
     hero_supporting:
-      'Before investing in tools, platforms, or large-scale transformations, we help you identify what to amplify \u2014 and what to fix first.',
-    hero_tags: 'AI Strategy \u00B7 Automation \u00B7 Architecture \u00B7 Product Thinking \u00B7 Engineering Leadership',
+      'The best outcomes emerge when human judgment, organizational context, and technology work together. We help organizations identify where AI creates meaningful value, understand what should be improved before automation, and build practical paths to adoption.',
+    hero_tagline: 'Work With AI. Not Around It.',
     hero_cta_primary: 'Explore the Clarity Sprint',
     hero_cta_secondary: 'Contact Us',
 
@@ -40,51 +38,48 @@ export const translations = {
 
     // Nebula Clarity Sprint
     sprint_headline: 'The Nebula Clarity Sprint',
-    sprint_sub: 'Understand before you automate.',
+    sprint_sub: 'Clarity before commitment.',
     sprint_desc:
-      'The Nebula Clarity Sprint is a focused assessment designed to identify where technology, AI, automation, and organizational processes can create meaningful value.',
-    sprint_approach: 'Instead of starting with tools, we start with understanding.',
+      'The Nebula Clarity Sprint helps organizations identify friction, evaluate technology constraints, and uncover practical opportunities for AI, automation, and operational improvement before investing in implementation.',
     sprint_eval_label: 'What we evaluate',
     sprint_eval1_title: 'Business Context',
-    sprint_eval1_desc: 'Objectives, priorities, constraints, stakeholders, and desired outcomes.',
+    sprint_eval1_desc: 'Objectives, priorities, stakeholders, constraints, and desired outcomes.',
     sprint_eval2_title: 'Operational Reality',
-    sprint_eval2_desc: 'How work actually flows across teams, systems, and processes.',
+    sprint_eval2_desc: 'How work flows across teams, processes, and systems.',
     sprint_eval3_title: 'Technology Landscape',
-    sprint_eval3_desc: 'Architecture, integrations, dependencies, technical debt, and scalability considerations.',
-    sprint_eval4_title: 'AI & Automation Opportunities',
+    sprint_eval3_desc: 'Architecture, integrations, dependencies, technical constraints, and scalability considerations.',
+    sprint_eval4_title: 'AI & Automation Potential',
     sprint_eval4_desc:
-      'Areas where AI can augment people, improve decision-making, reduce friction, or accelerate delivery.',
+      'Where AI and automation can create meaningful value, reduce friction, and support decision-making.',
     sprint_deliverable_label: 'What you receive',
     sprint_deliverable1: 'Current-state assessment',
     sprint_deliverable2: 'Key risks and bottlenecks',
     sprint_deliverable3: 'Opportunity map',
-    sprint_deliverable4: 'AI and automation recommendations',
-    sprint_deliverable5: 'Prioritized roadmap',
-    sprint_deliverable6: 'Strategic implementation guidance',
+    sprint_deliverable4: 'Prioritized recommendations',
+    sprint_deliverable5: 'AI & automation guidance',
+    sprint_deliverable6: 'Implementation roadmap',
     sprint_deliverable_footer: 'A clear path forward based on your reality\u2014not industry hype.',
     sprint_cta: 'Schedule a Discovery Call',
 
     // What We Help With
     services_label: 'SERVICES',
-    services_headline: 'What We Help With',
+    services_headline: 'Beyond the Clarity Sprint',
     service1_title: 'AI & Automation Strategy',
-    service1_desc: 'Identify where AI can create measurable value before investing in implementation.',
+    service1_desc: 'Identify where AI can create meaningful value, support decision-making, and improve the way people work before investing in implementation.',
     service2_title: 'Architecture & Technical Assessment',
     service2_desc:
-      'Understand technical debt, system constraints, scalability concerns, and modernization opportunities.',
+      'Evaluate technical constraints, architectural risks, scalability concerns, and modernization opportunities.',
     service3_title: 'Product & Process Alignment',
-    service3_desc: 'Connect business goals, team execution, and technology decisions.',
+    service3_desc: 'Connect business goals, team execution, and technology decisions to improve focus, alignment, and delivery.',
     service4_title: 'Engineering Leadership & Advisory',
-    service4_desc: 'Support organizational growth, technical decision-making, and operational maturity.',
+    service4_desc: 'Support organizational growth, technical decision-making, team effectiveness, and operational maturity.',
 
     // Our Approach
-    approach_headline: 'Our Approach',
-    approach_sub: 'Work With AI. Not Around It.',
-    approach_body1: 'We believe the best results come from combining human judgment with technological capabilities.',
-    approach_body2: 'AI is not a replacement for people.',
-    approach_body3: 'AI is an amplifier.',
-    approach_body4: 'The goal is not to remove humans from the process.',
-    approach_body5: 'The goal is to help humans make better decisions, move faster, and focus on higher-value work.',
+    approach_sub: 'Clarity is usually where the work begins.',
+    approach_body1: 'The Nebula Clarity Sprint helps create a shared understanding of your current reality, opportunities, and constraints.',
+    approach_body2: 'What happens next depends on what we discover together.',
+    approach_body3: 'Some organizations need guidance on AI adoption. Others need help navigating technical complexity, aligning teams, improving delivery, or making strategic technology decisions.',
+    approach_body4: 'These are some of the areas where we frequently help.',
 
     // Principles That Guide Us
     principles_label: 'PRINCIPLES',
@@ -173,10 +168,9 @@ export const translations = {
   },
   es: {
     // Navigation
-    nav_problem: 'El Problema',
-    nav_services: 'C\u00f3mo Ayudamos',
+    nav_home: 'Inicio',
+    nav_services: 'M\u00e1s All\u00e1 del Clarity Sprint',
     nav_sprint: 'Sprint de Claridad',
-    nav_approach: 'Nuestro Enfoque',
     nav_blog: 'Blog',
     nav_contact: 'Contacto',
     nav_toggle_es: 'ES',
@@ -184,12 +178,11 @@ export const translations = {
     nav_schedule: 'Agendar una Llamada',
 
     // Hero
-    hero_headline: 'La tecnolog\u00eda y la IA deber\u00edan crear claridad, no complejidad.',
-    hero_subheadline:
-      'Ayudamos a las organizaciones a entender d\u00f3nde la tecnolog\u00eda crea fricci\u00f3n, alinear equipos en torno a resultados medibles e identificar oportunidades pr\u00e1cticas para IA y automatizaci\u00f3n.',
+    hero_headline: 'La IA es un amplificador.',
+    hero_subheadline: 'Entiende antes de amplificar.',
     hero_supporting:
-      'Antes de invertir en herramientas, plataformas o transformaciones a gran escala, te ayudamos a identificar qu\u00e9 amplificar \u2014 y qu\u00e9 arreglar primero.',
-    hero_tags: 'Estrategia de IA \u00B7 Automatizaci\u00f3n \u00B7 Arquitectura \u00B7 Pensamiento de Producto \u00B7 Liderazgo en Ingenier\u00eda',
+      'Los mejores resultados surgen cuando el juicio humano, el contexto organizacional y la tecnolog\u00eda trabajan juntos. Ayudamos a las organizaciones a identificar donde la IA crea valor significativo, entender qu\u00e9 debe mejorarse antes de automatizar y construir caminos pr\u00e1cticos hacia la adopci\u00f3n.',
+    hero_tagline: 'Trabaja con IA. No al rev\u00e9s.',
     hero_cta_primary: 'Explora el Clarity Sprint',
     hero_cta_secondary: 'Cont\u00e1ctanos',
 
@@ -210,53 +203,49 @@ export const translations = {
 
     // Nebula Clarity Sprint
     sprint_headline: 'Nebula Clarity Sprint',
-    sprint_sub: 'Entiende antes de automatizar.',
+    sprint_sub: 'Claridad antes de comprometerse.',
     sprint_desc:
-      'El Nebula Clarity Sprint es una evaluaci\u00f3n enfocada dise\u00f1ada para identificar d\u00f3nde la tecnolog\u00eda, la IA, la automatizaci\u00f3n y los procesos organizacionales pueden crear valor significativo.',
-    sprint_approach: 'En lugar de empezar con herramientas, empezamos con entendimiento.',
+      'El Nebula Clarity Sprint ayuda a las organizaciones a identificar fricci\u00f3n, evaluar restricciones tecnol\u00f3gicas y descubrir oportunidades pr\u00e1cticas para IA, automatizaci\u00f3n y mejora operativa antes de invertir en implementaci\u00f3n.',
     sprint_eval_label: 'Qu\u00e9 evaluamos',
     sprint_eval1_title: 'Contexto de Negocio',
-    sprint_eval1_desc: 'Objetivos, prioridades, restricciones, stakeholders y resultados deseados.',
+    sprint_eval1_desc: 'Objetivos, prioridades, stakeholders, restricciones y resultados deseados.',
     sprint_eval2_title: 'Realidad Operativa',
-    sprint_eval2_desc: 'C\u00f3mo fluye el trabajo realmente entre equipos, sistemas y procesos.',
+    sprint_eval2_desc: 'C\u00f3mo fluye el trabajo entre equipos, procesos y sistemas.',
     sprint_eval3_title: 'Panorama Tecnol\u00f3gico',
     sprint_eval3_desc:
-      'Arquitectura, integraciones, dependencias, deuda t\u00e9cnica y consideraciones de escalabilidad.',
-    sprint_eval4_title: 'Oportunidades de IA y Automatizaci\u00f3n',
+      'Arquitectura, integraciones, dependencias, restricciones t\u00e9cnicas y consideraciones de escalabilidad.',
+    sprint_eval4_title: 'Potencial de IA y Automatizaci\u00f3n',
     sprint_eval4_desc:
-      '\u00c1reas donde la IA puede aumentar a las personas, mejorar la toma de decisiones, reducir fricci\u00f3n o acelerar la entrega.',
+      'Donde la IA y la automatizaci\u00f3n pueden crear valor significativo, reducir fricci\u00f3n y apoyar la toma de decisiones.',
     sprint_deliverable_label: 'Qu\u00e9 recibes',
     sprint_deliverable1: 'Evaluaci\u00f3n del estado actual',
     sprint_deliverable2: 'Riesgos clave y cuellos de botella',
     sprint_deliverable3: 'Mapa de oportunidades',
-    sprint_deliverable4: 'Recomendaciones de IA y automatizaci\u00f3n',
-    sprint_deliverable5: 'Hoja de ruta priorizada',
-    sprint_deliverable6: 'Gu\u00eda de implementaci\u00f3n estrat\u00e9gica',
+    sprint_deliverable4: 'Recomendaciones priorizadas',
+    sprint_deliverable5: 'Gu\u00eda de IA y automatizaci\u00f3n',
+    sprint_deliverable6: 'Hoja de ruta de implementaci\u00f3n',
     sprint_deliverable_footer: 'Un camino claro basado en tu realidad, no en el hype de la industria.',
     sprint_cta: 'Agenda una Llamada de Descubrimiento',
 
     // What We Help With
     services_label: 'SERVICIOS',
-    services_headline: 'C\u00f3mo Ayudamos',
+    services_headline: 'M\u00e1s All\u00e1 del Clarity Sprint',
     service1_title: 'Estrategia de IA y Automatizaci\u00f3n',
-    service1_desc: 'Identifica d\u00f3nde la IA puede crear valor medible antes de invertir en implementaci\u00f3n.',
+    service1_desc: 'Identifica donde la IA puede crear valor significativo, apoyar la toma de decisiones y mejorar la forma en que las personas trabajan antes de invertir en implementaci\u00f3n.',
     service2_title: 'Evaluaci\u00f3n de Arquitectura y Tecnolog\u00eda',
     service2_desc:
-      'Comprende la deuda t\u00e9cnica, restricciones del sistema, preocupaciones de escalabilidad y oportunidades de modernizaci\u00f3n.',
+      'Eval\u00faa restricciones t\u00e9cnicas, riesgos arquitect\u00f3nicos, preocupaciones de escalabilidad y oportunidades de modernizaci\u00f3n.',
     service3_title: 'Alineaci\u00f3n de Producto y Procesos',
-    service3_desc: 'Conecta objetivos de negocio, ejecuci\u00f3n del equipo y decisiones tecnol\u00f3gicas.',
+    service3_desc: 'Conecta objetivos de negocio, ejecuci\u00f3n del equipo y decisiones tecnol\u00f3gicas para mejorar enfoque, alineaci\u00f3n y entrega.',
     service4_title: 'Liderazgo y Asesor\u00eda en Ingenier\u00eda',
-    service4_desc: 'Apoya el crecimiento organizacional, la toma de decisiones t\u00e9cnicas y la madurez operativa.',
+    service4_desc: 'Apoya el crecimiento organizacional, la toma de decisiones t\u00e9cnicas, la efectividad del equipo y la madurez operativa.',
 
     // Our Approach
-    approach_headline: 'Nuestro Enfoque',
-    approach_sub: 'Trabaja con IA. No al rev\u00e9s.',
-    approach_body1:
-      'Creemos que los mejores resultados provienen de combinar el juicio humano con las capacidades tecnol\u00f3gicas.',
-    approach_body2: 'La IA no es un reemplazo para las personas.',
-    approach_body3: 'La IA es un amplificador.',
-    approach_body4: 'El objetivo no es eliminar a los humanos del proceso.',
-    approach_body5: 'El objetivo es ayudar a las personas a tomar mejores decisiones, moverse m\u00e1s r\u00e1pido y enfocarse en trabajo de mayor valor.',
+    approach_sub: 'La claridad es usualmente donde comienza el trabajo.',
+    approach_body1: 'El Nebula Clarity Sprint ayuda a crear un entendimiento compartido de tu realidad actual, oportunidades y restricciones.',
+    approach_body2: 'Lo que sucede despu\u00e9s depende de lo que descubramos juntos.',
+    approach_body3: 'Algunas organizaciones necesitan orientaci\u00f3n sobre adopci\u00f3n de IA. Otras necesitan ayuda navegando complejidad t\u00e9cnica, alineando equipos, mejorando la entrega o tomando decisiones tecnol\u00f3gicas estrat\u00e9gicas.',
+    approach_body4: 'Estas son algunas de las \u00e1reas donde frecuentemente ayudamos.',
 
     // Principles That Guide Us
     principles_label: 'PRINCIPIOS',

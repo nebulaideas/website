@@ -45,7 +45,7 @@ function TestComponent() {
     <div>
       <span data-testid="lang">{language}</span>
       <span data-testid="calendly">{calendlyUrl}</span>
-      <span data-testid="translation">{t('nav_problem')}</span>
+      <span data-testid="translation">{t('nav_sprint')}</span>
       <button onClick={toggleLanguage} data-testid="toggle-btn">Toggle</button>
     </div>
   );
@@ -72,7 +72,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     );
 
     expect(screen.getByTestId('lang')).toHaveTextContent('en');
-    expect(screen.getByTestId('translation')).toHaveTextContent('The Problem');
+    expect(screen.getByTestId('translation')).toHaveTextContent('Clarity Sprint');
   });
 
   it('should load initial language from localStorage if present', () => {
@@ -85,7 +85,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     );
 
     expect(screen.getByTestId('lang')).toHaveTextContent('es');
-    expect(screen.getByTestId('translation')).toHaveTextContent('El Problema');
+    expect(screen.getByTestId('translation')).toHaveTextContent('Sprint de Claridad');
   });
 
   it('should toggle language from "en" to "es" and back', () => {
@@ -99,7 +99,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     
     // Initial English
     expect(screen.getByTestId('lang')).toHaveTextContent('en');
-    expect(screen.getByTestId('translation')).toHaveTextContent('The Problem');
+    expect(screen.getByTestId('translation')).toHaveTextContent('Clarity Sprint');
 
     // Toggle to Spanish
     act(() => {
@@ -107,7 +107,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     });
 
     expect(screen.getByTestId('lang')).toHaveTextContent('es');
-    expect(screen.getByTestId('translation')).toHaveTextContent('El Problema');
+    expect(screen.getByTestId('translation')).toHaveTextContent('Sprint de Claridad');
     expect(localStorage.getItem('nebula-language')).toBe('es');
     expect(document.documentElement.lang).toBe('es');
 
@@ -117,7 +117,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     });
 
     expect(screen.getByTestId('lang')).toHaveTextContent('en');
-    expect(screen.getByTestId('translation')).toHaveTextContent('The Problem');
+    expect(screen.getByTestId('translation')).toHaveTextContent('Clarity Sprint');
     expect(localStorage.getItem('nebula-language')).toBe('en');
     expect(document.documentElement.lang).toBe('en');
   });

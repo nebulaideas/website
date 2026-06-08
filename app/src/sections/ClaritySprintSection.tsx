@@ -39,20 +39,14 @@ export default function ClaritySprintSection() {
     <SectionShell id="clarity-sprint" className="py-28 md:py-32 bg-surface-container-high border-t border-outline-variant/50" containerClassName="max-w-5xl">
       <ScrollReveal>
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center justify-center p-4 bg-obsidian-base rounded-full border border-outline-variant mb-8 hover:border-nebula-gold transition-colors duration-300">
-            <SearchCheck size={32} className="text-nebula-gold" />
-          </div>
           <h2 className="font-display text-[40px] md:text-[56px] text-on-surface mb-4 tracking-tight">
             {t('sprint_headline')}
           </h2>
-          <p className="font-headline text-headline-md text-nebula-gold mb-6">
+          <h3 className="font-headline text-headline-md text-nebula-gold mb-6">
             {t('sprint_sub')}
-          </p>
+          </h3>
           <p className="font-body text-body-lg text-on-surface-variant mb-4">
             {t('sprint_desc')}
-          </p>
-          <p className="font-body text-body-md text-on-surface-variant italic">
-            {t('sprint_approach')}
           </p>
         </div>
       </ScrollReveal>
@@ -60,10 +54,9 @@ export default function ClaritySprintSection() {
       <ScrollReveal delay={0.1}>
         <div className="mb-16">
           <div className="flex items-center gap-3 mb-8">
-            <ClipboardCheck size={20} className="text-nebula-gold" />
-            <span className="font-tech text-tech-label text-nebula-gold uppercase tracking-[0.15em]">
+            <h3 className="font-tech text-tech-label text-nebula-gold uppercase tracking-[0.15em]">
               {t('sprint_eval_label')}
-            </span>
+            </h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {evalAreas.map((area, i) => (
@@ -80,10 +73,12 @@ export default function ClaritySprintSection() {
       </ScrollReveal>
 
       <ScrollReveal delay={0.2}>
-        <div className="card-base bg-obsidian-base p-8 md:p-10 mb-12">
-          <span className="font-tech text-tech-label text-syntax-green uppercase tracking-[0.15em] block mb-6">
+        <div className="flex items-center gap-3 mb-8">
+          <h3 className="font-tech text-tech-label text-nebula-gold uppercase tracking-[0.15em]">
             {t('sprint_deliverable_label')}
-          </span>
+          </h3>
+        </div>
+        <div className="card-base border-none p-8 md:p-10 mb-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {deliverables.map((key) => (
               <div key={key} className="flex items-center gap-3">

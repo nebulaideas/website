@@ -1,4 +1,5 @@
 import { useLanguage } from '@/hooks/useLanguage';
+import ScrollReveal from '@/components/ScrollReveal';
 import SectionShell from '@/components/SectionShell';
 import SectionHeader from '@/components/SectionHeader';
 import FeatureCard from '@/components/FeatureCard';
@@ -27,12 +28,32 @@ const services = [
   },
 ] as const;
 
-export default function WhatWeHelpSection() {
+export default function BeyondClaritySprintSection() {
   const { t } = useLanguage();
 
   return (
-    <SectionShell id="what-we-help" className="py-24 bg-surface-container-lowest">
-      <SectionHeader labelKey="services_label" headlineKey="services_headline" />
+    <SectionShell id="beyond-clarity-sprint" className="py-24 bg-surface-container-lowest">
+      <SectionHeader headlineKey="services_headline" />
+
+      <ScrollReveal>
+        <div className="max-w-[640px] mx-auto space-y-5 mb-16 text-center">
+          <p className="font-headline text-headline-md text-nebula-gold">
+            {t('approach_sub')}
+          </p>
+          <p className="font-body text-body-lg text-on-surface-variant leading-relaxed">
+            {t('approach_body1')}
+          </p>
+          <p className="font-body text-body-lg text-on-surface-variant leading-relaxed">
+            {t('approach_body2')}
+          </p>
+          <p className="font-body text-body-lg text-on-surface-variant leading-relaxed">
+            {t('approach_body3')}
+          </p>
+          <p className="font-body text-body-lg text-on-surface-variant leading-relaxed">
+            {t('approach_body4')}
+          </p>
+        </div>
+      </ScrollReveal>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
         {services.map((service, i) => (

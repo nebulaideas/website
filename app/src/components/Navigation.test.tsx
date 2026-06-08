@@ -29,8 +29,9 @@ describe('Navigation component', () => {
     expect(logo).toHaveAttribute('src', '/assets/logo.png');
 
     // Check key nav links exist
-    expect(screen.getAllByText('The Problem')[0]).toBeInTheDocument();
-    expect(screen.getAllByText('What We Help With')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Home')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Clarity Sprint')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Beyond the Clarity Sprint')[0]).toBeInTheDocument();
     expect(screen.getByText('Schedule a Call')).toBeInTheDocument();
   });
 
@@ -46,8 +47,9 @@ describe('Navigation component', () => {
     });
 
     // Check language labels are updated to Spanish
-    expect(screen.getAllByText('El Problema')[0]).toBeInTheDocument();
-    expect(screen.getAllByText('Cómo Ayudamos')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Inicio')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Sprint de Claridad')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Más Allá del Clarity Sprint')[0]).toBeInTheDocument();
     expect(screen.getByText('Agendar una Llamada')).toBeInTheDocument();
   });
 
@@ -99,22 +101,22 @@ describe('Navigation component', () => {
     window.IntersectionObserver = LocalMockIntersectionObserver as unknown as typeof IntersectionObserver;
     
     // Add mock elements to document so getElementById returns them
-    const problemEl = document.createElement('div');
-    problemEl.id = 'why-struggle';
-    document.body.appendChild(problemEl);
+    const sprintEl = document.createElement('div');
+    sprintEl.id = 'clarity-sprint';
+    document.body.appendChild(sprintEl);
     
     renderNavigation();
     
     act(() => {
-      observerCallback([{ isIntersecting: true, target: problemEl }]);
+      observerCallback([{ isIntersecting: true, target: sprintEl }]);
     });
     
-    // Now problem link should have active class
-    const problemLinks = screen.getAllByRole('link', { name: /The Problem/i });
-    expect(problemLinks[0]).toHaveClass('text-nebula-gold');
+    // Now sprint link should have active class
+    const sprintLinks = screen.getAllByRole('link', { name: /Clarity Sprint/i });
+    expect(sprintLinks[0]).toHaveClass('text-nebula-gold');
     
     // Clean up
-    document.body.removeChild(problemEl);
+    document.body.removeChild(sprintEl);
     window.IntersectionObserver = originalIO;
   });
 
@@ -124,7 +126,7 @@ describe('Navigation component', () => {
     } as unknown as Element;
     
     const spy = vi.spyOn(document, 'querySelector').mockImplementation((selector) => {
-      if (selector === '#why-struggle') {
+      if (selector === '#clarity-sprint') {
         return mockElement;
       }
       return null;
@@ -132,9 +134,9 @@ describe('Navigation component', () => {
 
     renderNavigation();
 
-    const problemLinks = screen.getAllByText('The Problem');
+    const sprintLinks = screen.getAllByText('Clarity Sprint');
     act(() => {
-      problemLinks[0].click();
+      sprintLinks[0].click();
     });
 
     expect(window.scrollTo).toHaveBeenCalled();
@@ -167,7 +169,7 @@ describe('Navigation component', () => {
     const overlay = document.getElementById('mobile-menu-overlay');
     expect(overlay).toHaveClass('opacity-100');
 
-    const mobileLinks = screen.getAllByText('The Problem');
+    const mobileLinks = screen.getAllByText('Clarity Sprint');
     // mobileLinks[1] should be the one in the mobile overlay
     act(() => {
       mobileLinks[1].click();
@@ -201,7 +203,7 @@ describe('Navigation component', () => {
     });
 
     // Language should change to Spanish and menu should close
-    expect(screen.getAllByText('El Problema')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Sprint de Claridad')[0]).toBeInTheDocument();
     expect(overlay).toHaveClass('opacity-0');
   });
 });
