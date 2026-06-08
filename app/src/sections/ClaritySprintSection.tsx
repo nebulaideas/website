@@ -6,31 +6,19 @@ import FeatureCard from '@/components/FeatureCard';
 import { SearchCheck, ClipboardCheck, CheckCircle2 } from 'lucide-react';
 
 const evalAreas = [
-  {
-    titleKey: 'sprint_eval1_title',
-    descKey: 'sprint_eval1_desc',
-  },
-  {
-    titleKey: 'sprint_eval2_title',
-    descKey: 'sprint_eval2_desc',
-  },
-  {
-    titleKey: 'sprint_eval3_title',
-    descKey: 'sprint_eval3_desc',
-  },
-  {
-    titleKey: 'sprint_eval4_title',
-    descKey: 'sprint_eval4_desc',
-  },
+  { titleKey: 'sprint.eval.1.title', descKey: 'sprint.eval.1.desc' },
+  { titleKey: 'sprint.eval.2.title', descKey: 'sprint.eval.2.desc' },
+  { titleKey: 'sprint.eval.3.title', descKey: 'sprint.eval.3.desc' },
+  { titleKey: 'sprint.eval.4.title', descKey: 'sprint.eval.4.desc' },
 ] as const;
 
 const deliverables = [
-  'sprint_deliverable1',
-  'sprint_deliverable2',
-  'sprint_deliverable3',
-  'sprint_deliverable4',
-  'sprint_deliverable5',
-  'sprint_deliverable6',
+  'sprint.deliverable.1',
+  'sprint.deliverable.2',
+  'sprint.deliverable.3',
+  'sprint.deliverable.4',
+  'sprint.deliverable.5',
+  'sprint.deliverable.6',
 ] as const;
 
 export default function ClaritySprintSection() {
@@ -38,15 +26,15 @@ export default function ClaritySprintSection() {
 
   return (
     <SectionShell id="clarity-sprint" className="py-28 md:py-32 bg-surface-container-high border-t border-outline-variant/50" containerClassName="max-w-5xl">
-      <SectionHeader headlineKey="sprint_headline" />
+      <SectionHeader headlineKey="sprint.headline" />
 
       <ScrollReveal>
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h3 className="font-headline text-headline-md text-nebula-gold mb-6">
-            {t('sprint_sub')}
+            {t('sprint.sub')}
           </h3>
           <p className="font-body text-body-lg text-on-surface-variant text-justify">
-            {t('sprint_desc')}
+            {t('sprint.desc')}
           </p>
         </div>
       </ScrollReveal>
@@ -55,7 +43,7 @@ export default function ClaritySprintSection() {
         <div className="mb-16">
           <div className="flex items-center gap-3 mb-8">
             <h3 className="font-tech text-tech-label text-nebula-gold uppercase tracking-[0.15em]">
-              {t('sprint_eval_label')}
+              {t('sprint.eval_label')}
             </h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -75,7 +63,7 @@ export default function ClaritySprintSection() {
       <ScrollReveal delay={0.2}>
         <div className="flex items-center gap-3 mb-8">
           <h3 className="font-tech text-tech-label text-nebula-gold uppercase tracking-[0.15em]">
-            {t('sprint_deliverable_label')}
+            {t('sprint.deliverable_label')}
           </h3>
         </div>
         <div className="card-base border-none p-8 md:p-10 mb-12">
@@ -89,7 +77,7 @@ export default function ClaritySprintSection() {
           </div>
           <div className="mt-8 pt-6 border-t border-outline-variant">
             <p className="font-body text-body-md text-on-surface-variant italic text-justify">
-              {t('sprint_deliverable_footer')}
+              {t('sprint.deliverable_footer')}
             </p>
           </div>
         </div>
@@ -102,7 +90,7 @@ export default function ClaritySprintSection() {
           rel="noopener noreferrer"
           className="btn-gold inline-block px-10 py-4"
         >
-          {t('sprint_cta')}
+          {t('sprint.cta')}
         </a>
       </ScrollReveal>
     </SectionShell>

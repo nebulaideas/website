@@ -45,7 +45,7 @@ function TestComponent() {
     <div>
       <span data-testid="lang">{language}</span>
       <span data-testid="calendly">{calendlyUrl}</span>
-      <span data-testid="translation">{t('nav_sprint')}</span>
+      <span data-testid="translation">{t('nav.sprint')}</span>
       <button onClick={toggleLanguage} data-testid="toggle-btn">Toggle</button>
     </div>
   );
@@ -166,13 +166,13 @@ describe('useLanguage hook & LanguageProvider', () => {
       </LanguageProvider>
     );
 
-    expect(document.title).toBe(translations.en.seo_title);
-    expect(metaDesc.getAttribute('content')).toBe(translations.en.seo_description);
-    expect(metaOgTitle.getAttribute('content')).toBe(translations.en.seo_title);
-    expect(metaOgDesc.getAttribute('content')).toBe(translations.en.seo_og_description);
-    expect(metaOgSiteName.getAttribute('content')).toBe(translations.en.seo_site_name);
-    expect(metaTwTitle.getAttribute('content')).toBe(translations.en.seo_title);
-    expect(metaTwDesc.getAttribute('content')).toBe(translations.en.seo_og_description);
+    expect(document.title).toBe(translations.en.seo.title);
+    expect(metaDesc.getAttribute('content')).toBe(translations.en.seo.description);
+    expect(metaOgTitle.getAttribute('content')).toBe(translations.en.seo.title);
+    expect(metaOgDesc.getAttribute('content')).toBe(translations.en.seo.og_description);
+    expect(metaOgSiteName.getAttribute('content')).toBe(translations.en.seo.site_name);
+    expect(metaTwTitle.getAttribute('content')).toBe(translations.en.seo.title);
+    expect(metaTwDesc.getAttribute('content')).toBe(translations.en.seo.og_description);
     expect(metaOgLocale.getAttribute('content')).toBe('en_US');
     expect(metaOgImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
     expect(metaTwImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
@@ -183,13 +183,13 @@ describe('useLanguage hook & LanguageProvider', () => {
       toggleButton.click();
     });
 
-    expect(document.title).toBe(translations.es.seo_title);
-    expect(metaDesc.getAttribute('content')).toBe(translations.es.seo_description);
-    expect(metaOgTitle.getAttribute('content')).toBe(translations.es.seo_title);
-    expect(metaOgDesc.getAttribute('content')).toBe(translations.es.seo_og_description);
-    expect(metaOgSiteName.getAttribute('content')).toBe(translations.es.seo_site_name);
-    expect(metaTwTitle.getAttribute('content')).toBe(translations.es.seo_title);
-    expect(metaTwDesc.getAttribute('content')).toBe(translations.es.seo_og_description);
+    expect(document.title).toBe(translations.es.seo.title);
+    expect(metaDesc.getAttribute('content')).toBe(translations.es.seo.description);
+    expect(metaOgTitle.getAttribute('content')).toBe(translations.es.seo.title);
+    expect(metaOgDesc.getAttribute('content')).toBe(translations.es.seo.og_description);
+    expect(metaOgSiteName.getAttribute('content')).toBe(translations.es.seo.site_name);
+    expect(metaTwTitle.getAttribute('content')).toBe(translations.es.seo.title);
+    expect(metaTwDesc.getAttribute('content')).toBe(translations.es.seo.og_description);
     expect(metaOgLocale.getAttribute('content')).toBe('es_MX');
     expect(metaOgImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
     expect(metaTwImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');

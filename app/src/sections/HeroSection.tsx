@@ -41,7 +41,7 @@ export default function HeroSection() {
           }`}
           style={{ textShadow: '0 2px 40px rgba(0,0,0,0.6), 0 0 80px rgba(1,4,9,0.8)' }}
         >
-          {t('hero_headline')}
+          {t('hero.headline')}
         </h1>
 
         <h2
@@ -50,7 +50,7 @@ export default function HeroSection() {
           }`}
           style={{ textShadow: '0 1px 20px rgba(0,0,0,0.5)' }}
         >
-          {t('hero_subheadline')}
+          {t('hero.subheadline')}
         </h2>
 
         <p
@@ -58,7 +58,7 @@ export default function HeroSection() {
             loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
-          {t('hero_supporting')}
+          {t('hero.supporting')}
         </p>
 
         <p
@@ -66,7 +66,7 @@ export default function HeroSection() {
             loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
-          {t('hero_tagline')}
+          {t('hero.tagline')}
         </p>
 
         <div
@@ -79,7 +79,7 @@ export default function HeroSection() {
             onClick={(e) => handleScrollTo(e, '#clarity-sprint')}
             className="btn-gold px-8 py-4 min-w-[200px]"
           >
-            {t('hero_cta_primary')}
+            {t('hero.cta_primary')}
           </a>
         </div>
       </div>

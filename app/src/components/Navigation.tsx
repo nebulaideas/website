@@ -4,9 +4,9 @@ import NavLink from '@/components/NavLink';
 import { Menu, X, Globe } from 'lucide-react';
 
 const navLinks = [
-  { key: 'nav_home', href: '#top' },
-  { key: 'nav_sprint', href: '#clarity-sprint' },
-  { key: 'nav_services', href: '#beyond-clarity-sprint' },
+  { key: 'nav.home', href: '#top' },
+  { key: 'nav.sprint', href: '#clarity-sprint' },
+  { key: 'nav.services', href: '#beyond-clarity-sprint' },
 ] as const;
 
 export default function Navigation() {
@@ -93,7 +93,7 @@ export default function Navigation() {
               className="hidden lg:flex items-center gap-1.5 font-tech text-tech-label text-on-surface-variant hover:text-nebula-gold transition-colors duration-200 cursor-pointer"
             >
               <Globe size={14} />
-              {language === 'en' ? t('nav_toggle_es') : t('nav_toggle_en')}
+              {language === 'en' ? t('nav.toggle_es') : t('nav.toggle_en')}
             </button>
 
             <a
@@ -102,7 +102,7 @@ export default function Navigation() {
               rel="noopener noreferrer"
               className="bg-nebula-gold text-nebula-navy px-5 py-2.5 rounded font-tech text-tech-label font-bold hover:bg-nebula-gold-hover transition-all duration-300 hover:scale-[1.02] hover:shadow-gold-strong whitespace-nowrap"
             >
-              {t('nav_schedule')}
+              {t('nav.schedule')}
             </a>
 
             {/* Mobile hamburger */}
@@ -147,7 +147,7 @@ export default function Navigation() {
           className="mt-4 flex items-center gap-2 px-6 py-3 rounded border border-nebula-gold text-nebula-gold font-tech font-semibold"
         >
           <Globe size={16} />
-          {language === 'en' ? t('nav_toggle_es') : t('nav_toggle_en')}
+          {language === 'en' ? t('nav.toggle_es') : t('nav.toggle_en')}
         </button>
       </div>
     </>

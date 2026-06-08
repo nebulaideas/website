@@ -3,6 +3,16 @@ import { createContext, useContext, useState, useCallback, useEffect, useMemo, t
 import { translations, type Language, type TranslationKey } from '@/lib/translations';
 import { updateMetaTags, injectJsonLd } from '@/lib/meta';
 
+function resolve(lang: Record<string, unknown>, path: string): string {
+  const parts = path.split('.');
+  let current: unknown = lang;
+  for (const part of parts) {
+    if (current == null || typeof current !== 'object') return path;
+    current = (current as Record<string, unknown>)[part];
+  }
+  return typeof current === 'string' ? current : path;
+}
+
 interface LanguageContextType {
   language: Language;
   toggleLanguage: () => void;
@@ -27,10 +37,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
     const lang = translations[language];
     updateMetaTags({
-      title: lang.seo_title,
-      description: lang.seo_description,
-      ogDescription: lang.seo_og_description,
-      siteName: lang.seo_site_name,
+      title: resolve(lang, 'seo.title'),
+      description: resolve(lang, 'seo.description'),
+      ogDescription: resolve(lang, 'seo.og_description'),
+      siteName: resolve(lang, 'seo.site_name'),
       language,
     });
 
@@ -43,7 +53,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const t = useCallback(
     (key: TranslationKey): string => {
-      return translations[language][key] || key;
+      return resolve(translations[language], key);
     },
     [language]
   );
@@ -76,10 +86,6 @@ export function useLanguage() {
   return context;
 }
 
-/**
- * Hook to retrieve the Calendly booking URL for the opposite (complementary) language
- * than the currently active language. Useful for cross-linking booking pages.
- */
 export function useComplementaryCalendlyUrl() {
   const { language } = useLanguage();
   return language === 'en'

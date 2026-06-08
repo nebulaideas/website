@@ -6,26 +6,10 @@ import FeatureCard from '@/components/FeatureCard';
 import { BrainCircuit, Building2, GitBranch, Users } from 'lucide-react';
 
 const services = [
-  {
-    titleKey: 'service1_title',
-    descKey: 'service1_desc',
-    icon: BrainCircuit,
-  },
-  {
-    titleKey: 'service2_title',
-    descKey: 'service2_desc',
-    icon: Building2,
-  },
-  {
-    titleKey: 'service3_title',
-    descKey: 'service3_desc',
-    icon: GitBranch,
-  },
-  {
-    titleKey: 'service4_title',
-    descKey: 'service4_desc',
-    icon: Users,
-  },
+  { titleKey: 'services.items.1.title', descKey: 'services.items.1.desc', icon: BrainCircuit },
+  { titleKey: 'services.items.2.title', descKey: 'services.items.2.desc', icon: Building2 },
+  { titleKey: 'services.items.3.title', descKey: 'services.items.3.desc', icon: GitBranch },
+  { titleKey: 'services.items.4.title', descKey: 'services.items.4.desc', icon: Users },
 ] as const;
 
 export default function BeyondClaritySprintSection() {
@@ -33,15 +17,15 @@ export default function BeyondClaritySprintSection() {
 
   return (
     <SectionShell id="beyond-clarity-sprint" className="py-24 bg-surface-container-lowest">
-      <SectionHeader headlineKey="services_headline" />
+      <SectionHeader headlineKey="services.headline" />
 
       <ScrollReveal>
         <div className="max-w-[640px] mx-auto space-y-5 mb-16 text-center">
           <p className="font-headline text-headline-md text-nebula-gold">
-            {t('approach_sub')}
+            {t('approach.sub')}
           </p>
           <p className="font-body text-body-lg text-on-surface-variant leading-relaxed text-justify">
-            {t('approach_body1')}
+            {t('approach.body')}
           </p>
         </div>
       </ScrollReveal>

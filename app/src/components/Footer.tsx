@@ -23,7 +23,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="font-tech text-tech-data text-on-tertiary-container">
-              &copy; {CURRENT_YEAR} {t('footer_copyright')}
+              &copy; {CURRENT_YEAR} {t('footer.copyright')}
             </p>
             <a
               href="mailto:hello@nebulaideas.com"
@@ -66,7 +66,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200"
             >
-              {t('nav_contact')}
+              {t('nav.contact')}
             </a>
             <a
               href={calendlyUrl}
@@ -74,21 +74,21 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200"
             >
-              {t('nav_schedule')}
+              {t('nav.schedule')}
             </a>
             <a
               href="https://www.linkedin.com/company/nebulaideas"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200 flex items-center gap-1"
             >
               <Linkedin size={14} />
-              {t('footer_linkedin')}
+              {t('footer.linkedin')}
             </a>
             <a
               href="https://github.com/nebulaideas"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200 flex items-center gap-1"
             >
               <Github size={14} />
-              {t('footer_github')}
+              {t('footer.github')}
             </a>
           </div>
         </div>
