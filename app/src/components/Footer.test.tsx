@@ -65,7 +65,7 @@ describe('Footer component', () => {
       esBtn.click();
     });
 
-    expect(screen.getByText('Agendar una Llamada').closest('a')).toHaveAttribute(
+    expect(screen.getByText('Hablemos').closest('a')).toHaveAttribute(
       'href',
       'https://cal.com/nebula-ideas/descubrimiento'
     );

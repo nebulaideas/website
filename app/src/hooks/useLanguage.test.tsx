@@ -85,7 +85,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     );
 
     expect(screen.getByTestId('lang')).toHaveTextContent('es');
-    expect(screen.getByTestId('translation')).toHaveTextContent('Sprint de Claridad');
+    expect(screen.getByTestId('translation')).toHaveTextContent('Nebula Clarity Sprint');
   });
 
   it('should toggle language from "en" to "es" and back', () => {
@@ -107,7 +107,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     });
 
     expect(screen.getByTestId('lang')).toHaveTextContent('es');
-    expect(screen.getByTestId('translation')).toHaveTextContent('Sprint de Claridad');
+    expect(screen.getByTestId('translation')).toHaveTextContent('Nebula Clarity Sprint');
     expect(localStorage.getItem('nebula-language')).toBe('es');
     expect(document.documentElement.lang).toBe('es');
 

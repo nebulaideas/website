@@ -48,9 +48,9 @@ describe('Navigation component', () => {
 
     // Check language labels are updated to Spanish
     expect(screen.getAllByText('Inicio')[0]).toBeInTheDocument();
-    expect(screen.getAllByText('Sprint de Claridad')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Nebula Clarity Sprint')[0]).toBeInTheDocument();
     expect(screen.getAllByText('Más allá del Clarity Sprint')[0]).toBeInTheDocument();
-    expect(screen.getByText('Agendar una Llamada')).toBeInTheDocument();
+    expect(screen.getByText('Hablemos')).toBeInTheDocument();
   });
 
   it('should toggle mobile menu when hamburger button is clicked', () => {
@@ -203,7 +203,7 @@ describe('Navigation component', () => {
     });
 
     // Language should change to Spanish and menu should close
-    expect(screen.getAllByText('Sprint de Claridad')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Nebula Clarity Sprint')[0]).toBeInTheDocument();
     expect(overlay).toHaveClass('opacity-0');
   });
 });
