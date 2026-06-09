@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
-import WhatWeHelpSection from './WhatWeHelpSection';
+import BeyondClaritySprintSection from './BeyondClaritySprintSection';
 import { LanguageProvider } from '@/hooks/useLanguage';
 
-describe('WhatWeHelpSection', () => {
+describe('BeyondClaritySprintSection', () => {
   beforeEach(() => {
     localStorage.clear();
   });
@@ -11,15 +11,21 @@ describe('WhatWeHelpSection', () => {
   const renderSection = () => {
     return render(
       <LanguageProvider>
-        <WhatWeHelpSection />
+        <BeyondClaritySprintSection />
       </LanguageProvider>
     );
   };
 
-  it('should render label and headline', () => {
+  it('should render headline', () => {
     renderSection();
-    expect(screen.getByText('SERVICES')).toBeInTheDocument();
-    expect(screen.getByText('What We Help With')).toBeInTheDocument();
+    expect(screen.getByText('Beyond the Clarity Sprint')).toBeInTheDocument();
+  });
+
+  it('should render approach narrative', () => {
+    renderSection();
+    expect(screen.getByText('Clarity is not the destination. It\u2019s the beginning.')).toBeInTheDocument();
+    expect(screen.getByText(/The Clarity Sprint creates a shared understanding of your current reality/)).toBeInTheDocument();
+    expect(screen.getByText(/What comes next depends on what we discover together/)).toBeInTheDocument();
   });
 
   it('should render all four service cards', () => {
@@ -28,12 +34,5 @@ describe('WhatWeHelpSection', () => {
     expect(screen.getByText('Architecture & Technical Assessment')).toBeInTheDocument();
     expect(screen.getByText('Product & Process Alignment')).toBeInTheDocument();
     expect(screen.getByText('Engineering Leadership & Advisory')).toBeInTheDocument();
-  });
-
-  it('should render service descriptions', () => {
-    renderSection();
-    expect(screen.getByText(/Identify where AI can create measurable value/)).toBeInTheDocument();
-    expect(screen.getByText(/Connect business goals/)).toBeInTheDocument();
-    expect(screen.getByText(/Support organizational growth/)).toBeInTheDocument();
   });
 });

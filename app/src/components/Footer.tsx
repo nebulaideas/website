@@ -23,33 +23,14 @@ export default function Footer() {
               </span>
             </div>
             <p className="font-tech text-tech-data text-on-tertiary-container">
-              &copy; {CURRENT_YEAR} {t('footer_copyright')}
+              &copy; {CURRENT_YEAR} {t('footer.copyright')}
             </p>
-            {/* Language toggle */}
-            <div className="flex items-center gap-2 mt-2">
-              <button
-                onClick={() => language !== 'en' && toggleLanguage()}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold font-tech tracking-wide border transition-all duration-200 ${
-                  language === 'en'
-                    ? 'border-nebula-gold bg-nebula-gold/10 text-nebula-gold'
-                    : 'border-outline-variant text-on-surface-variant hover:border-nebula-gold hover:text-nebula-gold'
-                }`}
-              >
-                <Globe size={12} />
-                EN
-              </button>
-              <button
-                onClick={() => language !== 'es' && toggleLanguage()}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold font-tech tracking-wide border transition-all duration-200 ${
-                  language === 'es'
-                    ? 'border-nebula-gold bg-nebula-gold/10 text-nebula-gold'
-                    : 'border-outline-variant text-on-surface-variant hover:border-nebula-gold hover:text-nebula-gold'
-                }`}
-              >
-                <Globe size={12} />
-                ES
-              </button>
-            </div>
+            <a
+              href="mailto:hello@nebulaideas.com"
+              className="font-tech text-tech-data text-nebula-gold hover:text-nebula-gold-hover transition-colors duration-200"
+            >
+              hello@nebulaideas.com
+            </a>
           </div>
 
           {/* Links Column */}
@@ -60,7 +41,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200"
             >
-              {t('nav_contact')}
+              {t('nav.contact')}
             </a>
             <a
               href={calendlyUrl}
@@ -68,24 +49,49 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200"
             >
-              {t('nav_schedule')}
+              {t('nav.schedule')}
             </a>
             <a
               href="https://www.linkedin.com/company/nebulaideas"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200 flex items-center gap-1"
             >
               <Linkedin size={14} />
-              {t('footer_linkedin')}
+              {t('footer.linkedin')}
             </a>
             <a
               href="https://github.com/nebulaideas"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200 flex items-center gap-1"
             >
               <Github size={14} />
-              {t('footer_github')}
+              {t('footer.github')}
             </a>
-          </div>
+            {/* Language toggle */}
+            <div className="flex items-center gap-2 w-full mt-2 md:justify-end">
+              <button
+                onClick={() => language !== 'en' && toggleLanguage()}
+                className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold font-tech tracking-wide border transition-all duration-200 leading-none ${
+                  language === 'en'
+                    ? 'border-nebula-gold bg-nebula-gold/10 text-nebula-gold'
+                    : 'border-outline-variant text-on-surface-variant hover:border-nebula-gold hover:text-nebula-gold'
+                }`}
+              >
+                <Globe size={12} className="translate-y-[0.5px]" />
+                EN
+              </button>
+              <button
+                onClick={() => language !== 'es' && toggleLanguage()}
+                className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold font-tech tracking-wide border transition-all duration-200 leading-none ${
+                  language === 'es'
+                    ? 'border-nebula-gold bg-nebula-gold/10 text-nebula-gold'
+                    : 'border-outline-variant text-on-surface-variant hover:border-nebula-gold hover:text-nebula-gold'
+                }`}
+              >
+                <Globe size={12} className="translate-y-[0.5px]" />
+                ES
+              </button>
+            </div>
         </div>
+      </div>
       </div>
     </footer>
   );

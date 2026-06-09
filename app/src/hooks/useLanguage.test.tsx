@@ -1,7 +1,7 @@
 import { renderHook, act, render, screen } from '@testing-library/react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { LanguageProvider, useLanguage, useComplementaryCalendlyUrl } from './useLanguage';
-import { translations } from '../lib/translations';
+import { translations, type TranslationKey } from '../lib/translations';
 
 const TEST_METAS = [
   { key: 'name', value: 'description' },
@@ -26,16 +26,25 @@ function cleanupTestMetas() {
   });
 }
 
+function cleanupTestScripts() {
+  const orgScript = document.getElementById('json-ld-org');
+  if (orgScript) { document.head.removeChild(orgScript); }
+  const faqScript = document.getElementById('json-ld-faq');
+  if (faqScript) { document.head.removeChild(faqScript); }
+}
+
 beforeEach(() => {
   localStorage.clear();
   document.documentElement.lang = '';
   document.title = '';
   // Clean up meta tags to prevent test pollution
   cleanupTestMetas();
+  cleanupTestScripts();
 });
 
 afterEach(() => {
   cleanupTestMetas();
+  cleanupTestScripts();
 });
 
 // Helper component to test useLanguage context
@@ -45,7 +54,7 @@ function TestComponent() {
     <div>
       <span data-testid="lang">{language}</span>
       <span data-testid="calendly">{calendlyUrl}</span>
-      <span data-testid="translation">{t('nav_problem')}</span>
+      <span data-testid="translation">{t('nav.sprint')}</span>
       <button onClick={toggleLanguage} data-testid="toggle-btn">Toggle</button>
     </div>
   );
@@ -72,7 +81,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     );
 
     expect(screen.getByTestId('lang')).toHaveTextContent('en');
-    expect(screen.getByTestId('translation')).toHaveTextContent('The Problem');
+    expect(screen.getByTestId('translation')).toHaveTextContent('Clarity Sprint');
   });
 
   it('should load initial language from localStorage if present', () => {
@@ -85,7 +94,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     );
 
     expect(screen.getByTestId('lang')).toHaveTextContent('es');
-    expect(screen.getByTestId('translation')).toHaveTextContent('El Problema');
+    expect(screen.getByTestId('translation')).toHaveTextContent('Nebula Clarity Sprint');
   });
 
   it('should toggle language from "en" to "es" and back', () => {
@@ -99,7 +108,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     
     // Initial English
     expect(screen.getByTestId('lang')).toHaveTextContent('en');
-    expect(screen.getByTestId('translation')).toHaveTextContent('The Problem');
+    expect(screen.getByTestId('translation')).toHaveTextContent('Clarity Sprint');
 
     // Toggle to Spanish
     act(() => {
@@ -107,7 +116,7 @@ describe('useLanguage hook & LanguageProvider', () => {
     });
 
     expect(screen.getByTestId('lang')).toHaveTextContent('es');
-    expect(screen.getByTestId('translation')).toHaveTextContent('El Problema');
+    expect(screen.getByTestId('translation')).toHaveTextContent('Nebula Clarity Sprint');
     expect(localStorage.getItem('nebula-language')).toBe('es');
     expect(document.documentElement.lang).toBe('es');
 
@@ -117,9 +126,22 @@ describe('useLanguage hook & LanguageProvider', () => {
     });
 
     expect(screen.getByTestId('lang')).toHaveTextContent('en');
-    expect(screen.getByTestId('translation')).toHaveTextContent('The Problem');
+    expect(screen.getByTestId('translation')).toHaveTextContent('Clarity Sprint');
     expect(localStorage.getItem('nebula-language')).toBe('en');
     expect(document.documentElement.lang).toBe('en');
+  });
+
+  it('should fall back to the path string when a translation key is missing', () => {
+    function MissingKeyTester() {
+      const { t } = useLanguage();
+      return <span data-testid="missing">{t('nonexistent.key' as unknown as TranslationKey)}</span>;
+    }
+    render(
+      <LanguageProvider>
+        <MissingKeyTester />
+      </LanguageProvider>
+    );
+    expect(screen.getByTestId('missing')).toHaveTextContent('nonexistent.key');
   });
 
   it('should update document title and meta description upon change', () => {
@@ -166,13 +188,13 @@ describe('useLanguage hook & LanguageProvider', () => {
       </LanguageProvider>
     );
 
-    expect(document.title).toBe(translations.en.seo_title);
-    expect(metaDesc.getAttribute('content')).toBe(translations.en.seo_description);
-    expect(metaOgTitle.getAttribute('content')).toBe(translations.en.seo_title);
-    expect(metaOgDesc.getAttribute('content')).toBe(translations.en.seo_og_description);
-    expect(metaOgSiteName.getAttribute('content')).toBe(translations.en.seo_site_name);
-    expect(metaTwTitle.getAttribute('content')).toBe(translations.en.seo_title);
-    expect(metaTwDesc.getAttribute('content')).toBe(translations.en.seo_og_description);
+    expect(document.title).toBe(translations.en.seo.title);
+    expect(metaDesc.getAttribute('content')).toBe(translations.en.seo.description);
+    expect(metaOgTitle.getAttribute('content')).toBe(translations.en.seo.title);
+    expect(metaOgDesc.getAttribute('content')).toBe(translations.en.seo.og_description);
+    expect(metaOgSiteName.getAttribute('content')).toBe(translations.en.seo.site_name);
+    expect(metaTwTitle.getAttribute('content')).toBe(translations.en.seo.title);
+    expect(metaTwDesc.getAttribute('content')).toBe(translations.en.seo.og_description);
     expect(metaOgLocale.getAttribute('content')).toBe('en_US');
     expect(metaOgImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
     expect(metaTwImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
@@ -183,13 +205,13 @@ describe('useLanguage hook & LanguageProvider', () => {
       toggleButton.click();
     });
 
-    expect(document.title).toBe(translations.es.seo_title);
-    expect(metaDesc.getAttribute('content')).toBe(translations.es.seo_description);
-    expect(metaOgTitle.getAttribute('content')).toBe(translations.es.seo_title);
-    expect(metaOgDesc.getAttribute('content')).toBe(translations.es.seo_og_description);
-    expect(metaOgSiteName.getAttribute('content')).toBe(translations.es.seo_site_name);
-    expect(metaTwTitle.getAttribute('content')).toBe(translations.es.seo_title);
-    expect(metaTwDesc.getAttribute('content')).toBe(translations.es.seo_og_description);
+    expect(document.title).toBe(translations.es.seo.title);
+    expect(metaDesc.getAttribute('content')).toBe(translations.es.seo.description);
+    expect(metaOgTitle.getAttribute('content')).toBe(translations.es.seo.title);
+    expect(metaOgDesc.getAttribute('content')).toBe(translations.es.seo.og_description);
+    expect(metaOgSiteName.getAttribute('content')).toBe(translations.es.seo.site_name);
+    expect(metaTwTitle.getAttribute('content')).toBe(translations.es.seo.title);
+    expect(metaTwDesc.getAttribute('content')).toBe(translations.es.seo.og_description);
     expect(metaOgLocale.getAttribute('content')).toBe('es_MX');
     expect(metaOgImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
     expect(metaTwImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');

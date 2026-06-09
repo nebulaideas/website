@@ -78,7 +78,7 @@ module.exports = {
         'display': ['"Hanken Grotesk"', 'system-ui', 'sans-serif'],
         'headline': ['"Hanken Grotesk"', 'system-ui', 'sans-serif'],
         'body': ['"Inter"', 'system-ui', 'sans-serif'],
-        'tech': ['"JetBrains Mono"', 'monospace'],
+        'tech': ['"Inter"', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         'display-lg': ['64px', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '700' }],
