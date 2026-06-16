@@ -26,7 +26,7 @@ describe('Navigation component', () => {
     // Check logo img exists with correct alt text
     const logo = screen.getByAltText('Nebula Ideas');
     expect(logo).toBeInTheDocument();
-    expect(logo).toHaveAttribute('src', '/assets/logo.png');
+    expect(logo).toHaveAttribute('src', '/assets/logo.webp');
 
     // Check key nav links exist
     expect(screen.getAllByText('Home')[0]).toBeInTheDocument();

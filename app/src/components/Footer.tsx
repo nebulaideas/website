@@ -14,8 +14,10 @@ export default function Footer() {
           <div className="md:col-span-6 flex flex-col gap-4">
             <div className="flex items-center gap-3">
               <img
-                src="/assets/logo.png"
+                src="/assets/logo.webp"
                 alt="Nebula Ideas"
+                width="32"
+                height="32"
                 className="h-8 w-auto opacity-80 hover:opacity-100 transition-opacity duration-300"
               />
               <span className="font-headline text-headline-md font-bold text-on-surface tracking-tight">
