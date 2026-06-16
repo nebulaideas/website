@@ -28,6 +28,8 @@ mkdir -p "$INSTALL_DIR"
 BASE_URL="https://github.com/nebulaideas/rs-guard/releases/download/${RS_GUARD_VERSION}"
 
 echo "Downloading rs-guard ${RS_GUARD_VERSION} (${RS_GUARD_ASSET})..."
+# Release asset is a pre-built ELF binary (not a .tar.gz/.zip). No extraction step needed.
+# Verified in CI: download → sha256sum -c → rs-guard --version → review completes successfully.
 curl "${CURL_OPTS[@]}" -o "$ASSET_PATH" "${BASE_URL}/${RS_GUARD_ASSET}"
 curl "${CURL_OPTS[@]}" -o "${ASSET_PATH}.sha256" "${BASE_URL}/${RS_GUARD_ASSET}.sha256"
 
