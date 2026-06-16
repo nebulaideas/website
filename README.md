@@ -37,9 +37,12 @@ website/
 │       ├── ci.yml            # CI validation workflow for active branches
 │       └── rs-guard-review.yml # rs-guard AI code reviewer with PR gating
 ├── bin/
-│   ├── rs-guard-linux-x64    # Bundled rs-guard binary for CI
-│   ├── rs-guard-macos-arm64    # Bundled rs-guard binary for local dry-run
-│   └── CHECKSUMS.txt           # SHA-256 checksums for bundled binaries
+│   └── rs-guard.manifest       # Pinned rs-guard release + checksum for CI download
+├── scripts/
+│   ├── rs-guard-install.sh     # Download and verify rs-guard in CI
+│   ├── rs-guard-smoke.sh       # Smoke/integration test for rs-guard setup
+│   └── fixtures/
+│       └── rs-guard-sample.diff
 ├── hooks/
 │   ├── pre-commit-rs-guard   # Advisory rs-guard pre-commit hook (--dry-run)
 │   └── hooks.json            # Claude plugin hook registration
@@ -148,8 +151,9 @@ This repository utilizes three GitHub Actions workflows under `.github/workflows
    - Automatically runs linting and test coverage checks (`npm run test:coverage`) to validate change sets before integration.
 3. **rs-guard PR Review & Gating** ([rs-guard-review.yml](.github/workflows/rs-guard-review.yml)):
    - Triggered on pull requests (non-draft).
-   - Runs [rs-guard](https://github.com/nebulaideas/rs-guard) using the bundled Linux binary and [review prompt](.github/review-prompt.md) to post PR reviews (Approve / Comment / Request Changes) based on severity-tagged findings.
+   - Downloads a pinned [rs-guard](https://github.com/nebulaideas/rs-guard) release ([manifest](bin/rs-guard.manifest)), verifies its SHA-256 checksum, then runs the [review prompt](.github/review-prompt.md) to post PR reviews (Approve / Comment / Request Changes).
    - Review focus: HTML/CSS/JS quality, lint hygiene, best practices, security, SEO, and bilingual English/Spanish copy.
+   - Smoke test: [rs-guard-smoke.sh](scripts/rs-guard-smoke.sh) runs in [ci.yml](.github/workflows/ci.yml) to validate download, checksum, config files, and optional dry-run against a fixture diff.
 
 #### GitHub Secrets Setup
 

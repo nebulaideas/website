@@ -76,3 +76,4 @@ app/dist-ssr/
 *.sw?
 .DS_Store
 
+.rs-guard/cache/
