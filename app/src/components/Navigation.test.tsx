@@ -26,7 +26,7 @@ describe('Navigation component', () => {
     // Check logo img exists with correct alt text
     const logo = screen.getByAltText('Nebula Ideas');
     expect(logo).toBeInTheDocument();
-    expect(logo).toHaveAttribute('src', '/assets/logo.png');
+    expect(logo).toHaveAttribute('src', '/assets/logo.webp');
 
     // Check key nav links exist
     expect(screen.getAllByText('Home')[0]).toBeInTheDocument();
@@ -121,6 +121,7 @@ describe('Navigation component', () => {
   });
 
   it('should trigger smooth scroll on nav link click', () => {
+    const originalQuerySelector = document.querySelector.bind(document);
     const mockElement = {
       getBoundingClientRect: () => ({ top: 100 } as DOMRect),
     } as unknown as Element;
@@ -129,7 +130,7 @@ describe('Navigation component', () => {
       if (selector === '#clarity-sprint') {
         return mockElement;
       }
-      return null;
+      return originalQuerySelector(selector);
     });
 
     renderNavigation();
@@ -145,16 +146,16 @@ describe('Navigation component', () => {
   });
 
   it('should close mobile menu and scroll when mobile nav link is clicked', () => {
-    const originalQuerySelector = document.querySelector;
+    const originalQuerySelector = document.querySelector.bind(document);
     const mockElement = {
       getBoundingClientRect: () => ({ top: 100 } as DOMRect),
     } as unknown as Element;
     
-    const spy = vi.spyOn(document, 'querySelector').mockImplementation((selector) => {
-      if (selector.startsWith('meta')) {
-        return originalQuerySelector.call(document, selector);
+    const spy = vi.spyOn(document, 'querySelector').mockImplementation((selector: string) => {
+      if (selector === '#clarity-sprint') {
+        return mockElement;
       }
-      return mockElement;
+      return originalQuerySelector(selector);
     });
 
     renderNavigation();

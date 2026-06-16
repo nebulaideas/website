@@ -196,8 +196,8 @@ describe('useLanguage hook & LanguageProvider', () => {
     expect(metaTwTitle.getAttribute('content')).toBe(translations.en.seo.title);
     expect(metaTwDesc.getAttribute('content')).toBe(translations.en.seo.og_description);
     expect(metaOgLocale.getAttribute('content')).toBe('en_US');
-    expect(metaOgImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
-    expect(metaTwImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
+    expect(metaOgImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.webp');
+    expect(metaTwImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.webp');
 
     // Toggle to Spanish
     const toggleButton = screen.getByTestId('toggle-btn');
@@ -213,8 +213,8 @@ describe('useLanguage hook & LanguageProvider', () => {
     expect(metaTwTitle.getAttribute('content')).toBe(translations.es.seo.title);
     expect(metaTwDesc.getAttribute('content')).toBe(translations.es.seo.og_description);
     expect(metaOgLocale.getAttribute('content')).toBe('es_MX');
-    expect(metaOgImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
-    expect(metaTwImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.png');
+    expect(metaOgImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.webp');
+    expect(metaTwImage.getAttribute('content')).toBe('https://nebulaideas.com/assets/logo.webp');
   });
 });
 

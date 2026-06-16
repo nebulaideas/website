@@ -66,7 +66,7 @@ export default function Navigation() {
         <div className="container-main flex justify-between items-center py-4">
           {/* Brand */}
           <a href="#top" onClick={(e) => handleNavClick(e, '#top')} className="flex items-center gap-3 flex-shrink-0">
-            <img src="/assets/logo.png" alt="Nebula Ideas" className="h-10 w-auto" />
+            <img src="/assets/logo.webp" alt="Nebula Ideas" width="40" height="40" className="h-10 w-auto" />
             <span className="font-headline text-headline-md font-bold text-on-surface hidden lg:block tracking-tight whitespace-nowrap">
               Nebula Ideas
             </span>
