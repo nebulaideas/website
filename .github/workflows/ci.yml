@@ -37,3 +37,16 @@ jobs:
 
       - name: Run Tests with Coverage
         run: npm run test:coverage
+
+  rs-guard-smoke:
+    name: rs-guard Smoke Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run rs-guard smoke test
+        run: ./scripts/rs-guard-smoke.sh
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}

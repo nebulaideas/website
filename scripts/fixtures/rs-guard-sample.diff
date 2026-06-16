@@ -1,0 +1,14 @@
+diff --git a/app/src/lib/translations.ts b/app/src/lib/translations.ts
+index 1111111..2222222 100644
+--- a/app/src/lib/translations.ts
++++ b/app/src/lib/translations.ts
+@@ -20,7 +20,7 @@ export const translations = {
+     hero: {
+       headline: 'AI is an amplifier.',
+       subheadline: 'Understand before you amplify.',
+       supporting:
+-        'The best outcomes emerge when people, context, and technology work together.',
++        'The best outcomes emerge when people, context, and technology work together. We help organizations identify the value AI can create.',
+       tagline: 'Work With AI. Not Around It.',
+       cta_primary: 'Learn About the Clarity Sprint',
+     },
