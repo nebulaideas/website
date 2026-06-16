@@ -134,7 +134,7 @@ We use three GitHub Actions workflows in `.github/workflows/` to enforce softwar
    - Triggers: On pull requests (non-draft).
    - Purpose: Executes automated AI code review by downloading a pinned rs-guard release (`bin/rs-guard.manifest`), verifying its SHA-256 checksum, and running `.github/review-prompt.md`.
    - Configuration: `.reviewer.toml` (provider: deepseek, model: deepseek-v4-flash).
-   - Smoke test: `scripts/rs-guard-smoke.sh` in `ci.yml` validates download, checksum, config files, and optional dry-run against `scripts/fixtures/rs-guard-sample.diff`.
+   - Smoke test: `scripts/rs-guard-smoke.sh` in `ci.yml` validates download, checksum, config files, and a required API dry-run against `scripts/fixtures/rs-guard-sample.diff` (`DEEPSEEK_API_KEY` required).
    - Review focus: HTML/CSS/JS, lint hygiene, code quality, best practices, security, SEO, and bilingual English/Spanish customer-facing copy.
    - Gating (native rs-guard logic):
      - **Request Changes**: Any `[Critical]` or `[Security]` finding, verdict NEGATIVE, or ≥3 `[Important]` findings.

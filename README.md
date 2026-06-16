@@ -153,14 +153,15 @@ This repository utilizes three GitHub Actions workflows under `.github/workflows
    - Triggered on pull requests (non-draft).
    - Downloads a pinned [rs-guard](https://github.com/nebulaideas/rs-guard) release ([manifest](bin/rs-guard.manifest)), verifies its SHA-256 checksum, then runs the [review prompt](.github/review-prompt.md) to post PR reviews (Approve / Comment / Request Changes).
    - Review focus: HTML/CSS/JS quality, lint hygiene, best practices, security, SEO, and bilingual English/Spanish copy.
-   - Smoke test: [rs-guard-smoke.sh](scripts/rs-guard-smoke.sh) runs in [ci.yml](.github/workflows/ci.yml) to validate download, checksum, config files, and optional dry-run against a fixture diff.
+   - Smoke test: [rs-guard-smoke.sh](scripts/rs-guard-smoke.sh) runs in [ci.yml](.github/workflows/ci.yml) to validate download, checksum, config files, and a required API dry-run against a fixture diff (`DEEPSEEK_API_KEY` required).
 
 #### GitHub Secrets Setup
 
 To enable automatic deployments and AI review pipelines, add these secrets under **Settings > Secrets and variables > Actions** in your GitHub repository:
 * `CLOUDFLARE_API_TOKEN`: Your Cloudflare API Token (with **Cloudflare Pages — Edit** permission).
 * `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare Account ID.
-* `DEEPSEEK_API_KEY`: Your DeepSeek API Key (required for rs-guard AI reviews).
+* `DEEPSEEK_API_KEY`: Your DeepSeek API Key (required for rs-guard AI reviews and smoke tests).
+* `GH_PAT` (optional): Fine-grained PAT with **Pull requests: Read and write** — enables real `APPROVE` / `REQUEST_CHANGES` reviews instead of `COMMENT` fallback from `GITHUB_TOKEN`.
 
 ---
 
