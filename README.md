@@ -161,7 +161,7 @@ To enable automatic deployments and AI review pipelines, add these secrets under
 * `CLOUDFLARE_API_TOKEN`: Your Cloudflare API Token (with **Cloudflare Pages — Edit** permission).
 * `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare Account ID.
 * `DEEPSEEK_API_KEY`: Your DeepSeek API Key (required for rs-guard AI reviews and smoke tests).
-* `GH_PAT` (optional): Fine-grained PAT with **Pull requests: Read and write** — enables real `APPROVE` / `REQUEST_CHANGES` reviews instead of `COMMENT` fallback from `GITHUB_TOKEN`.
+* `GH_PAT` (recommended): Fine-grained PAT from a **dedicated bot user** (e.g. `nebula-rs-guard`), not your personal account. Grant **Pull requests: Read and write** on `nebulaideas/website`. This enables real `APPROVE` / `REQUEST_CHANGES` reviews; a personal PAT cannot request changes on your own PRs, and `GITHUB_TOKEN` often falls back to `COMMENT` only.
 
 ---
 

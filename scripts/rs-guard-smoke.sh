@@ -9,15 +9,23 @@ if [[ -z "${DEEPSEEK_API_KEY:-}" ]]; then
   exit 1
 fi
 
+cleanup() {
+  rm -rf "${RS_GUARD_INSTALL_DIR:-}"
+  rm -f "${OUTPUT_FILE:-}"
+}
+
 echo "==> Installing rs-guard from pinned release"
 RS_GUARD_INSTALL_DIR="$(mktemp -d)"
-trap 'rm -rf "$RS_GUARD_INSTALL_DIR"' EXIT
+OUTPUT_FILE="$(mktemp)"
+trap cleanup EXIT
+
 export RS_GUARD_INSTALL_DIR
 "$SCRIPT_DIR/rs-guard-install.sh"
 
 RS_GUARD_BIN="$RS_GUARD_INSTALL_DIR/rs-guard"
 DRY_RUN_BIN="$RS_GUARD_BIN"
 
+# Non-Linux fallback is for local development only; CI always runs on Linux.
 if [[ "$(uname -s)" != "Linux" ]]; then
   if command -v rs-guard &>/dev/null; then
     DRY_RUN_BIN="rs-guard"
@@ -38,9 +46,6 @@ test -f "$REPO_ROOT/bin/rs-guard.manifest"
 echo "==> Running dry-run integration test against fixture diff"
 FIXTURE_DIFF="$SCRIPT_DIR/fixtures/rs-guard-sample.diff"
 test -f "$FIXTURE_DIFF"
-
-OUTPUT_FILE="$(mktemp)"
-trap 'rm -rf "$RS_GUARD_INSTALL_DIR"; rm -f "$OUTPUT_FILE"' EXIT
 
 # Force file/local mode even when invoked from GitHub Actions.
 env -u GITHUB_ACTIONS -u GITHUB_TOKEN -u PR_NUMBER -u REPO_FULL_NAME \
