@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - 2026-06-16
+
+### Added
+- rs-guard AI PR review workflow (`.github/workflows/rs-guard-review.yml`) with bundled binaries, `.reviewer.toml`, and domain-specific `.github/review-prompt.md`.
+- Advisory local rs-guard pre-commit hook (`hooks/pre-commit-rs-guard`, `hooks/hooks.json`).
+
+### Removed
+- OpenCode PR review workflow (`opencode-review.yml`) and custom gating scripts (`scripts/evaluate-review.js`, `scripts/evaluate-review.test.js`).
+
 ## [Unreleased] - 2026-06-03
 
 ### Added

@@ -31,15 +31,21 @@ For detailed architecture decisions, component inventory, and design specificati
 ```text
 website/
 ├── .github/
+│   ├── review-prompt.md      # Domain-specific AI review prompt for rs-guard
 │   └── workflows/            # CI/CD pipelines and PR gating checks
 │       ├── deploy.yml        # Production pages builder and deployer
 │       ├── ci.yml            # CI validation workflow for active branches
-│       └── opencode-review.yml # OpenCode AI code reviewer with PR gating
+│       └── rs-guard-review.yml # rs-guard AI code reviewer with PR gating
+├── bin/
+│   ├── rs-guard-linux-x64    # Bundled rs-guard binary for CI
+│   ├── rs-guard-macos-arm64    # Bundled rs-guard binary for local dry-run
+│   └── CHECKSUMS.txt           # SHA-256 checksums for bundled binaries
+├── hooks/
+│   ├── pre-commit-rs-guard   # Advisory rs-guard pre-commit hook (--dry-run)
+│   └── hooks.json            # Claude plugin hook registration
 ├── .git-hooks/
-│   └── pre-commit            # Shell pre-commit hook template
-├── scripts/
-│   ├── evaluate-review.js    # Node script for custom PR review gating
-│   └── evaluate-review.test.js # Unit test suite for the evaluation script
+│   └── pre-commit            # Shell pre-commit hook template (lint + test)
+├── .reviewer.toml            # rs-guard provider/model configuration
 ├── app/                      # React Frontend Application
 │   ├── src/
 │   │   ├── components/       # Layout and UI Components
@@ -140,23 +146,25 @@ This repository utilizes three GitHub Actions workflows under `.github/workflows
 2. **CI Check Pipeline** ([ci.yml](file:///Users/igmarin/Developer/Personal/Nebula/website/.github/workflows/ci.yml)):
    - Triggered on all pull requests and pushes to non-deployment branches.
    - Automatically runs linting and test coverage checks (`npm run test:coverage`) to validate change sets before integration.
-3. **OpenCode PR Review & Gating** ([opencode-review.yml](file:///Users/igmarin/Developer/Personal/Nebula/website/.github/workflows/opencode-review.yml)):
-   - Triggered on pull requests.
-   - Runs an AI code review using the OpenCode reviewer, then executes the evaluation script ([evaluate-review.js](file:///Users/igmarin/Developer/Personal/Nebula/website/scripts/evaluate-review.js)) to automatically set the PR review status (Request Changes / Comment / Approve) based on security findings and critical bug counts.
+3. **rs-guard PR Review & Gating** ([rs-guard-review.yml](.github/workflows/rs-guard-review.yml)):
+   - Triggered on pull requests (non-draft).
+   - Runs [rs-guard](https://github.com/nebulaideas/rs-guard) using the bundled Linux binary and [review prompt](.github/review-prompt.md) to post PR reviews (Approve / Comment / Request Changes) based on severity-tagged findings.
+   - Review focus: HTML/CSS/JS quality, lint hygiene, best practices, security, SEO, and bilingual English/Spanish copy.
 
 #### GitHub Secrets Setup
 
 To enable automatic deployments and AI review pipelines, add these secrets under **Settings > Secrets and variables > Actions** in your GitHub repository:
 * `CLOUDFLARE_API_TOKEN`: Your Cloudflare API Token (with **Cloudflare Pages — Edit** permission).
 * `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare Account ID.
-* `DEEPSEEK_API_KEY`: Your DeepSeek API Key (required for OpenCode reviews).
+* `DEEPSEEK_API_KEY`: Your DeepSeek API Key (required for rs-guard AI reviews).
 
 ---
 
 ### ⚓ Local Git Hooks
 
 To maintain code quality before pushing commits:
-* **Hook Template**: [.git-hooks/pre-commit](file:///Users/igmarin/Developer/Personal/Nebula/website/.git-hooks/pre-commit) — Runs `npm run lint` and `npm run test:coverage` inside the `app` directory.
+* **Hook Template**: [.git-hooks/pre-commit](.git-hooks/pre-commit) — Runs `npm run lint` and `npm run test:coverage` inside the `app` directory.
+* **rs-guard Advisory Hook**: [hooks/pre-commit-rs-guard](hooks/pre-commit-rs-guard) — Optional AI review of staged changes (`--dry-run`, never blocks commits). Requires a provider API key such as `DEEPSEEK_API_KEY`.
 * **Installation**:
   Run the following script inside the `app/` folder to install the hook on your local machine:
   ```bash
@@ -171,7 +179,7 @@ To maintain code quality before pushing commits:
 #### Added
 - Added a dedicated CI validation workflow ([ci.yml](file:///Users/igmarin/Developer/Personal/Nebula/website/.github/workflows/ci.yml)) to automatically test and lint code on all branches and pull requests.
 - Created a version-controlled git pre-commit hook template ([pre-commit](file:///Users/igmarin/Developer/Personal/Nebula/website/.git-hooks/pre-commit)) and an associated installation script (`npm run setup-hooks`) inside [package.json](file:///Users/igmarin/Developer/Personal/Nebula/website/app/package.json) for easy local setup.
-- Configured a custom PR gating script ([evaluate-review.js](file:///Users/igmarin/Developer/Personal/Nebula/website/scripts/evaluate-review.js)) and comprehensive unit tests ([evaluate-review.test.js](file:///Users/igmarin/Developer/Personal/Nebula/website/scripts/evaluate-review.test.js)) inside [.github/workflows/opencode-review.yml](file:///Users/igmarin/Developer/Personal/Nebula/website/.github/workflows/opencode-review.yml) to automatically request changes or approve PRs based on OpenCode review verdicts.
+- Replaced OpenCode PR review with [rs-guard](https://github.com/nebulaideas/rs-guard): bundled binaries, [`.reviewer.toml`](.reviewer.toml), [review prompt](.github/review-prompt.md), and [rs-guard-review.yml](.github/workflows/rs-guard-review.yml) for native PR gating.
 
 #### Changed
 - Upgraded the Deploy pipeline ([deploy.yml](file:///Users/igmarin/Developer/Personal/Nebula/website/.github/workflows/deploy.yml)) to run tests with coverage validation (`npm run test:coverage`) ensuring all code meets the required 85% threshold before deployment.

@@ -130,13 +130,15 @@ We use three GitHub Actions workflows in `.github/workflows/` to enforce softwar
    - Triggers: On pushes and PRs to `main` and `kimi-2`.
    - Purpose: Validates build and test specs and deploys to Cloudflare Pages.
    - Core Checks: `npm run lint`, `npm run test:coverage` (enforcing the 85% statement/branch coverage threshold), `npm run build`, and `npx wrangler pages deploy`.
-3. **OpenCode PR Review & Gating (`opencode-review.yml`)**:
-   - Triggers: On pull requests.
-   - Purpose: Executes automated AI code review using the OpenCode reviewer.
-   - Evaluation Step: Runs a custom Node script (`scripts/evaluate-review.js`) that reads reviews, counts critical bugs / security tag occurrences, and executes GitHub CLI (`gh pr review`) to transition PR state:
-     - **Request Changes**: If Verdict is NEGATIVE, any security issues are found, or >2 critical bugs are found.
-     - **Comment**: If minor feedback comments are left but no blocking issues are found.
-     - **Approve**: If Verdict is POSITIVE/APPROVED and there are 0 bugs and 0 security issues.
+3. **rs-guard PR Review & Gating (`rs-guard-review.yml`)**:
+   - Triggers: On pull requests (non-draft).
+   - Purpose: Executes automated AI code review using the bundled `bin/rs-guard-linux-x64` binary and `.github/review-prompt.md`.
+   - Configuration: `.reviewer.toml` (provider: deepseek, model: deepseek-v4-flash).
+   - Review focus: HTML/CSS/JS, lint hygiene, code quality, best practices, security, SEO, and bilingual English/Spanish customer-facing copy.
+   - Gating (native rs-guard logic):
+     - **Request Changes**: Any `[Critical]` or `[Security]` finding, verdict NEGATIVE, or ≥3 `[Important]` findings.
+     - **Comment**: 1–2 `[Important]` findings without critical/security issues.
+     - **Approve**: Clean review with no blocking findings.
 
 ### Local Git hooks
 - **Hook Template (`.git-hooks/pre-commit`)**: Configured to run `npm run lint` and `npm run test:coverage` inside the `app/` folder before any local commit.
