@@ -32,7 +32,7 @@ export function useConstellationBackground(
     particleCount = 70,
     particleSize = 0.12,
     cameraZ = 28,
-    fogColor = 0x010409,
+    fogColor: fogColorVal = 0x010409,
     fogDensity = 0.02,
     clearAlpha = 1,
     clearColor = 0x010409,
@@ -54,8 +54,8 @@ export function useConstellationBackground(
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const scene = new THREE.Scene();
-    if (fogColor !== undefined) {
-      scene.fog = new THREE.FogExp2(fogColor, fogDensity);
+    if (fogColorVal !== undefined) {
+      scene.fog = new THREE.FogExp2(fogColorVal, fogDensity);
     }
 
     const camera = new THREE.PerspectiveCamera(
@@ -72,53 +72,77 @@ export function useConstellationBackground(
     renderer.setClearColor(clearColor, clearAlpha);
     container.appendChild(renderer.domElement);
 
-    // Particles
-    const particles: THREE.Mesh[] = [];
-    const sphereGeo = new THREE.SphereGeometry(particleSize, 6, 6);
-
-    const goldMat = new THREE.MeshBasicMaterial({
-      color: 0xd4af37,
-      transparent: true,
-      opacity: goldOpacity,
-    });
-    const blueMat = new THREE.MeshBasicMaterial({
-      color: 0x58a6ff,
-      transparent: true,
-      opacity: blueOpacity,
-    });
+    // ── Particles as TWO Points objects (gold + blue) ──────────────────────
+    const masterX = new Float32Array(particleCount);
+    const masterY = new Float32Array(particleCount);
+    const masterZ = new Float32Array(particleCount);
+    const vx = new Float32Array(particleCount);
+    const vy = new Float32Array(particleCount);
+    const vz = new Float32Array(particleCount);
+    const goldIndices: number[] = [];
+    const blueIndices: number[] = [];
 
     for (let i = 0; i < particleCount; i++) {
       const isGold = Math.random() > 1 - goldRatio;
-      const mesh = new THREE.Mesh(sphereGeo, isGold ? goldMat : blueMat);
+      const vScale = distribution === 'galaxy' ? 0.005 : 0.01;
 
       if (distribution === 'galaxy') {
         const angle = Math.random() * Math.PI * 2;
-        const radius = 5 + Math.random() * 20;
-        mesh.position.set(
-          Math.cos(angle) * radius + (Math.random() - 0.5) * 8,
-          Math.sin(angle) * radius * 0.4 + (Math.random() - 0.5) * 6,
-          (Math.random() - 0.5) * 12
-        );
-        mesh.userData.velocity = new THREE.Vector3(
-          (Math.random() - 0.5) * 0.005,
-          (Math.random() - 0.5) * 0.005,
-          (Math.random() - 0.5) * 0.002
-        );
+        const radius = 5 + Math.random() * (config.galaxySpread ?? 20);
+        masterX[i] = Math.cos(angle) * radius + (Math.random() - 0.5) * 8;
+        masterY[i] = Math.sin(angle) * radius * 0.4 + (Math.random() - 0.5) * 6;
+        masterZ[i] = (Math.random() - 0.5) * 12;
       } else {
-        mesh.position.set(
-          (Math.random() - 0.5) * 48,
-          (Math.random() - 0.5) * 30,
-          (Math.random() - 0.5) * 18
-        );
-        mesh.userData.velocity = new THREE.Vector3(
-          (Math.random() - 0.5) * 0.01,
-          (Math.random() - 0.5) * 0.01,
-          (Math.random() - 0.5) * 0.005
-        );
+        masterX[i] = (Math.random() - 0.5) * 48;
+        masterY[i] = (Math.random() - 0.5) * 30;
+        masterZ[i] = (Math.random() - 0.5) * 18;
       }
 
-      scene.add(mesh);
-      particles.push(mesh);
+      vx[i] = (Math.random() - 0.5) * vScale;
+      vy[i] = (Math.random() - 0.5) * vScale;
+      vz[i] = (Math.random() - 0.5) * (vScale * 0.5);
+
+      if (isGold) {goldIndices.push(i);} else {blueIndices.push(i);}
+    }
+
+    type PointsGroup = {
+      mesh: THREE.Points;
+      geo: THREE.BufferGeometry;
+      attr: THREE.BufferAttribute;
+      mat: THREE.PointsMaterial;
+      indices: number[];
+    };
+
+    const gold = createPointsGroup(goldIndices, 0xd4af37, goldOpacity);
+    const blue = createPointsGroup(blueIndices, 0x58a6ff, blueOpacity);
+    if (gold) {scene.add(gold.mesh);}
+    if (blue) {scene.add(blue.mesh);}
+
+    function createPointsGroup(
+      indices: number[],
+      color: number,
+      opacity: number,
+    ): PointsGroup | null {
+      if (indices.length === 0) {return null;}
+      const arr = new Float32Array(indices.length * 3);
+      for (let gi = 0; gi < indices.length; gi++) {
+        const mi = indices[gi];
+        arr[gi * 3] = masterX[mi];
+        arr[gi * 3 + 1] = masterY[mi];
+        arr[gi * 3 + 2] = masterZ[mi];
+      }
+      const attr = new THREE.BufferAttribute(arr, 3);
+      attr.setUsage(THREE.DynamicDrawUsage);
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', attr);
+      const mat = new THREE.PointsMaterial({
+        size: particleSize,
+        color,
+        transparent: true,
+        opacity,
+        sizeAttenuation: true,
+      });
+      return { mesh: new THREE.Points(geo, mat), geo, attr, mat, indices };
     }
 
     // Ambient glow lights
@@ -136,7 +160,7 @@ export function useConstellationBackground(
 
     // Connection lines — pre-allocated fixed buffer, updated in-place each frame
     const maxSlots = connectionMaxConnections;
-    const linePositions = new Float32Array(maxSlots * 6); // 2 vertices * 3 coords per connection
+    const linePositions = new Float32Array(maxSlots * 6);
     const lineGeo = new THREE.BufferGeometry();
     lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
     lineGeo.setDrawRange(0, 0);
@@ -160,29 +184,49 @@ export function useConstellationBackground(
         ? { x: 20, y: 10, z: 8 }
         : { x: 24, y: 15, z: 9 };
 
-      particles.forEach((p) => {
-        p.position.add(p.userData.velocity);
-        if (Math.abs(p.position.x) > bounds.x) {p.userData.velocity.x *= -1;}
-        if (Math.abs(p.position.y) > bounds.y) {p.userData.velocity.y *= -1;}
-        if (Math.abs(p.position.z) > bounds.z) {p.userData.velocity.z *= -1;}
-      });
+      // Update master positions
+      for (let i = 0; i < particleCount; i++) {
+        masterX[i] += vx[i];
+        masterY[i] += vy[i];
+        masterZ[i] += vz[i];
+        if (Math.abs(masterX[i]) > bounds.x) {vx[i] *= -1;}
+        if (Math.abs(masterY[i]) > bounds.y) {vy[i] *= -1;}
+        if (Math.abs(masterZ[i]) > bounds.z) {vz[i] *= -1;}
+      }
 
+      // Copy master positions into gold/blue geometry buffers
+      const syncGroup = (g: PointsGroup) => {
+        const arr = g.attr.array as Float32Array;
+        for (let gi = 0; gi < g.indices.length; gi++) {
+          const mi = g.indices[gi];
+          const gi3 = gi * 3;
+          arr[gi3] = masterX[mi];
+          arr[gi3 + 1] = masterY[mi];
+          arr[gi3 + 2] = masterZ[mi];
+        }
+        g.attr.needsUpdate = true;
+      };
+      if (gold) {syncGroup(gold);}
+      if (blue) {syncGroup(blue);}
+
+      // Connection lines
       let writeIdx = 0;
       let connectionCount = 0;
 
-      for (let i = 0; i < particles.length && connectionCount < maxSlots; i++) {
-        for (let j = i + 1; j < particles.length && connectionCount < maxSlots; j++) {
-          const dist = particles[i].position.distanceTo(particles[j].position);
+      for (let i = 0; i < particleCount && connectionCount < maxSlots; i++) {
+        for (let j = i + 1; j < particleCount && connectionCount < maxSlots; j++) {
+          const dx = masterX[i] - masterX[j];
+          const dy = masterY[i] - masterY[j];
+          const dz = masterZ[i] - masterZ[j];
+          const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
           if (dist < connectionMaxDist) {
             const idx = writeIdx * 3;
-            const px = particles[i].position;
-            const py = particles[j].position;
-            linePositions[idx]     = px.x;
-            linePositions[idx + 1] = px.y;
-            linePositions[idx + 2] = px.z;
-            linePositions[idx + 3] = py.x;
-            linePositions[idx + 4] = py.y;
-            linePositions[idx + 5] = py.z;
+            linePositions[idx] = masterX[i];
+            linePositions[idx + 1] = masterY[i];
+            linePositions[idx + 2] = masterZ[i];
+            linePositions[idx + 3] = masterX[j];
+            linePositions[idx + 4] = masterY[j];
+            linePositions[idx + 5] = masterZ[j];
             writeIdx += 2;
             connectionCount++;
           }
@@ -221,15 +265,29 @@ export function useConstellationBackground(
       window.addEventListener('mousemove', handleMouseMove);
     }
 
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const { width, height } = entry.contentRect;
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-        renderer.setSize(width, height);
-      }
-    });
-    resizeObserver.observe(container);
+    // Only observe resize when animation loop is active (non-reduced-motion)
+    if (!prefersReducedMotion) {
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          const { width, height } = entry.contentRect;
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+          renderer.setSize(width, height);
+        }
+      });
+      resizeObserver.observe(container);
+
+      return () => {
+        isActive = false;
+        cancelAnimationFrame(animFrameId);
+        clearTimeout(timer);
+        if (handleMouseMove) {
+          window.removeEventListener('mousemove', handleMouseMove);
+        }
+        resizeObserver.disconnect();
+        cleanupResources();
+      };
+    }
 
     return () => {
       isActive = false;
@@ -238,18 +296,39 @@ export function useConstellationBackground(
       if (handleMouseMove) {
         window.removeEventListener('mousemove', handleMouseMove);
       }
-      resizeObserver.disconnect();
-      sphereGeo.dispose();
+      cleanupResources();
+    };
+
+    function cleanupResources() {
+      if (gold) { gold.geo.dispose(); gold.mat.dispose(); }
+      if (blue) { blue.geo.dispose(); blue.mat.dispose(); }
       lineGeo.dispose();
       lineMaterial.dispose();
-      goldMat.dispose();
-      blueMat.dispose();
       renderer.dispose();
-      if (container.contains(renderer.domElement)) {
-        container.removeChild(renderer.domElement);
+      if (container?.contains(renderer.domElement)) {
+        container?.removeChild(renderer.domElement);
       }
-    };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }
+  }, [
+    containerRef,
+    particleCount,
+    particleSize,
+    cameraZ,
+    fogColorVal,
+    fogDensity,
+    clearAlpha,
+    clearColor,
+    mouseTracking,
+    connectionOpacity,
+    connectionMaxDist,
+    connectionMaxConnections,
+    distribution,
+    enableLights,
+    goldRatio,
+    goldOpacity,
+    blueOpacity,
+    config.galaxySpread,
+  ]);
 
   return { loaded };
 }

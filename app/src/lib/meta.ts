@@ -2,15 +2,14 @@ import { type Language, translations } from './translations';
 
 // Helper to update a meta tag by name/property, creating it if missing
 const updateMeta = (attrKey: 'name' | 'property', attrValue: string, contentValue: string) => {
-  // Use CSS.escape if available to prevent selector injection and protect against special characters
-  const escapedValue = typeof CSS !== 'undefined' && CSS.escape ? CSS.escape(attrValue) : attrValue;
-  const selector = `meta[${attrKey}="${escapedValue}"]`;
-  let el = document.querySelector(selector);
-  if (!el) {
-    el = document.createElement('meta');
-    el.setAttribute(attrKey, attrValue);
-    document.head.appendChild(el);
-  }
+  const candidates = document.head.querySelectorAll(`meta[${attrKey}]`);
+  const el = Array.from(candidates).find(m => m.getAttribute(attrKey) === attrValue) as HTMLMetaElement | null
+    ?? (() => {
+      const tag = document.createElement('meta');
+      tag.setAttribute(attrKey, attrValue);
+      document.head.appendChild(tag);
+      return tag;
+    })();
   el.setAttribute('content', contentValue);
 };
 

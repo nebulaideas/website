@@ -61,7 +61,7 @@ describe('updateMetaTags', () => {
     expect(ogDescMetaUpdated).toHaveAttribute('content', 'Updated og description');
   });
 
-  it('should use CSS.escape fallback if CSS is undefined', () => {
+  it('should work when CSS is undefined', () => {
     const originalCSS = globalThis.CSS;
     // @ts-expect-error deleting CSS to test fallback
     delete globalThis.CSS;
@@ -70,22 +70,6 @@ describe('updateMetaTags', () => {
 
     const descMeta = document.querySelector('meta[name="description"]');
     expect(descMeta).toHaveAttribute('content', 'Fallback path');
-
-    globalThis.CSS = originalCSS;
-  });
-
-  it('should use CSS.escape fallback if CSS.escape is defined', () => {
-    const originalCSS = globalThis.CSS;
-
-    const mockEscape = vi.fn().mockImplementation((val) => val);
-    globalThis.CSS = {
-      escape: mockEscape,
-      supports: vi.fn(),
-    } as unknown as typeof CSS;
-
-    updateMetaTags({ title: 'Escape Test', description: 'Test CSS escape', language: 'en', ...defaults });
-
-    expect(mockEscape).toHaveBeenCalled();
 
     globalThis.CSS = originalCSS;
   });

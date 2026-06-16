@@ -121,6 +121,7 @@ describe('Navigation component', () => {
   });
 
   it('should trigger smooth scroll on nav link click', () => {
+    const originalQuerySelector = document.querySelector.bind(document);
     const mockElement = {
       getBoundingClientRect: () => ({ top: 100 } as DOMRect),
     } as unknown as Element;
@@ -129,7 +130,7 @@ describe('Navigation component', () => {
       if (selector === '#clarity-sprint') {
         return mockElement;
       }
-      return null;
+      return originalQuerySelector(selector);
     });
 
     renderNavigation();
