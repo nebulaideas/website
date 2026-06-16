@@ -47,7 +47,8 @@ echo "==> Running dry-run integration test against fixture diff"
 FIXTURE_DIFF="$SCRIPT_DIR/fixtures/rs-guard-sample.diff"
 test -f "$FIXTURE_DIFF"
 
-# Force file/local mode even when invoked from GitHub Actions.
+# Unset CI env vars so rs-guard runs in file/local mode (not PR submission mode).
+# Required when smoke runs inside GitHub Actions, where GITHUB_ACTIONS is auto-set.
 env -u GITHUB_ACTIONS -u GITHUB_TOKEN -u PR_NUMBER -u REPO_FULL_NAME \
   "$DRY_RUN_BIN" \
   --diff-file "$FIXTURE_DIFF" \
