@@ -145,16 +145,16 @@ describe('Navigation component', () => {
   });
 
   it('should close mobile menu and scroll when mobile nav link is clicked', () => {
-    const originalQuerySelector = document.querySelector;
+    const originalQuerySelector = document.querySelector.bind(document);
     const mockElement = {
       getBoundingClientRect: () => ({ top: 100 } as DOMRect),
     } as unknown as Element;
     
-    const spy = vi.spyOn(document, 'querySelector').mockImplementation((selector) => {
-      if (selector.startsWith('meta')) {
-        return originalQuerySelector.call(document, selector);
+    const spy = vi.spyOn(document, 'querySelector').mockImplementation((selector: string) => {
+      if (selector === '#clarity-sprint') {
+        return mockElement;
       }
-      return mockElement;
+      return originalQuerySelector(selector);
     });
 
     renderNavigation();

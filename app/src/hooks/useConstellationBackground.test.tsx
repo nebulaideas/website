@@ -3,8 +3,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useRef, type RefObject } from 'react';
 import { useConstellationBackground } from './useConstellationBackground';
 
-const { mockDispose, mockThreeRef } = vi.hoisted(() => {
-  const mockDispose = vi.fn();
+const { disposeRenderer, disposeGeo, disposeMat1, disposeMat2, disposeMat3, mockThreeRef } = vi.hoisted(() => {
+  const disposeRenderer = vi.fn();
+  const disposeGeo = vi.fn();
+  const disposeMat1 = vi.fn();
+  const disposeMat2 = vi.fn();
+  const disposeMat3 = vi.fn();
 
   const mockThree = {
     Scene: vi.fn(function () { return { fog: null, add: vi.fn(), remove: vi.fn() }; }),
@@ -19,23 +23,21 @@ const { mockDispose, mockThreeRef } = vi.hoisted(() => {
         domElement: document.createElement('div'),
         setSize: vi.fn(), setPixelRatio: vi.fn(),
         setClearColor: vi.fn(), render: vi.fn(),
-        dispose: mockDispose,
+        dispose: disposeRenderer,
       };
     }),
-    SphereGeometry: vi.fn(function () { return { dispose: mockDispose }; }),
+    SphereGeometry: vi.fn(function () { return { dispose: disposeGeo }; }),
     MeshBasicMaterial: vi.fn(function () {
-      return { dispose: mockDispose, color: 0, transparent: false, opacity: 1 };
+      return { dispose: disposeMat3, color: 0, transparent: false, opacity: 1 };
     }),
     Mesh: vi.fn(function () {
       return {
         position: { x: 0, y: 0, z: 0, set: vi.fn(), add: vi.fn(), distanceTo: vi.fn(() => 0) },
         userData: {},
-        material: { dispose: mockDispose },
-        geometry: { dispose: mockDispose },
       };
     }),
     PointLight: vi.fn(function () {
-      return { position: { x: 0, y: 0, z: 0, set: vi.fn() }, dispose: mockDispose };
+      return { position: { x: 0, y: 0, z: 0, set: vi.fn() } };
     }),
     FogExp2: vi.fn(),
     BufferGeometry: vi.fn(function () {
@@ -43,14 +45,14 @@ const { mockDispose, mockThreeRef } = vi.hoisted(() => {
       return {
         attributes: attrs,
         setAttribute: vi.fn((name: string, attr: { needsUpdate: boolean }) => { attrs[name] = attr; }),
-        setDrawRange: vi.fn(), dispose: mockDispose,
+        setDrawRange: vi.fn(), dispose: disposeMat1,
       };
     }),
     BufferAttribute: vi.fn(function (array: Float32Array, itemSize: number) {
       return { array, itemSize, needsUpdate: false };
     }),
     LineBasicMaterial: vi.fn(function () {
-      return { dispose: mockDispose, color: 0, transparent: false, opacity: 1 };
+      return { dispose: disposeMat2, color: 0, transparent: false, opacity: 1 };
     }),
     LineSegments: vi.fn(function () { return { geometry: {}, material: {} }; }),
     Vector3: vi.fn(function (x = 0, y = 0, z = 0) {
@@ -58,7 +60,7 @@ const { mockDispose, mockThreeRef } = vi.hoisted(() => {
     }),
   };
 
-  return { mockDispose, mockThreeRef: { current: mockThree } };
+  return { disposeRenderer, disposeGeo, disposeMat1, disposeMat2, disposeMat3, mockThreeRef: { current: mockThree } };
 });
 
 vi.mock('three', () => mockThreeRef.current);
@@ -111,6 +113,10 @@ describe('useConstellationBackground', () => {
   it('should dispose GPU resources on unmount', () => {
     const { unmount } = render(<TestComponent mouseTracking />);
     unmount();
-    expect(mockDispose).toHaveBeenCalled();
+    expect(disposeRenderer).toHaveBeenCalledTimes(1);
+    expect(disposeGeo).toHaveBeenCalledTimes(1);
+    expect(disposeMat1).toHaveBeenCalledTimes(1);
+    expect(disposeMat2).toHaveBeenCalledTimes(1);
+    expect(disposeMat3).toHaveBeenCalledTimes(2);
   });
 });

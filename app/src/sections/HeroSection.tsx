@@ -6,7 +6,7 @@ export default function HeroSection() {
   const { t } = useLanguage();
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const particleCount = useMemo(() => window.innerWidth < 768 ? 35 : 70, []);
-  useConstellationBackground(canvasContainerRef, {
+  const bgConfig = useMemo(() => ({
     particleCount,
     goldRatio: 0.6,
     goldOpacity: 0.6,
@@ -17,7 +17,8 @@ export default function HeroSection() {
     cameraZ: 28,
     mouseTracking: true,
     lights: true,
-  });
+  }), [particleCount]);
+  useConstellationBackground(canvasContainerRef, bgConfig);
 
   const handleScrollTo = useCallback((e: React.MouseEvent, id: string) => {
     e.preventDefault();

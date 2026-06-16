@@ -76,14 +76,20 @@ export function useConstellationBackground(
     const particles: THREE.Mesh[] = [];
     const sphereGeo = new THREE.SphereGeometry(particleSize, 6, 6);
 
+    const goldMat = new THREE.MeshBasicMaterial({
+      color: 0xd4af37,
+      transparent: true,
+      opacity: goldOpacity,
+    });
+    const blueMat = new THREE.MeshBasicMaterial({
+      color: 0x58a6ff,
+      transparent: true,
+      opacity: blueOpacity,
+    });
+
     for (let i = 0; i < particleCount; i++) {
       const isGold = Math.random() > 1 - goldRatio;
-      const mat = new THREE.MeshBasicMaterial({
-        color: isGold ? 0xd4af37 : 0x58a6ff,
-        transparent: true,
-        opacity: isGold ? goldOpacity : blueOpacity,
-      });
-      const mesh = new THREE.Mesh(sphereGeo, mat);
+      const mesh = new THREE.Mesh(sphereGeo, isGold ? goldMat : blueMat);
 
       if (distribution === 'galaxy') {
         const angle = Math.random() * Math.PI * 2;
@@ -236,7 +242,8 @@ export function useConstellationBackground(
       sphereGeo.dispose();
       lineGeo.dispose();
       lineMaterial.dispose();
-      particles.forEach((p) => { (p.material as THREE.Material).dispose(); });
+      goldMat.dispose();
+      blueMat.dispose();
       renderer.dispose();
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
