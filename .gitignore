@@ -77,3 +77,6 @@ app/dist-ssr/
 .DS_Store
 
 .rs-guard/cache/
+
+review-result.txt
+rs-guard-metrics.json
