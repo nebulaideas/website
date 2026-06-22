@@ -3,6 +3,6 @@
 #
 # RS_GUARD_ASSET is a raw Linux ELF binary from GitHub Releases — not an archive.
 # If the release format ever changes to .tar.gz/.zip, update rs-guard-install.sh accordingly.
-RS_GUARD_VERSION="v1.0.2"
+RS_GUARD_VERSION="v1.2.2"
 RS_GUARD_ASSET="rs-guard-x86_64-unknown-linux-gnu"
-RS_GUARD_SHA256="38c964bed9c550174a82f24acc536a2096801e455a45af7acd4919f9833219c5"
+RS_GUARD_SHA256="08c3e9d57975faee56eb0b96f3f32ab8c7922b2e4885bfb067ddc45ab65149f5"
