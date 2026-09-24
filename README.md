@@ -31,25 +31,16 @@ For detailed architecture decisions, component inventory, and design specificati
 ```text
 website/
 ├── .github/
-│   ├── review-prompt.md      # Domain-specific AI review prompt for rs-guard
 │   └── workflows/            # CI/CD pipelines and PR gating checks
 │       ├── deploy.yml        # Production pages builder and deployer
 │       ├── ci.yml            # CI validation workflow for active branches
-│       └── rs-guard-review.yml # rs-guard AI code reviewer with PR gating
-├── bin/
-│   └── rs-guard.manifest       # Pinned rs-guard release + checksum for CI download
-├── scripts/
-│   ├── rs-guard-install.sh     # Download and verify rs-guard in CI
-│   ├── rs-guard-smoke.sh       # Smoke/integration test for rs-guard setup
-│   └── fixtures/
-│       └── rs-guard-sample.diff
+│   └── open-code-review.yml # OpenCodeReview AI code reviewer with PR gating
 ├── hooks/
-│   ├── pre-commit-rs-guard   # Advisory rs-guard pre-commit hook (--dry-run)
-│   └── hooks.json            # Claude plugin hook registration
+│   ├── pre-commit-open-code-review # Advisory local staged review
+│   └── hooks.json                 # Claude plugin hook registration
 ├── .git-hooks/
-│   └── pre-commit            # Shell pre-commit hook template (lint + test)
-├── .reviewer.toml            # rs-guard provider/model configuration
-├── app/                      # React Frontend Application
+│   └── pre-commit                # Shell pre-commit hook template (lint + test)
+├── app/                         # React Frontend Application
 │   ├── src/
 │   │   ├── components/       # Layout and UI Components
 │   │   │   ├── ui/           # Reusable Radix & Custom primitives
@@ -149,19 +140,19 @@ This repository utilizes three GitHub Actions workflows under `.github/workflows
 2. **CI Check Pipeline** ([ci.yml](file:///Users/igmarin/Developer/Personal/Nebula/website/.github/workflows/ci.yml)):
    - Triggered on all pull requests and pushes to non-deployment branches.
    - Automatically runs linting and test coverage checks (`npm run test:coverage`) to validate change sets before integration.
-3. **rs-guard PR Review & Gating** ([rs-guard-review.yml](.github/workflows/rs-guard-review.yml)):
+3. **OpenCodeReview PR Review & Gating** ([open-code-review.yml](.github/workflows/open-code-review.yml)):
    - Triggered on pull requests (non-draft).
-   - Downloads a pinned [rs-guard](https://github.com/nebulaideas/rs-guard) release ([manifest](bin/rs-guard.manifest)), verifies its SHA-256 checksum, then runs the [review prompt](.github/review-prompt.md) to post PR reviews (Approve / Comment / Request Changes).
-   - Review focus: HTML/CSS/JS quality, lint hygiene, best practices, security, SEO, and bilingual English/Spanish copy.
-   - Smoke test: [rs-guard-smoke.sh](scripts/rs-guard-smoke.sh) runs in [ci.yml](.github/workflows/ci.yml) to validate download, checksum, config files, and a required API dry-run against a fixture diff (`DEEPSEEK_API_KEY` required).
+   - Uses the upstream `alibaba/open-code-review` GitHub Action with the npm-distributed `@alibaba-group/open-code-review` CLI, DeepSeek, and the repository review guidance.
+   - Posts inline findings and a sticky summary; the action is configured for the English review output.
+   - CLI installation is verified on CI with `ocr --version`.
 
 #### GitHub Secrets Setup
 
 To enable automatic deployments and AI review pipelines, add these secrets under **Settings > Secrets and variables > Actions** in your GitHub repository:
 * `CLOUDFLARE_API_TOKEN`: Your Cloudflare API Token (with **Cloudflare Pages — Edit** permission).
 * `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare Account ID.
-* `DEEPSEEK_API_KEY`: Your DeepSeek API Key (required for rs-guard AI reviews and smoke tests).
-* `GH_PAT` (recommended): Fine-grained PAT from a **dedicated bot user** (e.g. `nebula-rs-guard`), not your personal account. Grant **Pull requests: Read and write** on `nebulaideas/website`. This enables real `APPROVE` / `REQUEST_CHANGES` reviews; a personal PAT cannot request changes on your own PRs, and `GITHUB_TOKEN` often falls back to `COMMENT` only.
+* `DEEPSEEK_API_KEY`: Your DeepSeek API Key (required for OpenCodeReview AI reviews).
+* `GH_PAT` (recommended): Fine-grained PAT from a **dedicated bot user** (e.g. `nebula-open-code-review`), not your personal account. Grant **Pull requests: Read and write** on `nebulaideas/website`. This enables real inline comments and review summaries; the workflow falls back to `GITHUB_TOKEN` when unavailable.
 
 ---
 
@@ -169,7 +160,7 @@ To enable automatic deployments and AI review pipelines, add these secrets under
 
 To maintain code quality before pushing commits:
 * **Hook Template**: [.git-hooks/pre-commit](.git-hooks/pre-commit) — Runs `npm run lint` and `npm run test:coverage` inside the `app` directory.
-* **rs-guard Advisory Hook**: [hooks/pre-commit-rs-guard](hooks/pre-commit-rs-guard) — Optional AI review of staged changes (`--dry-run`, never blocks commits). Requires a provider API key such as `DEEPSEEK_API_KEY`.
+* **OpenCodeReview Advisory Hook**: [hooks/pre-commit-open-code-review](hooks/pre-commit-open-code-review) — optional AI review of staged changes; it is advisory and never blocks commits. Install the CLI with `npm install --global @alibaba-group/open-code-review@1.12.9` and set `OCR_LLM_TOKEN` (or `DEEPSEEK_API_KEY`).
 * **Installation**:
   Run the following script inside the `app/` folder to install the hook on your local machine:
   ```bash
@@ -184,7 +175,7 @@ To maintain code quality before pushing commits:
 #### Added
 - Added a dedicated CI validation workflow ([ci.yml](file:///Users/igmarin/Developer/Personal/Nebula/website/.github/workflows/ci.yml)) to automatically test and lint code on all branches and pull requests.
 - Created a version-controlled git pre-commit hook template ([pre-commit](file:///Users/igmarin/Developer/Personal/Nebula/website/.git-hooks/pre-commit)) and an associated installation script (`npm run setup-hooks`) inside [package.json](file:///Users/igmarin/Developer/Personal/Nebula/website/app/package.json) for easy local setup.
-- Replaced OpenCode PR review with [rs-guard](https://github.com/nebulaideas/rs-guard): bundled binaries, [`.reviewer.toml`](.reviewer.toml), [review prompt](.github/review-prompt.md), and [rs-guard-review.yml](.github/workflows/rs-guard-review.yml) for native PR gating.
+- Replaced the previous OpenCode PR review with [OpenCodeReview](https://github.com/alibaba/open-code-review) and the npm-distributed CLI.
 
 #### Changed
 - Upgraded the Deploy pipeline ([deploy.yml](file:///Users/igmarin/Developer/Personal/Nebula/website/.github/workflows/deploy.yml)) to run tests with coverage validation (`npm run test:coverage`) ensuring all code meets the required 85% threshold before deployment.

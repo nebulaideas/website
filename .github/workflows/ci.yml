@@ -38,15 +38,21 @@ jobs:
       - name: Run Tests with Coverage
         run: npm run test:coverage
 
-  rs-guard-smoke:
-    name: rs-guard Smoke Test
+  open-code-review-check:
+    name: OpenCodeReview CLI Check
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Run rs-guard smoke test
-        run: ./scripts/rs-guard-smoke.sh
-        env:
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install OpenCodeReview
+        run: npm install --global @alibaba-group/open-code-review@1.12.9
+
+      - name: Verify OpenCodeReview
+        run: ocr --version

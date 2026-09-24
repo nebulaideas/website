@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Advisory OpenCodeReview pre-commit hook.
+# Reviews staged changes locally; it never blocks a commit.
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+if ! command -v ocr >/dev/null 2>&1; then
+  echo "[open-code-review] ocr not found — skipping staged review."
+  echo "[open-code-review] Install with: npm install --global @alibaba-group/open-code-review@1.12.9"
+  exit 0
+fi
+
+if [[ -z "${OCR_LLM_TOKEN:-${DEEPSEEK_API_KEY:-}}" ]]; then
+  echo "[open-code-review] No OCR LLM token found — skipping staged review."
+  echo "[open-code-review] Set OCR_LLM_TOKEN (or DEEPSEEK_API_KEY)."
+  exit 0
+fi
+
+if git diff --cached --quiet; then
+  exit 0
+fi
+
+export OCR_LLM_URL="${OCR_LLM_URL:-https://api.deepseek.com}"
+export OCR_LLM_MODEL="${OCR_LLM_MODEL:-deepseek-chat}"
+export OCR_LLM_TOKEN="${OCR_LLM_TOKEN:-$DEEPSEEK_API_KEY}"
+
+echo "[open-code-review] Reviewing staged changes..."
+ocr review --format json --output "${TMPDIR:-/tmp}/open-code-review-staged.json" || {
+  echo "[open-code-review] Review failed (advisory only — commit proceeds)." >&2
+  exit 0
+}
+
+echo "[open-code-review] Review complete. Commit proceeding."
