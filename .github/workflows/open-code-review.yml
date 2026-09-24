@@ -7,7 +7,6 @@ on:
 permissions:
   contents: read
   pull-requests: write
-  issues: write
 
 concurrency:
   group: open-code-review-${{ github.event.pull_request.number }}
@@ -15,8 +14,11 @@ concurrency:
 
 jobs:
   review:
-    if: github.event.pull_request.draft == false
+    if: >-
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -25,7 +27,7 @@ jobs:
           fetch-depth: 0
 
       - name: Run OpenCodeReview
-        uses: alibaba/open-code-review@main
+        uses: alibaba/open-code-review@2c30c7001d3d30a3fdf3ed5513eed4bd879442b0 # v1.12.9
         with:
           llm_url: https://api.deepseek.com
           llm_auth_token: ${{ secrets.DEEPSEEK_API_KEY }}

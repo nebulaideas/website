@@ -9,6 +9,9 @@ on:
     branches:
       - '**'
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     name: Lint, Test, and Coverage
@@ -37,22 +40,3 @@ jobs:
 
       - name: Run Tests with Coverage
         run: npm run test:coverage
-
-  open-code-review-check:
-    name: OpenCodeReview CLI Check
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install OpenCodeReview
-        run: npm install --global @alibaba-group/open-code-review@1.12.9
-
-      - name: Verify OpenCodeReview
-        run: ocr --version

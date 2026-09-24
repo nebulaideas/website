@@ -3,9 +3,6 @@
 # Reviews staged changes locally; it never blocks a commit.
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-
 if ! command -v ocr >/dev/null 2>&1; then
   echo "[open-code-review] ocr not found — skipping staged review."
   echo "[open-code-review] Install with: npm install --global @alibaba-group/open-code-review@1.12.9"
@@ -26,10 +23,19 @@ export OCR_LLM_URL="${OCR_LLM_URL:-https://api.deepseek.com}"
 export OCR_LLM_MODEL="${OCR_LLM_MODEL:-deepseek-chat}"
 export OCR_LLM_TOKEN="${OCR_LLM_TOKEN:-$DEEPSEEK_API_KEY}"
 
+OUTPUT_FILE="$(mktemp "${TMPDIR:-/tmp}/open-code-review-staged.XXXXXX.json")"
+chmod 600 "$OUTPUT_FILE"
+trap 'rm -f "$OUTPUT_FILE"' EXIT
+
+REVIEW_ARGS=(review --format json --output "$OUTPUT_FILE")
+TIMEOUT_SECONDS="${OCR_REVIEW_TIMEOUT_SECONDS:-120}"
+
 echo "[open-code-review] Reviewing staged changes..."
-ocr review --format json --output "${TMPDIR:-/tmp}/open-code-review-staged.json" || {
-  echo "[open-code-review] Review failed (advisory only — commit proceeds)." >&2
-  exit 0
-}
+if command -v timeout >/dev/null 2>&1; then
+  timeout "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}" || true
+else
+  # macOS does not ship GNU timeout; Perl's alarm provides the same fail-fast behavior.
+  perl -e 'alarm shift; exec @ARGV' "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}" || true
+fi
 
 echo "[open-code-review] Review complete. Commit proceeding."
