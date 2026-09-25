@@ -28,3 +28,9 @@ JEV means **Just Enough Validation** for this project. The goal is to test the r
 **Current answer:** Not yet proven. We have a credible message and a working site, but no historical funnel data and fewer than 100 estimated monthly sessions.
 
 **Current gate:** Instrument first, run JEV conversations, then revise the message. Do not split the market by language alone.
+
+## JEV response cycle
+
+For a live TypeSafe/Jev judgment, follow [06-jev-response-workflow.md](06-jev-response-workflow.md). Save every request/response pair and interpret it in [04-review-log.md](04-review-log.md).
+
+The JSON examples in that document are copied from MenteViva and are **not Nebula results**.
