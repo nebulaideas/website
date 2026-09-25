@@ -31,6 +31,6 @@ JEV means **Just Enough Validation** for this project. The goal is to test the r
 
 ## JEV response cycle
 
-For a live TypeSafe/Jev judgment, follow [06-jev-response-workflow.md](06-jev-response-workflow.md). Save every request/response pair and interpret it in [04-review-log.md](04-review-log.md).
+For a live JEV judgment, follow [06-jev-response-workflow.md](06-jev-response-workflow.md). Save every request/response pair and interpret it in [04-review-log.md](04-review-log.md).
 
-The JSON examples in that document are copied from MenteViva and are **not Nebula results**.
+The JSON examples are synthetic Nebula examples and are **not live results**.

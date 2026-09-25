@@ -1,12 +1,10 @@
 # JEV example payload provenance
 
-These JSON files are copied or condensed from the real MenteViva TypeSafe/Jev archive to demonstrate the request/response contract. They are not Nebula Ideas results.
+The JSON examples in this workspace are **synthetic Nebula Ideas examples**. They exist only to show the request/response contract and file naming convention.
 
-`002-game-domains` is a condensed two-question subset of the source pair; the other pairs preserve the source examples used here.
+- They are not live JEV responses.
+- They are not evidence for any business decision.
+- They do not contain data from another project.
+- A real Nebula response must be recorded as a dated pair and interpreted in [04-review-log.md](04-review-log.md).
 
-- Source: `/Users/igmarin/Developer/Personal/Projects/MenteViva/docs/jev-json/`
-- Model: `jev-1.13.0`
-- Pairs: `001-audience`, `002-game-domains`, `003-monetization`, `004-jev-role`
-- Narrative interpretation examples: `/Users/igmarin/Developer/Personal/Projects/MenteViva/docs/jev-revisit.md`
-
-When Nebula receives its first live response, add a new pair and record the interpretation in [04-review-log.md](04-review-log.md).
+See [06-jev-response-workflow.md](06-jev-response-workflow.md) for the contract and archive rule.

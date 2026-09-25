@@ -23,7 +23,7 @@ This folder records the Mexico-first business, messaging, and website-learning p
 | [Review log](jev/04-review-log.md) | Chronological evidence and decisions from each iteration |
 | [Implementation backlog](jev/05-implementation-backlog.md) | Evidence-gated work to improve the site and funnel |
 | [JEV response workflow](jev/06-jev-response-workflow.md) | Request/response contract, archive rule, and example JSON payloads |
-| [JEV payload provenance](jev/07-jev-examples.md) | Source and limitations of the saved JSON examples |
+| [JEV payload provenance](jev/07-jev-examples.md) | Synthetic status and limitations of the saved JSON examples |
 
 ## Status labels
 

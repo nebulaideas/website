@@ -39,9 +39,9 @@ Use one entry per cycle. Do not overwrite earlier evidence. A result is not succ
 
 ### JEV payload status
 
-No live Nebula TypeSafe/Jev response has been recorded yet.
+No live Nebula JEV response has been recorded yet.
 
-The example payloads in [06-jev-response-workflow.md](06-jev-response-workflow.md) are copied from MenteViva and are not Nebula evidence. When the first Nebula response is received, add the request/response pair here with:
+The example payloads in [06-jev-response-workflow.md](06-jev-response-workflow.md) are synthetic Nebula examples and are not evidence. When the first real Nebula response is received, add the request/response pair here with:
 
 - model and date;
 - state used;

@@ -1,24 +1,23 @@
 {
-  "model": "jev-1.13.0",
+  "model": "jev-example",
   "answers": {
-    "primary_audience": {
+    "primary_message_frame": {
       "type": "choice",
-      "choice": "healthy_preventive_60plus",
-      "confidence": 0.94,
+      "choice": "improve_before_adopting_ai",
+      "confidence": 0.78,
       "probabilities": {
-        "diagnosed_mci": 0.05,
-        "early_dementia": 0.0,
-        "general_public": 0.0,
-        "healthy_preventive_60plus": 0.95
+        "improve_before_adopting_ai": 0.78,
+        "ai_is_an_amplifier": 0.15,
+        "clarity_sprint_first": 0.07
       }
     },
-    "dementia_claims_risky": {
+    "split_markets_now": {
       "type": "noul",
-      "noul": 0.98
+      "noul": 0.18
     }
   },
   "usage": {
-    "input_tokens": 890,
-    "output_tokens": 95
+    "input_tokens": 0,
+    "output_tokens": 0
   }
 }

@@ -1,39 +1,28 @@
 {
-  "model": "jev-1.13.0",
+  "model": "jev-example",
   "answers": {
-    "processing_speed": {
-      "type": "score",
-      "score": 1.93,
-      "confidence": 0.89,
-      "legend": {
-        "0": "Not worth v1: skip it for launch",
-        "1": "Nice variety: include only if trivially cheap to build",
-        "2": "Core pillar: strongest-evidence domain; v1 should find a way to cover it"
-      },
-      "probabilities": {
-        "0": 0.02,
-        "1": 0.03,
-        "2": 0.95
-      }
+    "instrument_before_copy": {
+      "type": "noul",
+      "noul": 0.91
     },
-    "numeracy": {
+    "prioritize_bookings": {
       "type": "score",
-      "score": 0.62,
-      "confidence": 0.41,
+      "score": 1.42,
+      "confidence": 0.73,
       "legend": {
-        "0": "Not worth v1: skip it for launch",
-        "1": "Nice variety: include only if trivially cheap to build",
-        "2": "Core pillar: v1 should find a way to cover it"
+        "0": "Low: focus on traffic volume first",
+        "1": "Medium: focus on CTA clicks and bookings first",
+        "2": "High: focus on qualified conversations and paid Sprints first"
       },
       "probabilities": {
-        "0": 0.39,
-        "1": 0.6,
-        "2": 0.01
+        "0": 0.08,
+        "1": 0.61,
+        "2": 0.31
       }
     }
   },
   "usage": {
-    "input_tokens": 1176,
-    "output_tokens": 100
+    "input_tokens": 0,
+    "output_tokens": 0
   }
 }

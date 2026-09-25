@@ -1,17 +1,17 @@
 {
-  "model": "jev-1.13.0",
+  "model": "jev-example",
   "answers": {
-    "offline_first_daily_right": {
+    "language_proxy_only": {
       "type": "noul",
-      "noul": 0.9
+      "noul": 0.87
     },
-    "per_session_worth_it": {
+    "defer_market_split": {
       "type": "noul",
-      "noul": 0.17
+      "noul": 0.93
     }
   },
   "usage": {
-    "input_tokens": 751,
-    "output_tokens": 43
+    "input_tokens": 0,
+    "output_tokens": 0
   }
 }

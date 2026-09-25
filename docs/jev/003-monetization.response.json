@@ -1,20 +1,19 @@
 {
-  "model": "jev-1.13.0",
+  "model": "jev-example",
   "answers": {
-    "launch_model": {
+    "primary_offer": {
       "type": "choice",
-      "choice": "one_time_1299_family_sharing",
-      "confidence": 0.62,
+      "choice": "fixed_scope_sprint",
+      "confidence": 0.71,
       "probabilities": {
-        "subscription_499_month": 0.0,
-        "free_forever": 0.0,
-        "one_time_1299_family_sharing": 0.72,
-        "freemium_annual_2499": 0.28
+        "fixed_scope_sprint": 0.71,
+        "open_consulting": 0.24,
+        "implementation_first": 0.05
       }
     }
   },
   "usage": {
-    "input_tokens": 846,
-    "output_tokens": 81
+    "input_tokens": 0,
+    "output_tokens": 0
   }
 }
