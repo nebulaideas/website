@@ -1,0 +1,30 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "market": "Mexico-first bilingual website",
+    "traffic": "baseline not established",
+    "funnel": "site visit -> CTA -> Calendly booking -> qualified conversation -> paid Clarity Sprint",
+    "current_message": "AI is an amplifier. Understand before you amplify.",
+    "offer_hypothesis": "fixed-scope paid Clarity Sprint",
+    "evidence_gap": "no historical funnel data"
+  },
+  "questions": {
+    "primary_message_frame": {
+      "type": "choice",
+      "instructions": "Which message frame should Nebula Ideas test first for the Mexico target?",
+      "criteria": {
+        "improve_before_adopting_ai": "Lead with improving IT/product capability; treat AI as one possible intervention",
+        "ai_is_an_amplifier": "Keep the current AI-amplifier philosophy as the primary frame",
+        "clarity_sprint_first": "Lead with the fixed-scope Clarity Sprint offer rather than the broader problem"
+      }
+    },
+    "split_markets_now": {
+      "type": "noul",
+      "instructions": "Is there enough evidence to split the Mexico and US messages now?",
+      "criteria": {
+        "true": "Evidence shows distinct markets, problems, sources, and conversion patterns",
+        "false": "Current traffic and attribution are insufficient; keep one shared core message"
+      }
+    }
+  }
+}
