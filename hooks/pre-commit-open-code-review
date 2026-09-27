@@ -92,6 +92,10 @@ export OCR_LLM_URL="${OCR_LLM_URL:-https://api.deepseek.com}"
 export OCR_LLM_MODEL="${OCR_LLM_MODEL:-deepseek-v4-flash}"
 export OCR_LLM_TOKEN="${OCR_LLM_TOKEN:-$DEEPSEEK_API_KEY}"
 EFFORT="${OCR_REVIEW_EFFORT:-medium}"
+case "$EFFORT" in
+  low|medium|high) ;;
+  *) warn "Invalid OCR_REVIEW_EFFORT='$EFFORT' (expected low|medium|high) — using medium."; EFFORT="medium" ;;
+esac
 TIMEOUT_SECONDS="${OCR_REVIEW_TIMEOUT_SECONDS:-600}"
 
 # A dedicated temp directory keeps the review result private (0700/0600) and
@@ -111,12 +115,23 @@ log "Reviewing staged changes (model=$OCR_LLM_MODEL, effort=$EFFORT, timeout=${T
 # Run the review in the background so an interrupt can reap the child; without
 # this the orphaned `ocr` process can outlive the hook and keep writing.
 OCR_PID=""
+CHILD_PID_FILE="$WORK_DIR/child.pid"
 cleanup() { rm -rf "$WORK_DIR"; }
 on_signal() {
   local code="$1"
   trap - EXIT INT TERM
-  if [[ -n "$OCR_PID" ]] && kill -0 "$OCR_PID" 2>/dev/null; then
-    kill -TERM "-$OCR_PID" 2>/dev/null || kill -TERM "$OCR_PID" 2>/dev/null
+  # The Perl wrapper writes the child's PID (also its PGID after setpgrp) to
+  # CHILD_PID_FILE so the timeout path can reap the whole subtree.  Targeting
+  # that same negative PID here reaches the wrapper, ocr, and every grandchild.
+  local target_pid=""
+  if [[ -r "$CHILD_PID_FILE" ]]; then
+    target_pid="$(cat "$CHILD_PID_FILE" 2>/dev/null)"
+  fi
+  # Fall back to the wrapper PID if the file was not yet written (race window
+  # between backgrounding and the Perl wrapper creating the file).
+  target_pid="${target_pid:-$OCR_PID}"
+  if [[ -n "$target_pid" ]]; then
+    kill -TERM -- "-$target_pid" 2>/dev/null || kill -TERM "$target_pid" 2>/dev/null
   fi
   cleanup
   exit "$code"
@@ -139,6 +154,7 @@ run_review() {
     # kill `ocr` by SIGALRM just before the parent's deadline and make a timeout
     # look like success. stderr is left attached so real failures stay visible.
     perl -e '
+      my $pid_file = shift @ARGV;
       my $t = shift @ARGV;
       my $pid = fork(); die "fork: $!" unless defined $pid;
       if (!$pid) {
@@ -150,6 +166,9 @@ run_review() {
         setpgrp(0, 0);
         exec @ARGV or exit 127;
       }
+      # Write the child PID (= its PGID) so the bash signal handler can target
+      # the whole process group on SIGINT/SIGTERM.
+      if (open(my $fh, ">", $pid_file)) { print $fh $pid; close $fh; }
       my $deadline = time + $t;
       while (1) {
         if (waitpid($pid, 1) == $pid) {
@@ -158,7 +177,7 @@ run_review() {
           exit($st & 127 ? 128 + ($st & 127) : $st >> 8);
         }
         if (time >= $deadline) {
-          # Negative PID targets the child's whole process group. A 0 return
+          # Negative PID targets the child whole process group. A 0 return
           # means the group never formed (setpgrp raced), so fall back to
           # signalling the pid directly rather than killing nothing.
           my $killed = kill "KILL", -$pid;
@@ -168,16 +187,17 @@ run_review() {
         }
         select(undef, undef, undef, 0.2);
       }
-    ' "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
+    ' "$CHILD_PID_FILE" "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
   else
     warn "Neither 'timeout' nor 'perl' available — running without a time limit."
     ocr "${REVIEW_ARGS[@]}"
   fi
 }
-# Backgrounded so the signal handler can reap it. Job control (`set -m`) puts
-# the background job in its own process group whose PGID equals its PID, so the
-# handler can kill the whole group (ocr spawns a child of its own) without ever
-# signalling this script.
+# Backgrounded so the signal handler can reap it. Job control (`set -m`) gives
+# the background job its own process group; the Perl timeout wrapper inside
+# further moves the actual `ocr` child into a separate group via setpgrp and
+# writes that child PID to CHILD_PID_FILE so both the Perl deadline and the
+# bash signal handler can target the whole subtree.
 set -m
 run_review &
 OCR_PID=$!
@@ -192,7 +212,6 @@ if [[ -s "$OUTPUT_FILE" ]]; then
     log "Install jq (brew install jq) to see review findings locally."
   elif ! jq -e . "$OUTPUT_FILE" >/dev/null 2>&1; then
     warn "Review output was not valid JSON (exit $REVIEW_STATUS); skipping raw dump."
-    warn "Install jq (brew install jq) and re-run to inspect the output: $OUTPUT_FILE"
   else
     finding_count="$(jq -r '(.comments // []) | length' "$OUTPUT_FILE" 2>/dev/null || echo 0)"
     if [[ "$finding_count" == "0" ]]; then
