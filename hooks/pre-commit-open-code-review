@@ -140,7 +140,9 @@ on_signal() {
   fi
   # Fall back to the wrapper PID if the file was never written.
   target_pid="${target_pid:-$OCR_PID}"
-  if [[ -n "$target_pid" ]]; then
+  # Guard: target_pid must be a positive integer to avoid signalling the wrong
+  # group (e.g. if the file contained garbage or a partial write).
+  if [[ -n "$target_pid" ]] && [[ "$target_pid" =~ ^[1-9][0-9]*$ ]]; then
     # Attempt the group kill unconditionally: the leader may have exited while
     # a grandchild is still alive in the same group, so a kill -0 on the leader
     # alone would miss it.  Errors are already suppressed.
@@ -156,16 +158,12 @@ trap 'on_signal 143' TERM
 REVIEW_STATUS=0
 run_review() {
   if command -v timeout >/dev/null 2>&1; then
-    timeout "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
+    timeout --kill-after=10 "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
   elif command -v perl >/dev/null 2>&1; then
-    # macOS does not ship GNU timeout. This wrapper polls waitpid() with WNOHANG
-    # and kills the child at the deadline, returning 142 on timeout. A plain
-    # `perl -e 'alarm shift; exec @ARGV'` cannot be used: it signals the wrapper
-    # (printing "Alarm clock" and yielding 142) without ever killing the real
-    # `ocr` process, which then keeps running after the hook has exited.
-    # The child sets no alarm of its own — an alarm survives execve, so it would
-    # kill `ocr` by SIGALRM just before the parent's deadline and make a timeout
-    # look like success. stderr is left attached so real failures stay visible.
+    # macOS does not ship GNU timeout.  This wrapper forks the child into its
+    # own process group (setpgrp) and polls waitpid() with WNOHANG, killing
+    # the whole group at the deadline.  Exit 124 matches GNU timeout's sentinel
+    # so the classification below handles both paths uniformly.
     perl -e '
       my $pid_file = shift @ARGV;
       my $t = shift @ARGV;
@@ -199,14 +197,13 @@ run_review() {
           my $killed = kill "KILL", -$pid;
           kill "KILL", $pid if !$killed;
           waitpid($pid, 0);
-          exit 142;
+          exit 124;
         }
         select(undef, undef, undef, 0.2);
       }
     ' "$CHILD_PID_FILE" "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
   else
-    warn "Neither 'timeout' nor 'perl' available — running without a time limit."
-    ocr "${REVIEW_ARGS[@]}"
+    warn "Neither 'timeout' nor 'perl' available — cannot enforce a time limit, skipping review."
   fi
 }
 # Backgrounded so the signal handler can reap it. Job control (`set -m`) gives
@@ -251,7 +248,7 @@ if [[ "$REVIEW_STATUS" -ne 0 ]]; then
   # 124/142 are the timeout exit codes from GNU timeout and Perl's alarm.
   # 128+N means the process died from signal N (e.g. 137=SIGKILL, 143=SIGTERM),
   # which in practice also indicates a timeout or external interruption.
-  if [[ "$REVIEW_STATUS" -eq 124 || "$REVIEW_STATUS" -eq 142 ]]; then
+  if [[ "$REVIEW_STATUS" -eq 124 ]]; then
     warn "Review timed out after ${TIMEOUT_SECONDS}s (raise OCR_REVIEW_TIMEOUT_SECONDS to allow more). Commit proceeding."
   elif [[ "$REVIEW_STATUS" -gt 128 ]]; then
     sig=$((REVIEW_STATUS - 128))

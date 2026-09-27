@@ -25,8 +25,12 @@ echo "============================================="
 # 3. Advisory AI review of the staged changes. The review script is advisory by
 #    contract and always exits 0, so `|| true` is a safety net that keeps a
 #    future bug in the review from ever blocking a commit.
-if [ -x "$REPO_ROOT/hooks/pre-commit-open-code-review" ]; then
-  "$REPO_ROOT/hooks/pre-commit-open-code-review" || true
+if [ -f "$REPO_ROOT/hooks/pre-commit-open-code-review" ]; then
+  if [ -x "$REPO_ROOT/hooks/pre-commit-open-code-review" ]; then
+    "$REPO_ROOT/hooks/pre-commit-open-code-review" || echo "[open-code-review] review hook exited $? (ignored)." >&2
+  else
+    echo "[open-code-review] hooks/pre-commit-open-code-review is not executable — skipping (run: chmod +x)." >&2
+  fi
 else
   echo "[open-code-review] hooks/pre-commit-open-code-review not found — skipping."
 fi
