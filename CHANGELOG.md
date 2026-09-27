@@ -12,8 +12,12 @@ All notable changes to this project will be documented in this file.
 - The advisory hook reads `DEEPSEEK_API_KEY` from the shell profile when the environment does not already carry it.
 
 ### Changed
-- OpenCodeReview LLM model switched from `deepseek-chat` to `deepseek-flash`, with `effort: medium` on both CI and the local hook.
+- OpenCodeReview LLM model switched from `deepseek-chat` to `deepseek-v4-flash`, with `effort: medium` on both CI and the local hook.
 - Local review timeout raised from 120s to 600s; the previous default terminated real reviews with SIGALRM (exit 142) before any findings were produced.
+- CI now posts review comments with the workflow's built-in `GITHUB_TOKEN`. The job already grants `pull-requests: write`, so no `GH_PAT` personal access token is used or documented.
+
+### Removed
+- `hooks/hooks.json`. It pointed at `${CLAUDE_PLUGIN_ROOT}` with no plugin manifest in the repository, so it never loaded; `core.hooksPath` is what actually runs the review.
 
 ## [Unreleased] - 2026-06-16
 

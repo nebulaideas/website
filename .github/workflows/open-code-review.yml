@@ -31,11 +31,11 @@ jobs:
         with:
           llm_url: https://api.deepseek.com
           llm_auth_token: ${{ secrets.DEEPSEEK_API_KEY }}
-          llm_model: deepseek-flash
+          llm_model: deepseek-v4-flash
           llm_use_anthropic: 'false'
           language: English
           effort: medium
-          github_token: ${{ secrets.GH_PAT || github.token }}
+          github_token: ${{ github.token }}
           ocr_version: 1.12.9
           stream_progress: 'true'
           upload_artifacts: 'true'

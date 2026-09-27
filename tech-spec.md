@@ -133,7 +133,7 @@ We use three GitHub Actions workflows in `.github/workflows/` to enforce softwar
 3. **OpenCodeReview PR Review & Gating (`open-code-review.yml`)**:
    - Triggers: On pull requests (non-draft).
    - Purpose: Runs the upstream `alibaba/open-code-review` GitHub Action with the npm-distributed `@alibaba-group/open-code-review` CLI and DeepSeek.
-   - Configuration: `llm_url` is `https://api.deepseek.com`, `llm_model` is `deepseek-flash`, `effort` is `medium`, and `DEEPSEEK_API_KEY` supplies the LLM token.
+   - Configuration: `llm_url` is `https://api.deepseek.com`, `llm_model` is `deepseek-v4-flash`, `effort` is `medium`, and `DEEPSEEK_API_KEY` supplies the LLM token.
    - CI check: the action installs `@alibaba-group/open-code-review` 1.12.9 itself via the `ocr_version` input; `ci.yml` only runs lint and tests.
    - Review focus: HTML/CSS/JS, lint hygiene, code quality, best practices, security, SEO, and bilingual English/Spanish customer-facing copy.
    - Posting: OpenCodeReview publishes inline findings and a sticky summary; GitHub permissions are configured in the workflow.
