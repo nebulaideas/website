@@ -7,7 +7,7 @@
 #
 # Environment (all optional):
 #   OCR_LLM_URL                 LLM endpoint    (default: https://api.deepseek.com)
-#   OCR_LLM_MODEL               model id        (default: deepseek-v4-flash)
+#   OCR_LLM_MODEL               model id        (default: deepseek-flash)
 #   OCR_LLM_TOKEN               API token       (default: $DEEPSEEK_API_KEY)
 #   OCR_REVIEW_TIMEOUT_SECONDS  wall-clock limit (default: 600)
 #   OCR_REVIEW_EFFORT           low|medium|high  (default: medium)
@@ -88,7 +88,7 @@ for state_dir in rebase-merge rebase-apply MERGE_HEAD CHERRY_PICK_HEAD; do
 done
 
 export OCR_LLM_URL="${OCR_LLM_URL:-https://api.deepseek.com}"
-export OCR_LLM_MODEL="${OCR_LLM_MODEL:-deepseek-v4-flash}"
+export OCR_LLM_MODEL="${OCR_LLM_MODEL:-deepseek-flash}"
 export OCR_LLM_TOKEN="${OCR_LLM_TOKEN:-$DEEPSEEK_API_KEY}"
 EFFORT="${OCR_REVIEW_EFFORT:-medium}"
 TIMEOUT_SECONDS="${OCR_REVIEW_TIMEOUT_SECONDS:-600}"
