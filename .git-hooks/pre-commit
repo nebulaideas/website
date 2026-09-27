@@ -23,8 +23,8 @@ echo "✅ Lint and test checks passed. Running AI review..."
 echo "============================================="
 
 # 3. Advisory AI review of the staged changes. The review script is advisory by
-#    contract and always exits 0, so `|| true` is a safety net that keeps a
-#    future bug in the review from ever blocking a commit.
+#    contract and always exits 0; the fallback logs a non-zero exit so an
+#    accidentally broken hook is still visible.
 if [ -f "$REPO_ROOT/hooks/pre-commit-open-code-review" ]; then
   if [ -x "$REPO_ROOT/hooks/pre-commit-open-code-review" ]; then
     "$REPO_ROOT/hooks/pre-commit-open-code-review" || echo "[open-code-review] review hook exited $? (ignored)." >&2

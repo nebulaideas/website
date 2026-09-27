@@ -102,8 +102,8 @@ if [[ ! "$TIMEOUT_SECONDS" =~ ^[1-9][0-9]*$ ]]; then
   TIMEOUT_SECONDS=600
 fi
 
-# A dedicated temp directory keeps the review result private (0700/0600) and
-# makes cleanup a single, reliable rmdir.
+# A dedicated temp directory keeps the review result private and makes cleanup
+# a single, reliable rmdir.
 WORK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/ocr-review.XXXXXX" 2>/dev/null)" || WORK_DIR=""
 if [[ -z "$WORK_DIR" || ! -d "$WORK_DIR" ]]; then
   warn "Could not create a temp directory — skipping review."
@@ -125,8 +125,10 @@ on_signal() {
   local code="$1"
   trap - EXIT INT TERM
   # The Perl wrapper writes the child's PID (also its PGID after setpgrp) to
-  # CHILD_PID_FILE so the timeout path can reap the whole subtree.  Targeting
-  # that same negative PID here reaches the wrapper, ocr, and every grandchild.
+  # CHILD_PID_FILE so the timeout path can reap the whole subtree.  After
+  # setpgrp, the child lives in its own process group; targeting -$target_pid
+  # reaches ocr and its grandchildren (but not the Perl wrapper, which reaps
+  # and exits independently when its child dies).
   local target_pid=""
   # Brief bounded wait: the file appears within microseconds of fork, but a
   # signal arriving between `run_review &` and the Perl wrapper's write would
@@ -158,7 +160,12 @@ trap 'on_signal 143' TERM
 REVIEW_STATUS=0
 run_review() {
   if command -v timeout >/dev/null 2>&1; then
-    timeout --kill-after=10 "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
+    # Probe for GNU --kill-after support (not available on busybox, etc.)
+    if timeout --kill-after=1 1 true 2>/dev/null; then
+      timeout --kill-after=10 "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
+    else
+      timeout "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
+    fi
   elif command -v perl >/dev/null 2>&1; then
     # macOS does not ship GNU timeout.  This wrapper forks the child into its
     # own process group (setpgrp) and polls waitpid() with WNOHANG, killing
@@ -204,6 +211,8 @@ run_review() {
     ' "$CHILD_PID_FILE" "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
   else
     warn "Neither 'timeout' nor 'perl' available — cannot enforce a time limit, skipping review."
+    REVIEW_STATUS=124
+  fi
   fi
 }
 # Backgrounded so the signal handler can reap it. Job control (`set -m`) gives
@@ -226,7 +235,7 @@ if [[ -s "$OUTPUT_FILE" ]]; then
   elif ! jq -e . "$OUTPUT_FILE" >/dev/null 2>&1; then
     warn "Review output was not valid JSON (exit $REVIEW_STATUS); skipping raw dump."
   else
-    finding_count="$(jq -r '(.comments // []) | length' "$OUTPUT_FILE" 2>/dev/null || echo 0)"
+    finding_count="$(jq -r '(.comments // []) | if type=="array" then length else 0 end' "$OUTPUT_FILE" 2>/dev/null || echo 0)"
     if [[ "$finding_count" == "0" ]]; then
       log "No findings."
     else
@@ -245,7 +254,7 @@ elif [[ "$REVIEW_STATUS" -eq 0 ]]; then
 fi
 
 if [[ "$REVIEW_STATUS" -ne 0 ]]; then
-  # 124/142 are the timeout exit codes from GNU timeout and Perl's alarm.
+  # 124 is the timeout exit code from both GNU timeout and our Perl wrapper.
   # 128+N means the process died from signal N (e.g. 137=SIGKILL, 143=SIGTERM),
   # which in practice also indicates a timeout or external interruption.
   if [[ "$REVIEW_STATUS" -eq 124 ]]; then
