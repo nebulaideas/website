@@ -1,10 +1,8 @@
 #!/bin/sh
-# Pre-commit hook to run lint, test, and coverage checks
-
-# Exit immediately if any command fails
+# Pre-commit hook: lint + tests, then an advisory OpenCodeReview pass.
+# Install with: git config core.hooksPath .git-hooks
 set -e
 
-# Resolve the project root directory
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 APP_DIR="$REPO_ROOT/app"
 
@@ -19,6 +17,19 @@ npm --prefix "$APP_DIR" run lint
 # 2. Run Tests with Coverage
 echo "🧪 Running tests and checking coverage thresholds..."
 npm --prefix "$APP_DIR" run test:coverage
+
+echo "============================================="
+echo "✅ Lint and test checks passed. Running AI review..."
+echo "============================================="
+
+# 3. Advisory AI review of the staged changes. The review script is advisory by
+#    contract and always exits 0, so `|| true` is a safety net that keeps a
+#    future bug in the review from ever blocking a commit.
+if [ -x "$REPO_ROOT/hooks/pre-commit-open-code-review" ]; then
+  "$REPO_ROOT/hooks/pre-commit-open-code-review" || true
+else
+  echo "[open-code-review] hooks/pre-commit-open-code-review not found — skipping."
+fi
 
 echo "============================================="
 echo "✅ All pre-commit checks passed successfully!"

@@ -1,51 +1,208 @@
 #!/usr/bin/env bash
 # Advisory OpenCodeReview pre-commit hook.
-# Reviews staged changes locally; it never blocks a commit.
-set -euo pipefail
+#
+# Reviews the staged changes in the working tree before a commit is created.
+# It is strictly advisory: it NEVER blocks a commit. The only case where it
+# stops the commit is mid-rebase/merge, where stopping is the correct behavior.
+#
+# Environment (all optional):
+#   OCR_LLM_URL                 LLM endpoint    (default: https://api.deepseek.com)
+#   OCR_LLM_MODEL               model id        (default: deepseek-v4-flash)
+#   OCR_LLM_TOKEN               API token       (default: $DEEPSEEK_API_KEY)
+#   OCR_REVIEW_TIMEOUT_SECONDS  wall-clock limit (default: 600)
+#   OCR_REVIEW_EFFORT           low|medium|high  (default: medium)
+#   OCR_SKIP_REVIEW=1           bypass the review entirely
+#
+# `set -e` is deliberately NOT used: every failure path must degrade to
+# "skip the review", never to "abort the commit".
+
+set -uo pipefail
+
+log() { printf '[open-code-review] %s\n' "$*"; }
+warn() { printf '[open-code-review] %s\n' "$*" >&2; }
+
+if [[ "${OCR_SKIP_REVIEW:-0}" == "1" ]]; then
+  log "OCR_SKIP_REVIEW=1 — skipping review."
+  exit 0
+fi
 
 if ! command -v ocr >/dev/null 2>&1; then
-  echo "[open-code-review] ocr not found — skipping staged review."
-  echo "[open-code-review] Install with: npm install --global @alibaba-group/open-code-review@1.12.9"
+  log "ocr not found — skipping review."
+  log "Install with: npm install --global @alibaba-group/open-code-review@1.12.9"
   exit 0
+fi
+
+# Git does not source shell rc files, so recover the token from the profile when
+# the parent environment does not already carry it. Uses POSIX BRE quantifiers
+# ({n,}) because BSD sed on macOS does not support GNU's \+ and ++. The last
+# assignment wins (matching shell semantics) and a trailing inline comment is
+# stripped before the surrounding quotes are removed.
+if [[ -z "${OCR_LLM_TOKEN:-${DEEPSEEK_API_KEY:-}}" ]]; then
+  # ZDOTDIR is only consulted when it is set and differs from $HOME, so the
+  # same file is not read twice.
+  rc_candidates=("$HOME/.zshenv" "$HOME/.zprofile" "$HOME/.profile" "$HOME/.bash_profile")
+  if [[ -n "${ZDOTDIR:-}" && "$ZDOTDIR" != "$HOME" ]]; then
+    rc_candidates=("$ZDOTDIR/.zshenv" "${rc_candidates[@]}")
+  fi
+  for rc in "${rc_candidates[@]}"; do
+    [[ -r "$rc" ]] || continue
+    recovered="$(sed -n \
+      -e 's/^[[:space:]]*export[[:space:]]\{1,\}DEEPSEEK_API_KEY=//p' \
+      -e 's/^[[:space:]]*DEEPSEEK_API_KEY=//p' \
+      "$rc" |
+      sed -e 's/[[:space:]]\{1,\}#.*$//' -e 's/[[:space:]]*$//' |
+      tail -n 1 |
+      sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\\(.*\\)'\$/\\1/")"
+    # Accept only a bare token. A `$VAR` reference or an embedded space is not a
+    # usable key, so reject it and keep looking instead of failing later with a
+    # confusing authentication error.
+    if [[ "$recovered" =~ ^[A-Za-z0-9._-]+$ ]]; then
+      DEEPSEEK_API_KEY="$recovered"
+      break
+    fi
+  done
 fi
 
 if [[ -z "${OCR_LLM_TOKEN:-${DEEPSEEK_API_KEY:-}}" ]]; then
-  echo "[open-code-review] No OCR LLM token found — skipping staged review."
-  echo "[open-code-review] Set OCR_LLM_TOKEN (or DEEPSEEK_API_KEY)."
+  log "No LLM token found — skipping review."
+  log "Set OCR_LLM_TOKEN (or DEEPSEEK_API_KEY)."
   exit 0
 fi
 
-if git diff --cached --quiet; then
+# Re-check staged state so the hook is safe to invoke directly.
+if git diff --cached --quiet 2>/dev/null; then
+  log "No staged changes — skipping review."
   exit 0
 fi
+
+# Mid-rebase/merge/cherry-pick: skip the review but DO NOT block. These state
+# entries are still present while the concluding commit is being created, so
+# exiting non-zero here would reject `git rebase --continue`, the commit that
+# concludes a merge, and `git cherry-pick` — a catch-22 that can only be escaped
+# with --no-verify. This hook is advisory, so it always exits 0.
+for state_dir in rebase-merge rebase-apply MERGE_HEAD CHERRY_PICK_HEAD; do
+  if [[ -e "$(git rev-parse --git-path "$state_dir")" ]]; then
+    log "Repository is mid-${state_dir} — skipping review (commit still allowed)."
+    exit 0
+  fi
+done
 
 export OCR_LLM_URL="${OCR_LLM_URL:-https://api.deepseek.com}"
-export OCR_LLM_MODEL="${OCR_LLM_MODEL:-deepseek-chat}"
+export OCR_LLM_MODEL="${OCR_LLM_MODEL:-deepseek-v4-flash}"
 export OCR_LLM_TOKEN="${OCR_LLM_TOKEN:-$DEEPSEEK_API_KEY}"
+EFFORT="${OCR_REVIEW_EFFORT:-medium}"
+TIMEOUT_SECONDS="${OCR_REVIEW_TIMEOUT_SECONDS:-600}"
 
-OUTPUT_FILE="$(mktemp "${TMPDIR:-/tmp}/open-code-review-staged.XXXXXX")"
-chmod 600 "$OUTPUT_FILE"
-trap 'rm -f "$OUTPUT_FILE"' EXIT
-
-REVIEW_ARGS=(review --format json --output "$OUTPUT_FILE")
-TIMEOUT_SECONDS="${OCR_REVIEW_TIMEOUT_SECONDS:-120}"
-
-echo "[open-code-review] Reviewing staged changes..."
-REVIEW_STATUS=0
-if command -v timeout >/dev/null 2>&1; then
-  timeout "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}" || REVIEW_STATUS=$?
-else
-  # macOS does not ship GNU timeout; Perl's alarm provides the same fail-fast behavior.
-  perl -e 'alarm shift; exec @ARGV' "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}" || REVIEW_STATUS=$?
+# A dedicated temp directory keeps the review result private (0700/0600) and
+# makes cleanup a single, reliable rmdir.
+WORK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/ocr-review.XXXXXX" 2>/dev/null)" || WORK_DIR=""
+if [[ -z "$WORK_DIR" || ! -d "$WORK_DIR" ]]; then
+  warn "Could not create a temp directory — skipping review."
+  exit 0
 fi
+chmod 700 "$WORK_DIR" 2>/dev/null
+OUTPUT_FILE="$WORK_DIR/result.json"
+
+REVIEW_ARGS=(review --effort "$EFFORT" --format json --output "$OUTPUT_FILE")
+
+log "Reviewing staged changes (model=$OCR_LLM_MODEL, effort=$EFFORT, timeout=${TIMEOUT_SECONDS}s)..."
+
+# Run the review in the background so an interrupt can reap the child; without
+# this the orphaned `ocr` process can outlive the hook and keep writing.
+OCR_PID=""
+cleanup() { rm -rf "$WORK_DIR"; }
+on_signal() {
+  local code="$1"
+  trap - EXIT INT TERM
+  if [[ -n "$OCR_PID" ]] && kill -0 "$OCR_PID" 2>/dev/null; then
+    kill -TERM "-$OCR_PID" 2>/dev/null || kill -TERM "$OCR_PID" 2>/dev/null
+  fi
+  cleanup
+  exit "$code"
+}
+trap 'cleanup' EXIT
+trap 'on_signal 130' INT
+trap 'on_signal 143' TERM
+
+REVIEW_STATUS=0
+run_review() {
+  if command -v timeout >/dev/null 2>&1; then
+    timeout "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
+  elif command -v perl >/dev/null 2>&1; then
+    # macOS does not ship GNU timeout. This wrapper polls waitpid() with WNOHANG
+    # and kills the child at the deadline, returning 142 on timeout. A plain
+    # `perl -e 'alarm shift; exec @ARGV'` cannot be used: it signals the wrapper
+    # (printing "Alarm clock" and yielding 142) without ever killing the real
+    # `ocr` process, which then keeps running after the hook has exited.
+    # The child sets no alarm of its own — an alarm survives execve, so it would
+    # kill `ocr` by SIGALRM just before the parent's deadline and make a timeout
+    # look like success. stderr is left attached so real failures stay visible.
+    perl -e '
+      my $t = shift @ARGV;
+      my $pid = fork(); die "fork: $!" unless defined $pid;
+      if (!$pid) { exec @ARGV or exit 127; }
+      my $deadline = time + $t;
+      while (1) {
+        if (waitpid($pid, 1) == $pid) {
+          # Signal deaths must not decode to success: report 128 + signal.
+          my $st = $?;
+          exit($st & 127 ? 128 + ($st & 127) : $st >> 8);
+        }
+        if (time >= $deadline) { kill "KILL", $pid; waitpid($pid, 0); exit 142; }
+        select(undef, undef, undef, 0.2);
+      }
+    ' "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
+  else
+    warn "Neither 'timeout' nor 'perl' available — running without a time limit."
+    ocr "${REVIEW_ARGS[@]}"
+  fi
+}
+# Backgrounded so the signal handler can reap it. Job control (`set -m`) puts
+# the background job in its own process group whose PGID equals its PID, so the
+# handler can kill the whole group (ocr spawns a child of its own) without ever
+# signalling this script.
+set -m
+run_review &
+OCR_PID=$!
+set +m
+wait "$OCR_PID" || REVIEW_STATUS=$?
 
 if [[ -s "$OUTPUT_FILE" ]]; then
-  echo "[open-code-review] Review findings:"
-  cat "$OUTPUT_FILE"
+  if ! command -v jq >/dev/null 2>&1; then
+    # Say so plainly: dumping the raw JSON here would spill the model's internal
+    # thinking traces and tool-call logs across the terminal.
+    log "jq is not installed — skipping formatted findings."
+    log "Install jq (brew install jq) to see review findings locally."
+  elif ! jq -e . "$OUTPUT_FILE" >/dev/null 2>&1; then
+    warn "Review output was not valid JSON; showing the first 40 lines."
+    head -n 40 "$OUTPUT_FILE"
+  else
+    finding_count="$(jq -r '(.comments // []) | length' "$OUTPUT_FILE" 2>/dev/null || echo 0)"
+    if [[ "$finding_count" == "0" ]]; then
+      log "No findings."
+    else
+      log "Review findings ($finding_count):"
+      # Render only actionable fields. The raw JSON also carries the model's
+      # internal "thinking" traces and tool-call logs, which are pure noise.
+      jq -r '(.comments // [])[]
+             | "[\(.severity // "unknown")] \(.path // "?"):\(.start_line // 0)  \(.category // "-")\n    \(.content // "" | tostring | gsub("\\s+"; " "))\n"' \
+        "$OUTPUT_FILE" 2>/dev/null || warn "Could not parse findings from the review output."
+    fi
+    summary="$(jq -r '.message // empty' "$OUTPUT_FILE" 2>/dev/null)"
+    [[ -n "$summary" ]] && log "$summary"
+  fi
+elif [[ "$REVIEW_STATUS" -eq 0 ]]; then
+  log "Review completed with no output."
 fi
 
 if [[ "$REVIEW_STATUS" -ne 0 ]]; then
-  echo "[open-code-review] Review did not complete (exit $REVIEW_STATUS); commit proceeds." >&2
-else
-  echo "[open-code-review] Review complete. Commit proceeding."
+  # 124/142 are the timeout exit codes from GNU timeout and Perl's alarm.
+  if [[ "$REVIEW_STATUS" -eq 124 || "$REVIEW_STATUS" -eq 142 ]]; then
+    warn "Review timed out after ${TIMEOUT_SECONDS}s (raise OCR_REVIEW_TIMEOUT_SECONDS to allow more). Commit proceeding."
+  else
+    warn "Review did not complete (exit $REVIEW_STATUS); commit proceeds."
+  fi
 fi
+
+log "Review finished. Commit proceeding."
+exit 0

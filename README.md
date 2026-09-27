@@ -159,13 +159,14 @@ To enable automatic deployments and AI review pipelines, add these secrets under
 ### ⚓ Local Git Hooks
 
 To maintain code quality before pushing commits:
-* **Hook Template**: [.git-hooks/pre-commit](.git-hooks/pre-commit) — Runs `npm run lint` and `npm run test:coverage` inside the `app` directory.
-* **OpenCodeReview Advisory Hook**: [hooks/pre-commit-open-code-review](hooks/pre-commit-open-code-review) — optional AI review of staged changes; it is advisory and never blocks commits. Install the CLI with `npm install --global @alibaba-group/open-code-review@1.12.9` and set `OCR_LLM_TOKEN` (or `DEEPSEEK_API_KEY`).
-* **Installation**:
-  Run the following script inside the `app/` folder to install the hook on your local machine:
+* **Hook Template**: [.git-hooks/pre-commit](.git-hooks/pre-commit) — Runs `npm run lint` and `npm run test:coverage` inside the `app` directory, then delegates to the advisory AI review.
+* **OpenCodeReview Advisory Hook**: [hooks/pre-commit-open-code-review](hooks/pre-commit-open-code-review) — AI review of staged changes on **every commit**; it is advisory and never blocks commits. Uses DeepSeek `deepseek-v4-flash` at medium effort. Install the CLI with `npm install --global @alibaba-group/open-code-review@1.12.9` and set `OCR_LLM_TOKEN` (or `DEEPSEEK_API_KEY`) in your shell profile.
+* **Installation** (once per clone) — point Git at the version-controlled hook directory so hook updates arrive with `git pull`:
   ```bash
-  npm run setup-hooks
+  npm --prefix app run setup-hooks
   ```
+  This is equivalent to `git config core.hooksPath .git-hooks`.
+* **Tuning**: `OCR_REVIEW_EFFORT` (`low|medium|high`, default `medium`), `OCR_REVIEW_TIMEOUT_SECONDS` (default `600`), and `OCR_SKIP_REVIEW=1` to bypass a single commit. The hook skips itself when the CLI or token is missing, and reads `DEEPSEEK_API_KEY` from your shell profile when the environment does not already carry it.
 
 ---
 

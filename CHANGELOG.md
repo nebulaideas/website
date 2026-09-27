@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased] - 2026-09-26
+
+### Added
+- `core.hooksPath` wiring so the version-controlled `.git-hooks` directory actually runs; the OpenCodeReview review now executes on every local commit instead of only being documented.
+- `.git-hooks/pre-commit` now delegates to the advisory OpenCodeReview hook after lint and tests pass.
+- `npm run setup-hooks` now sets `core.hooksPath` (was copying the hook into `.git/hooks`, which is bypassed once a hooks path is configured).
+- `OCR_SKIP_REVIEW` escape hatch and `OCR_REVIEW_EFFORT` / `OCR_REVIEW_TIMEOUT_SECONDS` tuning knobs in the advisory hook.
+- The advisory hook reads `DEEPSEEK_API_KEY` from the shell profile when the environment does not already carry it.
+
+### Changed
+- OpenCodeReview LLM model switched from `deepseek-chat` to `deepseek-v4-flash`, with `effort: medium` on both CI and the local hook.
+- Local review timeout raised from 120s to 600s; the previous default terminated real reviews with SIGALRM (exit 142) before any findings were produced.
+
 ## [Unreleased] - 2026-06-16
 
 ### Added
