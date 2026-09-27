@@ -141,7 +141,15 @@ run_review() {
     perl -e '
       my $t = shift @ARGV;
       my $pid = fork(); die "fork: $!" unless defined $pid;
-      if (!$pid) { exec @ARGV or exit 127; }
+      if (!$pid) {
+        # New process group BEFORE exec, so the deadline below can reap the
+        # whole subtree. ocr is a Node CLI that spawns children of its own; if
+        # only the direct child were killed, those grandchildren would outlive
+        # the hook and keep writing to the output file. This is the primary
+        # path on macOS, which does not ship GNU timeout.
+        setpgrp(0, 0);
+        exec @ARGV or exit 127;
+      }
       my $deadline = time + $t;
       while (1) {
         if (waitpid($pid, 1) == $pid) {
@@ -149,7 +157,15 @@ run_review() {
           my $st = $?;
           exit($st & 127 ? 128 + ($st & 127) : $st >> 8);
         }
-        if (time >= $deadline) { kill "KILL", $pid; waitpid($pid, 0); exit 142; }
+        if (time >= $deadline) {
+          # Negative PID targets the child's whole process group. A 0 return
+          # means the group never formed (setpgrp raced), so fall back to
+          # signalling the pid directly rather than killing nothing.
+          my $killed = kill "KILL", -$pid;
+          kill "KILL", $pid if !$killed;
+          waitpid($pid, 0);
+          exit 142;
+        }
         select(undef, undef, undef, 0.2);
       }
     ' "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
@@ -175,8 +191,8 @@ if [[ -s "$OUTPUT_FILE" ]]; then
     log "jq is not installed — skipping formatted findings."
     log "Install jq (brew install jq) to see review findings locally."
   elif ! jq -e . "$OUTPUT_FILE" >/dev/null 2>&1; then
-    warn "Review output was not valid JSON; showing the first 40 lines."
-    head -n 40 "$OUTPUT_FILE"
+    warn "Review output was not valid JSON (exit $REVIEW_STATUS); skipping raw dump."
+    warn "Install jq (brew install jq) and re-run to inspect the output: $OUTPUT_FILE"
   else
     finding_count="$(jq -r '(.comments // []) | length' "$OUTPUT_FILE" 2>/dev/null || echo 0)"
     if [[ "$finding_count" == "0" ]]; then
@@ -198,8 +214,13 @@ fi
 
 if [[ "$REVIEW_STATUS" -ne 0 ]]; then
   # 124/142 are the timeout exit codes from GNU timeout and Perl's alarm.
+  # 128+N means the process died from signal N (e.g. 137=SIGKILL, 143=SIGTERM),
+  # which in practice also indicates a timeout or external interruption.
   if [[ "$REVIEW_STATUS" -eq 124 || "$REVIEW_STATUS" -eq 142 ]]; then
     warn "Review timed out after ${TIMEOUT_SECONDS}s (raise OCR_REVIEW_TIMEOUT_SECONDS to allow more). Commit proceeding."
+  elif [[ "$REVIEW_STATUS" -gt 128 ]]; then
+    sig=$((REVIEW_STATUS - 128))
+    warn "Review killed by signal $sig (exit $REVIEW_STATUS); likely timed out or interrupted. Commit proceeding."
   else
     warn "Review did not complete (exit $REVIEW_STATUS); commit proceeds."
   fi
