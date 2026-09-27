@@ -211,8 +211,9 @@ run_review() {
     ' "$CHILD_PID_FILE" "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
   else
     warn "Neither 'timeout' nor 'perl' available — cannot enforce a time limit, skipping review."
-    REVIEW_STATUS=124
-  fi
+    # `return` (not a bare assignment) so the status survives the backgrounded
+    # subshell and the parent can report the skip accurately.
+    return 3
   fi
 }
 # Backgrounded so the signal handler can reap it. Job control (`set -m`) gives
@@ -254,10 +255,13 @@ elif [[ "$REVIEW_STATUS" -eq 0 ]]; then
 fi
 
 if [[ "$REVIEW_STATUS" -ne 0 ]]; then
+  # 3 is our own sentinel for "no timeout implementation available — skipped".
   # 124 is the timeout exit code from both GNU timeout and our Perl wrapper.
   # 128+N means the process died from signal N (e.g. 137=SIGKILL, 143=SIGTERM),
   # which in practice also indicates a timeout or external interruption.
-  if [[ "$REVIEW_STATUS" -eq 124 ]]; then
+  if [[ "$REVIEW_STATUS" -eq 3 ]]; then
+    warn "Review skipped: neither 'timeout' nor 'perl' is available to bound the run."
+  elif [[ "$REVIEW_STATUS" -eq 124 ]]; then
     warn "Review timed out after ${TIMEOUT_SECONDS}s (raise OCR_REVIEW_TIMEOUT_SECONDS to allow more). Commit proceeding."
   elif [[ "$REVIEW_STATUS" -gt 128 ]]; then
     sig=$((REVIEW_STATUS - 128))
