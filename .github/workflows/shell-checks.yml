@@ -19,6 +19,11 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  # Collapse the duplicate push + pull_request runs for the same commit.
+  group: shell-checks-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+
 jobs:
   shell-check:
     name: Syntax and Lint
@@ -31,11 +36,24 @@ jobs:
       - name: Syntax check
         run: |
           set -euo pipefail
-          status=0
+          files=()
           for f in hooks/pre-commit-open-code-review .git-hooks/pre-commit; do
-            [ -f "$f" ] || continue
-            echo "::group::bash -n $f"
-            if bash -n "$f"; then
+            [ -f "$f" ] && files+=("$f")
+          done
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No shell hooks found — nothing to check."
+            exit 0
+          fi
+          status=0
+          for f in "${files[@]}"; do
+            # Pick the interpreter from the shebang so a POSIX sh script is not
+            # validated as bash (they are not mutually compatible).
+            case "$(head -n1 "$f")" in
+              *bash*) interp=bash ;;
+              *)      interp=sh ;;
+            esac
+            echo "::group::$interp -n $f"
+            if "$interp" -n "$f"; then
               echo "OK"
             else
               echo "::error file=$f::Shell syntax error"
@@ -47,5 +65,13 @@ jobs:
 
       - name: ShellCheck (errors only)
         run: |
-          shellcheck --severity=error --external-sources \
-            hooks/pre-commit-open-code-review .git-hooks/pre-commit
+          set -euo pipefail
+          files=()
+          for f in hooks/pre-commit-open-code-review .git-hooks/pre-commit; do
+            [ -f "$f" ] && files+=("$f")
+          done
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No shell hooks found — nothing to lint."
+            exit 0
+          fi
+          shellcheck --severity=error --external-sources "${files[@]}"

@@ -56,7 +56,10 @@ if [[ -z "${OCR_LLM_TOKEN:-${DEEPSEEK_API_KEY:-}}" ]]; then
       sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\\(.*\\)'\$/\\1/")"
     # Accept only a bare token. A `$VAR` reference or an embedded space is not a
     # usable key, so reject it and keep looking instead of failing later with a
-    # confusing authentication error.
+    # confusing authentication error.  Trust boundary: the recovered value is
+    # only ever used as the DeepSeek API token for OCR_LLM_URL's default
+    # endpoint — it is never sent to a user-supplied URL unless the caller set
+    # OCR_LLM_URL/OCR_LLM_TOKEN explicitly in the environment first.
     if [[ "$recovered" =~ ^[A-Za-z0-9._-]+$ ]]; then
       DEEPSEEK_API_KEY="$recovered"
       break
@@ -79,9 +82,9 @@ fi
 # Mid-rebase/merge/cherry-pick: skip the review but DO NOT block. These state
 # entries are still present while the concluding commit is being created, so
 # exiting non-zero here would reject `git rebase --continue`, the commit that
-# concludes a merge, and `git cherry-pick` — a catch-22 that can only be escaped
-# with --no-verify. This hook is advisory, so it always exits 0.
-for state_dir in rebase-merge rebase-apply MERGE_HEAD CHERRY_PICK_HEAD; do
+# concludes a merge, and `git cherry-pick` / `git revert` — a catch-22 that can
+# only be escaped with --no-verify. This hook is advisory, so it always exits 0.
+for state_dir in rebase-merge rebase-apply MERGE_HEAD CHERRY_PICK_HEAD REVERT_HEAD; do
   if [[ -e "$(git rev-parse --git-path "$state_dir")" ]]; then
     log "Repository is mid-${state_dir} — skipping review (commit still allowed)."
     exit 0
@@ -116,6 +119,18 @@ REVIEW_ARGS=(review --effort "$EFFORT" --format json --output "$OUTPUT_FILE")
 
 log "Reviewing staged changes (model=$OCR_LLM_MODEL, effort=$EFFORT, timeout=${TIMEOUT_SECONDS}s)..."
 
+# Which wall-clock mechanism will be used.  Detected here (in the parent) so the
+# signal handler knows whether a child PID file is expected: only the Perl
+# wrapper writes one.  On the GNU `timeout` path `$OCR_PID` is itself the group
+# leader (thanks to `set -m`, plus `--foreground` so timeout does not detach the
+# child into a new group), so the handler can target that group directly.
+TIMEOUT_MODE="none"
+if command -v timeout >/dev/null 2>&1; then
+  TIMEOUT_MODE="timeout"
+elif command -v perl >/dev/null 2>&1; then
+  TIMEOUT_MODE="perl"
+fi
+
 # Run the review in the background so an interrupt can reap the child; without
 # this the orphaned `ocr` process can outlive the hook and keep writing.
 OCR_PID=""
@@ -124,23 +139,24 @@ cleanup() { rm -rf "$WORK_DIR"; }
 on_signal() {
   local code="$1"
   trap - EXIT INT TERM
-  # The Perl wrapper writes the child's PID (also its PGID after setpgrp) to
-  # CHILD_PID_FILE so the timeout path can reap the whole subtree.  After
-  # setpgrp, the child lives in its own process group; targeting -$target_pid
-  # reaches ocr and its grandchildren (but not the Perl wrapper, which reaps
-  # and exits independently when its child dies).
   local target_pid=""
-  # Brief bounded wait: the file appears within microseconds of fork, but a
-  # signal arriving between `run_review &` and the Perl wrapper's write would
-  # see an empty file.  Wait up to 0.5 s before falling back.
-  local _i=0
-  while [[ $_i -lt 5 ]] && [[ ! -s "$CHILD_PID_FILE" ]]; do
-    sleep 0.1; _i=$((_i + 1))
-  done
-  if [[ -s "$CHILD_PID_FILE" ]]; then
-    target_pid="$(cat "$CHILD_PID_FILE" 2>/dev/null)"
+  if [[ "$TIMEOUT_MODE" == "perl" ]]; then
+    # The Perl wrapper writes the child's PID (also its PGID after setpgrp) to
+    # CHILD_PID_FILE.  After setpgrp the child lives in its own process group,
+    # so targeting -$target_pid reaches ocr and its grandchildren (but not the
+    # Perl wrapper, which reaps and exits independently when its child dies).
+    # Brief bounded wait: the file appears within microseconds of fork, but a
+    # signal arriving between `run_review &` and the wrapper's write would see
+    # an empty file.  Wait up to 0.5 s before falling back.
+    local _i=0
+    while [[ $_i -lt 5 ]] && [[ ! -s "$CHILD_PID_FILE" ]]; do
+      sleep 0.1; _i=$((_i + 1))
+    done
+    if [[ -s "$CHILD_PID_FILE" ]]; then
+      target_pid="$(cat "$CHILD_PID_FILE" 2>/dev/null)"
+    fi
   fi
-  # Fall back to the wrapper PID if the file was never written.
+  # Fall back to the wrapper/subshell PID.
   target_pid="${target_pid:-$OCR_PID}"
   # Guard: target_pid must be a positive integer to avoid signalling the wrong
   # group (e.g. if the file contained garbage or a partial write).
@@ -159,14 +175,16 @@ trap 'on_signal 143' TERM
 
 REVIEW_STATUS=0
 run_review() {
-  if command -v timeout >/dev/null 2>&1; then
-    # Probe for GNU --kill-after support (not available on busybox, etc.)
-    if timeout --kill-after=1 1 true 2>/dev/null; then
-      timeout --kill-after=10 "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
+  if [[ "$TIMEOUT_MODE" == "timeout" ]]; then
+    # Probe for GNU-only flags (not available on busybox, etc.).  --foreground
+    # keeps the child in this subshell's process group so the signal handler's
+    # group kill actually reaches ocr instead of a detached group.
+    if timeout --kill-after=1 --foreground 1 true 2>/dev/null; then
+      timeout --kill-after=10 --foreground "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
     else
       timeout "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
     fi
-  elif command -v perl >/dev/null 2>&1; then
+  elif [[ "$TIMEOUT_MODE" == "perl" ]]; then
     # macOS does not ship GNU timeout.  This wrapper forks the child into its
     # own process group (setpgrp) and polls waitpid() with WNOHANG, killing
     # the whole group at the deadline.  Exit 124 matches GNU timeout's sentinel
