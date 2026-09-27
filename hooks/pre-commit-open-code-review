@@ -97,6 +97,10 @@ case "$EFFORT" in
   *) warn "Invalid OCR_REVIEW_EFFORT='$EFFORT' (expected low|medium|high) — using medium."; EFFORT="medium" ;;
 esac
 TIMEOUT_SECONDS="${OCR_REVIEW_TIMEOUT_SECONDS:-600}"
+if [[ ! "$TIMEOUT_SECONDS" =~ ^[1-9][0-9]*$ ]]; then
+  warn "Invalid OCR_REVIEW_TIMEOUT_SECONDS='$TIMEOUT_SECONDS' — using 600."
+  TIMEOUT_SECONDS=600
+fi
 
 # A dedicated temp directory keeps the review result private (0700/0600) and
 # makes cleanup a single, reliable rmdir.
@@ -124,13 +128,19 @@ on_signal() {
   # CHILD_PID_FILE so the timeout path can reap the whole subtree.  Targeting
   # that same negative PID here reaches the wrapper, ocr, and every grandchild.
   local target_pid=""
-  if [[ -r "$CHILD_PID_FILE" ]]; then
+  # Brief bounded wait: the file appears within microseconds of fork, but a
+  # signal arriving between `run_review &` and the Perl wrapper's write would
+  # see an empty file.  Wait up to 0.5 s before falling back.
+  local _i=0
+  while [[ $_i -lt 5 ]] && [[ ! -s "$CHILD_PID_FILE" ]]; do
+    sleep 0.1; _i=$((_i + 1))
+  done
+  if [[ -s "$CHILD_PID_FILE" ]]; then
     target_pid="$(cat "$CHILD_PID_FILE" 2>/dev/null)"
   fi
-  # Fall back to the wrapper PID if the file was not yet written (race window
-  # between backgrounding and the Perl wrapper creating the file).
+  # Fall back to the wrapper PID if the file was never written.
   target_pid="${target_pid:-$OCR_PID}"
-  if [[ -n "$target_pid" ]]; then
+  if [[ -n "$target_pid" ]] && kill -0 "$target_pid" 2>/dev/null; then
     kill -TERM -- "-$target_pid" 2>/dev/null || kill -TERM "$target_pid" 2>/dev/null
   fi
   cleanup
@@ -168,7 +178,7 @@ run_review() {
       }
       # Write the child PID (= its PGID) so the bash signal handler can target
       # the whole process group on SIGINT/SIGTERM.
-      if (open(my $fh, ">", $pid_file)) { print $fh $pid; close $fh; }
+      if (open(my $fh, ">", $pid_file)) { print $fh $pid or exit 127; close $fh; }
       my $deadline = time + $t;
       while (1) {
         if (waitpid($pid, 1) == $pid) {
