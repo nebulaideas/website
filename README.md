@@ -34,12 +34,12 @@ website/
 │   └── workflows/            # CI/CD pipelines and PR gating checks
 │       ├── deploy.yml        # Production pages builder and deployer
 │       ├── ci.yml            # CI validation workflow for active branches
-│   └── open-code-review.yml # OpenCodeReview AI code reviewer with PR gating
+│       └── open-code-review.yml # OpenCodeReview AI code reviewer with PR gating
 ├── hooks/
 │   ├── pre-commit-open-code-review # Advisory local staged review
 │   └── hooks.json                 # Claude plugin hook registration
 ├── .git-hooks/
-│   └── pre-commit                # Shell pre-commit hook template (lint + test)
+│   └── pre-commit                # Pre-commit hook (lint + test + advisory AI review)
 ├── app/                         # React Frontend Application
 │   ├── src/
 │   │   ├── components/       # Layout and UI Components
@@ -143,8 +143,8 @@ This repository utilizes three GitHub Actions workflows under `.github/workflows
 3. **OpenCodeReview PR Review & Gating** ([open-code-review.yml](.github/workflows/open-code-review.yml)):
    - Triggered on pull requests (non-draft).
    - Uses the upstream `alibaba/open-code-review` GitHub Action with the npm-distributed `@alibaba-group/open-code-review` CLI, DeepSeek, and the repository review guidance.
-   - Posts inline findings and a sticky summary; the action is configured for the English review output.
-   - CLI installation is verified on CI with `ocr --version`.
+   - Posts inline findings and a sticky summary; the action is configured for the English review output at medium effort.
+   - The action installs `@alibaba-group/open-code-review` 1.12.9 itself via the `ocr_version` input.
 
 #### GitHub Secrets Setup
 

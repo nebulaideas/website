@@ -2,8 +2,9 @@
 # Advisory OpenCodeReview pre-commit hook.
 #
 # Reviews the staged changes in the working tree before a commit is created.
-# It is strictly advisory: it NEVER blocks a commit. The only case where it
-# stops the commit is mid-rebase/merge, where stopping is the correct behavior.
+# It is strictly advisory: it NEVER blocks a commit. Mid-rebase/merge/cherry-pick
+# is detected and skipped rather than treated as a reason to stop, so
+# `git rebase --continue` and the commit that concludes a merge always work.
 #
 # Environment (all optional):
 #   OCR_LLM_URL                 LLM endpoint    (default: https://api.deepseek.com)
