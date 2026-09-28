@@ -241,8 +241,13 @@ run_review() {
       }
       # Write the child PID (= its PGID) so the bash signal handler can target
       # the whole process group on SIGINT/SIGTERM.  Both failure modes are
-      # fail-safe (kill the child first, then exit 127) so this path can never
-      # leak the ocr subtree: a skipped review beats an orphaned one.
+      # fail-safe (kill the child first, then exit 127) so this path does not
+      # leak the ocr subtree: a skipped review beats an orphaned one.  If this
+      # branch is reached before the child ran setpgrp, -$pid names no group
+      # yet, so the negative-PID kill is a no-op and the direct child kill
+      # below still reaps it before ocr is started.
+      # NOTE: no apostrophes in Perl comments — they would terminate the
+      # surrounding single-quoted shell string and break the whole script.
       if (open(my $fh, ">", $pid_file)) {
         if (!print $fh $pid) { kill "KILL", -$pid; kill "KILL", $pid; waitpid($pid, 0); exit 127; }
         close $fh;

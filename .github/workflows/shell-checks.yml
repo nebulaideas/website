@@ -36,7 +36,9 @@ jobs:
     # Pinned image (not ubuntu-latest) so the shellcheck/git versions — and
     # therefore pass/fail — are reproducible.
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    # 10 min: generous enough that a cold `apt-get install shellcheck`
+    # fallback cannot exhaust the budget (the checks themselves take ~20s).
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
