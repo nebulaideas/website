@@ -21,11 +21,13 @@ bad()  { printf 'FAIL - %s\n' "$1" >&2; fail=1; }
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
-# Stubbed `ocr` that outlives every deadline used below.  `exec` keeps it to a
-# single process so the orphan check is unambiguous.
+# Stubbed `ocr` that outlives every deadline used below.  It records its PID so
+# the orphan check can test exactly that process — no pgrep globbing, which
+# could match (or kill) unrelated processes on the host.
 mkdir -p "$TMP/bin"
-cat > "$TMP/bin/ocr" <<'STUB'
+cat > "$TMP/bin/ocr" <<STUB
 #!/bin/sh
+echo \$\$ > "$TMP/ocr.pid"
 exec sleep 47
 STUB
 chmod +x "$TMP/bin/ocr"
@@ -73,11 +75,12 @@ else
   bad "timeout not reported: $out"
 fi
 
-# 4. No orphaned subtree survives the deadline.
+# 4. No orphaned subtree survives the deadline.  Checked by the exact PID the
+#    stub recorded (never a host-wide pattern match).
 sleep 1
-if pgrep -f 'sleep 47' >/dev/null 2>&1; then
+if [ -f "$TMP/ocr.pid" ] && kill -0 "$(cat "$TMP/ocr.pid")" 2>/dev/null; then
   bad 'orphaned ocr subtree survived the deadline'
-  pkill -f 'sleep 47' 2>/dev/null
+  kill "$(cat "$TMP/ocr.pid")" 2>/dev/null
 else
   pass 'no orphaned children after the deadline'
 fi
