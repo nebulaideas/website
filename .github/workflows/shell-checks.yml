@@ -33,7 +33,9 @@ concurrency:
 jobs:
   shell-check:
     name: Syntax and Lint
-    runs-on: ubuntu-latest
+    # Pinned image (not ubuntu-latest) so the shellcheck/git versions — and
+    # therefore pass/fail — are reproducible.
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - name: Checkout
@@ -86,6 +88,9 @@ jobs:
             if [ -f "$f" ]; then existing+=("$f"); fi
           done
           if [ "${#existing[@]}" -gt 0 ]; then
-            shellcheck --severity=error --external-sources "${existing[@]}" || status=1
+            # No --external-sources: these hooks contain no `source`/`.`
+            # directives, and the flag would let a fork PR craft a hook that
+            # sources runner-side files and leaks them via shellcheck output.
+            shellcheck --severity=error "${existing[@]}" || status=1
           fi
           exit "$status"
