@@ -1,0 +1,111 @@
+name: Shell Checks
+
+# Guards the pre-commit hooks and other shell scripts: a syntax error in
+# hooks/pre-commit-open-code-review disables the local review silently (the
+# caller treats a non-zero exit as advisory), so it must be caught in CI.
+on:
+  # Scope push to the default branch so a feature-branch push does not run the
+  # job twice (the same commit also triggers pull_request).  pull_request is
+  # deliberately NOT path-filtered: if this check is ever made required in
+  # branch protection, a path filter would leave PRs that skip it with a
+  # permanently expected-but-missing status.  The job takes ~10s.
+  push:
+    branches: [main]
+    paths:
+      - 'hooks/**'
+      - '.git-hooks/**'
+      - '.github/workflows/shell-checks.yml'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  # Safe now that `push` is scoped to the default branch: a branch push
+  # triggers only the pull_request event, so this group never cancels a
+  # same-commit duplicate — it only cancels superseded runs when commits
+  # land faster than the ~10s job.  github.ref is unique per PR
+  # (refs/pull/<n>/merge), so runs for different PRs never collide.
+  group: shell-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  shell-check:
+    name: Syntax and Lint
+    # Pinned image (not ubuntu-latest) so the shellcheck/git versions — and
+    # therefore pass/fail — are reproducible.
+    runs-on: ubuntu-24.04
+    # 10 min: generous enough that a cold `apt-get install shellcheck`
+    # fallback cannot exhaust the budget (the checks themselves take ~20s).
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      # shellcheck ships with the pinned image today (verified in the run log),
+      # but installing it when absent keeps this job working if a future image
+      # drops it — a missing linter must not look like a lint failure.
+      - name: Ensure ShellCheck is available
+        run: command -v shellcheck >/dev/null 2>&1 || { sudo apt-get update -qq && sudo apt-get install -y shellcheck; }
+
+      # The authoritative list of guarded files lives in `files` below.  The
+      # trigger's directory globs are deliberately broader (they just decide
+      # when to START the job), and a file listed here but missing from the
+      # repo fails the job loudly — deleting or renaming a hook can never keep
+      # CI green.  Adding a new hook: add it to `files` (the globs already
+      # cover when to run).
+      - name: Syntax and lint checks
+        run: |
+          set -euo pipefail
+          files=(hooks/pre-commit-open-code-review .git-hooks/pre-commit hooks/test-pre-commit.sh)
+          status=0
+          for f in "${files[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "::error file=$f::Expected shell hook not found (deleted or renamed?)"
+              status=1
+              continue
+            fi
+            # Pick the interpreter from the shebang (CR stripped for CRLF
+            # checkouts) so a POSIX sh script is not validated as bash —
+            # they are not mutually compatible.
+            case "$(head -n1 "$f" | tr -d '\r')" in
+              *bash*) interp=bash ;;
+              *)      interp=sh ;;
+            esac
+            echo "::group::$interp -n $f"
+            if "$interp" -n "$f"; then
+              echo "OK"
+            else
+              echo "::error file=$f::Shell syntax error"
+              status=1
+            fi
+            echo "::endgroup::"
+            # Git refuses to run hooks without the executable bit, and the
+            # entry point skips non-executable scripts — a mode drop would
+            # silently disable the review.  Require 100755 in the index AND
+            # an executable worktree copy.
+            mode="$(git ls-files -s "$f" | awk '{print $1}')"
+            if [ "$mode" != "100755" ] || [ ! -x "$f" ]; then
+              echo "::error file=$f::Hook must be executable (index mode: $mode)"
+              status=1
+            fi
+          done
+          existing=()
+          for f in "${files[@]}"; do
+            if [ -f "$f" ]; then existing+=("$f"); fi
+          done
+          if [ "${#existing[@]}" -gt 0 ]; then
+            # No --external-sources: these hooks contain no `source`/`.`
+            # directives, and the flag would let a fork PR craft a hook that
+            # sources runner-side files and leaks them via shellcheck output.
+            shellcheck --severity=error "${existing[@]}" || status=1
+          fi
+          exit "$status"
+
+      # Behavioural check for the Perl deadline wrapper and the skip
+      # fast-paths — syntax/lint alone cannot catch a deadline that fails to
+      # fire or leaves an orphaned review subtree.  Runs offline against a
+      # stubbed `ocr`.
+      - name: Functional smoke tests
+        run: bash hooks/test-pre-commit.sh

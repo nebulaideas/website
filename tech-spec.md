@@ -133,12 +133,12 @@ We use three GitHub Actions workflows in `.github/workflows/` to enforce softwar
 3. **OpenCodeReview PR Review & Gating (`open-code-review.yml`)**:
    - Triggers: On pull requests (non-draft).
    - Purpose: Runs the upstream `alibaba/open-code-review` GitHub Action with the npm-distributed `@alibaba-group/open-code-review` CLI and DeepSeek.
-   - Configuration: `llm_url` is `https://api.deepseek.com`, `llm_model` is `deepseek-chat`, and `DEEPSEEK_API_KEY` supplies the LLM token.
-   - CI check: `ci.yml` installs OCR 1.12.9 and verifies `ocr --version`.
+   - Configuration: `llm_url` is `https://api.deepseek.com`, `llm_model` is `deepseek-v4-flash`, `effort` is `medium`, and `DEEPSEEK_API_KEY` supplies the LLM token.
+   - CI check: the action installs `@alibaba-group/open-code-review` 1.12.9 itself via the `ocr_version` input; `ci.yml` only runs lint and tests.
    - Review focus: HTML/CSS/JS, lint hygiene, code quality, best practices, security, SEO, and bilingual English/Spanish customer-facing copy.
    - Posting: OpenCodeReview publishes inline findings and a sticky summary; GitHub permissions are configured in the workflow.
 
 ### Local Git hooks
-- **Hook Template (`.git-hooks/pre-commit`)**: Configured to run `npm run lint` and `npm run test:coverage` inside the `app/` folder before any local commit.
-- **Installer Script**: A setup script in `app/package.json` called `"setup-hooks"` copies this hook to `.git/hooks/pre-commit` and grants executable rights.
+- **Hook Template (`.git-hooks/pre-commit`)**: Runs `npm run lint` and `npm run test:coverage` inside the `app/` folder, then delegates to the advisory OpenCodeReview hook (`hooks/pre-commit-open-code-review`) before any local commit.
+- **Installer Script**: A setup script in `app/package.json` called `"setup-hooks"` sets `core.hooksPath` to `.git-hooks`, so Git runs the version-controlled hook directly and updates arrive with `git pull`.
 

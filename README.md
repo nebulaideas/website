@@ -34,12 +34,11 @@ website/
 │   └── workflows/            # CI/CD pipelines and PR gating checks
 │       ├── deploy.yml        # Production pages builder and deployer
 │       ├── ci.yml            # CI validation workflow for active branches
-│   └── open-code-review.yml # OpenCodeReview AI code reviewer with PR gating
+│       └── open-code-review.yml # OpenCodeReview AI code reviewer with PR gating
 ├── hooks/
-│   ├── pre-commit-open-code-review # Advisory local staged review
-│   └── hooks.json                 # Claude plugin hook registration
+│   └── pre-commit-open-code-review # Advisory local staged review
 ├── .git-hooks/
-│   └── pre-commit                # Shell pre-commit hook template (lint + test)
+│   └── pre-commit                # Pre-commit hook (lint + test + advisory AI review)
 ├── app/                         # React Frontend Application
 │   ├── src/
 │   │   ├── components/       # Layout and UI Components
@@ -143,8 +142,8 @@ This repository utilizes three GitHub Actions workflows under `.github/workflows
 3. **OpenCodeReview PR Review & Gating** ([open-code-review.yml](.github/workflows/open-code-review.yml)):
    - Triggered on pull requests (non-draft).
    - Uses the upstream `alibaba/open-code-review` GitHub Action with the npm-distributed `@alibaba-group/open-code-review` CLI, DeepSeek, and the repository review guidance.
-   - Posts inline findings and a sticky summary; the action is configured for the English review output.
-   - CLI installation is verified on CI with `ocr --version`.
+   - Posts inline findings and a sticky summary; the action is configured for the English review output at medium effort.
+   - The action installs `@alibaba-group/open-code-review` 1.12.9 itself via the `ocr_version` input.
 
 #### GitHub Secrets Setup
 
@@ -152,20 +151,22 @@ To enable automatic deployments and AI review pipelines, add these secrets under
 * `CLOUDFLARE_API_TOKEN`: Your Cloudflare API Token (with **Cloudflare Pages — Edit** permission).
 * `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare Account ID.
 * `DEEPSEEK_API_KEY`: Your DeepSeek API Key (required for OpenCodeReview AI reviews).
-* `GH_PAT` (recommended): Fine-grained PAT from a **dedicated bot user** (e.g. `nebula-open-code-review`), not your personal account. Grant **Pull requests: Read and write** on `nebulaideas/website`. This enables real inline comments and review summaries; the workflow falls back to `GITHUB_TOKEN` when unavailable.
+
+Review comments are posted with the workflow's built-in `GITHUB_TOKEN`; the job already grants `pull-requests: write`, so no personal access token is needed.
 
 ---
 
 ### ⚓ Local Git Hooks
 
 To maintain code quality before pushing commits:
-* **Hook Template**: [.git-hooks/pre-commit](.git-hooks/pre-commit) — Runs `npm run lint` and `npm run test:coverage` inside the `app` directory.
-* **OpenCodeReview Advisory Hook**: [hooks/pre-commit-open-code-review](hooks/pre-commit-open-code-review) — optional AI review of staged changes; it is advisory and never blocks commits. Install the CLI with `npm install --global @alibaba-group/open-code-review@1.12.9` and set `OCR_LLM_TOKEN` (or `DEEPSEEK_API_KEY`).
-* **Installation**:
-  Run the following script inside the `app/` folder to install the hook on your local machine:
+* **Hook Template**: [.git-hooks/pre-commit](.git-hooks/pre-commit) — Runs `npm run lint` and `npm run test:coverage` inside the `app` directory, then delegates to the advisory AI review.
+* **OpenCodeReview Advisory Hook**: [hooks/pre-commit-open-code-review](hooks/pre-commit-open-code-review) — AI review of staged changes on **every commit**; it is advisory and never blocks commits. Uses DeepSeek `deepseek-v4-flash` at medium effort. Install the CLI with `npm install --global @alibaba-group/open-code-review@1.12.9` and set `OCR_LLM_TOKEN` (or `DEEPSEEK_API_KEY`) in your shell profile.
+* **Installation** (once per clone) — point Git at the version-controlled hook directory so hook updates arrive with `git pull`:
   ```bash
-  npm run setup-hooks
+  npm --prefix app run setup-hooks
   ```
+  This is equivalent to `git config core.hooksPath .git-hooks`.
+* **Tuning**: `OCR_REVIEW_EFFORT` (`low|medium|high`, default `medium`), `OCR_REVIEW_TIMEOUT_SECONDS` (default `600`), and `OCR_SKIP_REVIEW=1` to bypass a single commit. The hook skips itself when the CLI or token is missing, and reads `DEEPSEEK_API_KEY` from your shell profile when the environment does not already carry it.
 
 ---
 

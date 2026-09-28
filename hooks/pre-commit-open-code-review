@@ -1,51 +1,362 @@
 #!/usr/bin/env bash
 # Advisory OpenCodeReview pre-commit hook.
-# Reviews staged changes locally; it never blocks a commit.
-set -euo pipefail
+#
+# Reviews the staged changes in the working tree before a commit is created.
+# It is strictly advisory: it NEVER blocks a commit. Mid-rebase/merge/cherry-pick
+# is detected and skipped rather than treated as a reason to stop, so
+# `git rebase --continue` and the commit that concludes a merge always work.
+#
+# Environment (all optional):
+#   OCR_LLM_URL                 LLM endpoint    (default: https://api.deepseek.com)
+#   OCR_LLM_MODEL               model id        (default: deepseek-v4-flash)
+#   OCR_LLM_TOKEN               API token       (default: $DEEPSEEK_API_KEY)
+#   OCR_REVIEW_TIMEOUT_SECONDS  wall-clock limit (default: 600)
+#   OCR_REVIEW_EFFORT           low|medium|high  (default: medium)
+#   OCR_SKIP_REVIEW=1           bypass the review entirely
+#
+# `set -e` is deliberately NOT used: every failure path must degrade to
+# "skip the review", never to "abort the commit".
+
+set -uo pipefail
+
+log() { printf '[open-code-review] %s\n' "$*"; }
+warn() { printf '[open-code-review] %s\n' "$*" >&2; }
+# Strip terminal escape sequences and control bytes from external input before
+# printing: review output is model-generated, so it must not be able to write
+# ANSI sequences into the developer's terminal.  Tab/LF/CR are preserved.
+# sed handles CSI sequences (ESC[...); tr strips remaining control bytes via
+# octal escapes (portable across BSD/GNU; $'...' cannot carry a NUL).
+sanitize() {
+  sed -e $'s/\x1b\[[0-9;]*[a-zA-Z]//g' | tr -d '\000-\010\013\014\016-\037\177'
+}
+
+if [[ "${OCR_SKIP_REVIEW:-0}" == "1" ]]; then
+  log "OCR_SKIP_REVIEW=1 — skipping review."
+  exit 0
+fi
 
 if ! command -v ocr >/dev/null 2>&1; then
-  echo "[open-code-review] ocr not found — skipping staged review."
-  echo "[open-code-review] Install with: npm install --global @alibaba-group/open-code-review@1.12.9"
+  log "ocr not found — skipping review."
+  # Keep this version in sync with ocr_version in .github/workflows/open-code-review.yml:
+  # both pin the CLI that CI and local commits review with, so bump them together.
+  log "Install with: npm install --global @alibaba-group/open-code-review@1.12.9"
   exit 0
+fi
+
+# Git does not source shell rc files, so recover the token from the profile when
+# the parent environment does not already carry it. Uses POSIX BRE quantifiers
+# ({n,}) because BSD sed on macOS does not support GNU's \+ and ++. Within a
+# single file the last assignment wins (tail -n 1, matching shell semantics);
+# across files, the first rc file that yields a valid-looking token wins —
+# earlier candidates ($ZDOTDIR, then ~/.zshenv, ...) take precedence, like the
+# order a shell would first encounter. A trailing inline comment is stripped
+# before the surrounding quotes are removed.
+if [[ -z "${OCR_LLM_TOKEN:-${DEEPSEEK_API_KEY:-}}" ]]; then
+  # ZDOTDIR is only consulted when it is set and differs from $HOME, so the
+  # same file is not read twice.
+  rc_candidates=("$HOME/.zshenv" "$HOME/.zprofile" "$HOME/.profile" "$HOME/.bash_profile")
+  if [[ -n "${ZDOTDIR:-}" && "$ZDOTDIR" != "$HOME" ]]; then
+    rc_candidates=("$ZDOTDIR/.zshenv" "${rc_candidates[@]}")
+  fi
+  for rc in "${rc_candidates[@]}"; do
+    [[ -r "$rc" ]] || continue
+    # Both variable names are recovered: this script documents OCR_LLM_TOKEN as
+    # the primary name with DEEPSEEK_API_KEY as its alias, and the project docs
+    # mention either one — a user who follows them and sets only
+    # OCR_LLM_TOKEN in their profile must not get "No LLM token found".
+    # Separate -e expressions per name (BSD sed lacks BRE alternation); the
+    # sed output preserves line order, so `tail -n 1` still yields the last
+    # assignment in the file, as a shell would.
+    recovered="$(sed -n \
+      -e 's/^[[:space:]]*export[[:space:]]\{1,\}OCR_LLM_TOKEN=//p' \
+      -e 's/^[[:space:]]*OCR_LLM_TOKEN=//p' \
+      -e 's/^[[:space:]]*export[[:space:]]\{1,\}DEEPSEEK_API_KEY=//p' \
+      -e 's/^[[:space:]]*DEEPSEEK_API_KEY=//p' \
+      "$rc" |
+      sed -e 's/[[:space:]]\{1,\}#.*$//' -e 's/[[:space:]]*$//' |
+      tail -n 1 |
+      sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\\(.*\\)'\$/\\1/")"
+    # Accept only a bare token: a `$VAR` reference, an embedded space, or
+    # anything that does not look like a key is rejected, so a non-key line
+    # (aliases, options, comments) cannot be mistaken for the token.  The
+    # value is never eval'd or re-interpreted by a shell — it is exported
+    # as an env var — so the charset check is about plausibility, not
+    # injection safety.  Trust boundary (accurate): the recovered
+    # value is exported as OCR_LLM_TOKEN and sent to OCR_LLM_URL — which a
+    # user-supplied env value can override (a supported BYO-endpoint setup), so
+    # the recovery must be trusted exactly as much as the user's own profile.
+    # Only the user's own rc files are read, and the value is restricted to a
+    # bare token (no spaces/expansions), so it cannot inject shell syntax.
+    if [[ "$recovered" =~ ^[A-Za-z0-9._+=/-]+$ ]]; then
+      DEEPSEEK_API_KEY="$recovered"
+      # Name the source (never the value) so a stale/test key inherited from a
+      # higher-precedence rc file is diagnosable instead of silently winning.
+      log "Using API token recovered from $rc"
+      break
+    fi
+  done
 fi
 
 if [[ -z "${OCR_LLM_TOKEN:-${DEEPSEEK_API_KEY:-}}" ]]; then
-  echo "[open-code-review] No OCR LLM token found — skipping staged review."
-  echo "[open-code-review] Set OCR_LLM_TOKEN (or DEEPSEEK_API_KEY)."
+  log "No LLM token found — skipping review."
+  log "Set OCR_LLM_TOKEN (or DEEPSEEK_API_KEY)."
   exit 0
 fi
 
-if git diff --cached --quiet; then
+# Re-check staged state so the hook is safe to invoke directly.
+if git diff --cached --quiet 2>/dev/null; then
+  log "No staged changes — skipping review."
   exit 0
 fi
+
+# Mid-rebase/merge/cherry-pick: skip the review but DO NOT block. These state
+# entries are still present while the concluding commit is being created, so
+# exiting non-zero here would reject `git rebase --continue`, the commit that
+# concludes a merge, and `git cherry-pick` / `git revert` — a catch-22 that can
+# only be escaped with --no-verify. This hook is advisory, so it always exits 0.
+for state_dir in rebase-merge rebase-apply MERGE_HEAD CHERRY_PICK_HEAD REVERT_HEAD; do
+  if [[ -e "$(git rev-parse --git-path "$state_dir")" ]]; then
+    log "Repository is mid-${state_dir} — skipping review (commit still allowed)."
+    exit 0
+  fi
+done
 
 export OCR_LLM_URL="${OCR_LLM_URL:-https://api.deepseek.com}"
-export OCR_LLM_MODEL="${OCR_LLM_MODEL:-deepseek-chat}"
+export OCR_LLM_MODEL="${OCR_LLM_MODEL:-deepseek-v4-flash}"
 export OCR_LLM_TOKEN="${OCR_LLM_TOKEN:-$DEEPSEEK_API_KEY}"
-
-OUTPUT_FILE="$(mktemp "${TMPDIR:-/tmp}/open-code-review-staged.XXXXXX")"
-chmod 600 "$OUTPUT_FILE"
-trap 'rm -f "$OUTPUT_FILE"' EXIT
-
-REVIEW_ARGS=(review --format json --output "$OUTPUT_FILE")
-TIMEOUT_SECONDS="${OCR_REVIEW_TIMEOUT_SECONDS:-120}"
-
-echo "[open-code-review] Reviewing staged changes..."
-REVIEW_STATUS=0
-if command -v timeout >/dev/null 2>&1; then
-  timeout "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}" || REVIEW_STATUS=$?
-else
-  # macOS does not ship GNU timeout; Perl's alarm provides the same fail-fast behavior.
-  perl -e 'alarm shift; exec @ARGV' "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}" || REVIEW_STATUS=$?
+EFFORT="${OCR_REVIEW_EFFORT:-medium}"
+case "$EFFORT" in
+  low|medium|high) ;;
+  *) warn "Invalid OCR_REVIEW_EFFORT='$EFFORT' (expected low|medium|high) — using medium."; EFFORT="medium" ;;
+esac
+TIMEOUT_SECONDS="${OCR_REVIEW_TIMEOUT_SECONDS:-600}"
+if [[ ! "$TIMEOUT_SECONDS" =~ ^[1-9][0-9]*$ ]]; then
+  warn "Invalid OCR_REVIEW_TIMEOUT_SECONDS='$TIMEOUT_SECONDS' — using 600."
+  TIMEOUT_SECONDS=600
 fi
 
+# A dedicated temp directory keeps the review result private and makes cleanup
+# a single, reliable rmdir.
+WORK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/ocr-review.XXXXXX" 2>/dev/null)" || WORK_DIR=""
+if [[ -z "$WORK_DIR" || ! -d "$WORK_DIR" ]]; then
+  warn "Could not create a temp directory — skipping review."
+  exit 0
+fi
+chmod 700 "$WORK_DIR" 2>/dev/null
+OUTPUT_FILE="$WORK_DIR/result.json"
+
+REVIEW_ARGS=(review --effort "$EFFORT" --format json --output "$OUTPUT_FILE")
+
+log "Reviewing staged changes (model=$OCR_LLM_MODEL, effort=$EFFORT, timeout=${TIMEOUT_SECONDS}s)..."
+
+# Which wall-clock mechanism will be used.  Detected here (in the parent) so the
+# signal handler knows whether a child PID file is expected: only the Perl
+# wrapper writes one.  On the GNU `timeout` path `$OCR_PID` is itself the group
+# leader (thanks to `set -m`, plus `--foreground` so timeout does not detach the
+# child into a new group), so the handler can target that group directly.
+TIMEOUT_MODE="none"
+if command -v timeout >/dev/null 2>&1 && timeout --kill-after=1 --foreground 1 true 2>/dev/null; then
+  TIMEOUT_MODE="gnu-timeout"
+elif command -v timeout >/dev/null 2>&1; then
+  TIMEOUT_MODE="plain-timeout"
+fi
+if [[ "$TIMEOUT_MODE" == "none" || "$TIMEOUT_MODE" == "plain-timeout" ]] && command -v perl >/dev/null 2>&1; then
+  # Prefer the Perl wrapper over a plain (busybox-style) timeout: the wrapper
+  # reaps the whole ocr subtree on both the deadline and signals, while plain
+  # timeout detaches the child into its own group (unreachable by the handler).
+  TIMEOUT_MODE="perl"
+fi
+
+# Run the review in the background so an interrupt can reap the child; without
+# this the orphaned `ocr` process can outlive the hook and keep writing.
+OCR_PID=""
+CHILD_PID_FILE="$WORK_DIR/child.pid"
+cleanup() { rm -rf "$WORK_DIR"; }
+on_signal() {
+  local code="$1"
+  trap - EXIT INT TERM
+  local target_pid=""
+  local candidate=""
+  if [[ "$TIMEOUT_MODE" == "perl" ]]; then
+    # The Perl wrapper writes the child's PID (also its PGID after setpgrp) to
+    # CHILD_PID_FILE.  After setpgrp the child lives in its own process group,
+    # so targeting -$target_pid reaches ocr and its grandchildren (but not the
+    # Perl wrapper, which reaps and exits independently when its child dies).
+    # Brief bounded wait: the file appears within microseconds of fork, but a
+    # signal arriving between `run_review &` and the wrapper's write would see
+    # an empty file.  Wait up to 0.5 s before falling back.
+    local _i=0
+    while [[ $_i -lt 5 ]] && [[ ! -s "$CHILD_PID_FILE" ]]; do
+      sleep 0.1; _i=$((_i + 1))
+    done
+    if [[ -s "$CHILD_PID_FILE" ]]; then
+      candidate="$(cat "$CHILD_PID_FILE" 2>/dev/null)"
+      # Garbage or a partial write must not disable cleanup: only accept a
+      # positive integer, otherwise fall back to the wrapper PID below rather
+      # than signalling nothing (or the wrong group).
+      [[ "$candidate" =~ ^[1-9][0-9]*$ ]] && target_pid="$candidate"
+    fi
+  fi
+  # Fall back to the wrapper/subshell PID.
+  target_pid="${target_pid:-$OCR_PID}"
+  # Guard: target_pid must be a positive integer to avoid signalling the wrong
+  # group (e.g. if the file contained garbage or a partial write).
+  if [[ -n "$target_pid" ]] && [[ "$target_pid" =~ ^[1-9][0-9]*$ ]]; then
+    # Attempt the group kill unconditionally: the leader may have exited while
+    # a grandchild is still alive in the same group, so a kill -0 on the leader
+    # alone would miss it.  Errors are already suppressed.
+    kill -TERM -- "-$target_pid" 2>/dev/null || kill -TERM "$target_pid" 2>/dev/null || true
+  fi
+  cleanup
+  exit "$code"
+}
+trap 'cleanup' EXIT
+trap 'on_signal 130' INT
+trap 'on_signal 143' TERM
+
+REVIEW_STATUS=0
+run_review() {
+  if [[ "$TIMEOUT_MODE" == "gnu-timeout" ]]; then
+    # --kill-after escalates to SIGKILL if SIGTERM is ignored; --foreground
+    # keeps ocr in this subshell's process group (set -m) so the signal
+    # handler's group kill actually reaches it.
+    timeout --kill-after=10 --foreground "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
+  elif [[ "$TIMEOUT_MODE" == "perl" ]]; then
+    # macOS does not ship GNU timeout.  This wrapper forks the child into its
+    # own process group (setpgrp) and polls waitpid() with WNOHANG, killing
+    # the whole group at the deadline.  Exit 124 matches GNU timeout's sentinel
+    # so the classification below handles both paths uniformly.
+    perl -e '
+      my $pid_file = shift @ARGV;
+      my $t = shift @ARGV;
+      my $pid = fork(); die "fork: $!" unless defined $pid;
+      if (!$pid) {
+        # New process group BEFORE exec, so the deadline below can reap the
+        # whole subtree. ocr is a Node CLI that spawns children of its own; if
+        # only the direct child were killed, those grandchildren would outlive
+        # the hook and keep writing to the output file. This is the primary
+        # path on macOS, which does not ship GNU timeout.
+        setpgrp(0, 0);
+        exec @ARGV or exit 127;
+      }
+      # Write the child PID (= its PGID) so the bash signal handler can target
+      # the whole process group on SIGINT/SIGTERM.  Both failure modes are
+      # fail-safe (kill the child first, then exit 127) so this path does not
+      # leak the ocr subtree: a skipped review beats an orphaned one.  If this
+      # branch is reached before the child ran setpgrp, -$pid names no group
+      # yet, so the negative-PID kill is a no-op and the direct child kill
+      # below still reaps it before ocr is started.
+      # NOTE: no apostrophes in Perl comments — they would terminate the
+      # surrounding single-quoted shell string and break the whole script.
+      if (open(my $fh, ">", $pid_file)) {
+        if (!print $fh $pid) { kill "KILL", -$pid; kill "KILL", $pid; waitpid($pid, 0); exit 127; }
+        close $fh;
+      } else {
+        kill "KILL", -$pid; kill "KILL", $pid; waitpid($pid, 0); exit 127;
+      }
+      # Belt and braces: if the bash parent signals THIS wrapper before it can
+      # read the PID file (its fallback targets the wrapper group, which does
+      # not contain the child after setpgrp), forward the signal to the child
+      # group so the ocr subtree is reaped either way.  NOTE: no apostrophes
+      # in Perl comments — they would terminate the surrounding single-quoted
+      # shell string and break the whole script.
+      $SIG{TERM} = $SIG{INT} = sub {
+        kill "KILL", -$pid;
+        kill "KILL", $pid;
+        waitpid($pid, 0);
+        exit 143;
+      };
+      my $deadline = time + $t;
+      while (1) {
+        if (waitpid($pid, 1) == $pid) {
+          # Signal deaths must not decode to success: report 128 + signal.
+          my $st = $?;
+          exit($st & 127 ? 128 + ($st & 127) : $st >> 8);
+        }
+        if (time >= $deadline) {
+          # Negative PID targets the child whole process group. A 0 return
+          # means the group never formed (setpgrp raced), so fall back to
+          # signalling the pid directly rather than killing nothing.
+          my $killed = kill "KILL", -$pid;
+          kill "KILL", $pid if !$killed;
+          waitpid($pid, 0);
+          exit 124;
+        }
+        select(undef, undef, undef, 0.2);
+      }
+    ' "$CHILD_PID_FILE" "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
+  elif [[ "$TIMEOUT_MODE" == "plain-timeout" ]]; then
+    # Last resort (busybox-style timeout, no Perl): the wall-clock limit — the
+    # critical guarantee — still holds, but the child is detached into its own
+    # process group, so signal-based reaping is best-effort on this path.
+    timeout "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
+  else
+    warn "No usable timeout mechanism (GNU timeout, Perl) — cannot enforce a time limit, skipping review."
+    # `return` (not a bare assignment) so the status survives the backgrounded
+    # subshell and the parent can report the skip accurately.
+    return 3
+  fi
+}
+# Backgrounded so the signal handler can reap it. Job control (`set -m`) gives
+# the background job its own process group; the Perl timeout wrapper inside
+# further moves the actual `ocr` child into a separate group via setpgrp and
+# writes that child PID to CHILD_PID_FILE so both the Perl deadline and the
+# bash signal handler can target the whole subtree.
+set -m
+run_review < /dev/null &
+OCR_PID=$!
+set +m
+wait "$OCR_PID" || REVIEW_STATUS=$?
+
 if [[ -s "$OUTPUT_FILE" ]]; then
-  echo "[open-code-review] Review findings:"
-  cat "$OUTPUT_FILE"
+  if ! command -v jq >/dev/null 2>&1; then
+    # Say so plainly: dumping the raw JSON here would spill the model's internal
+    # thinking traces and tool-call logs across the terminal.
+    log "jq is not installed — skipping formatted findings."
+    log "Install jq (brew install jq) to see review findings locally."
+  elif ! jq -e . "$OUTPUT_FILE" >/dev/null 2>&1; then
+    warn "Review output was not valid JSON (exit $REVIEW_STATUS); skipping raw dump."
+  else
+    finding_count="$(jq -r '(.comments // []) | if type=="array" then length else 0 end' "$OUTPUT_FILE" 2>/dev/null || echo 0)"
+    if [[ "$finding_count" == "0" ]]; then
+      log "No findings."
+    else
+      log "Review findings ($finding_count):"
+      # Render only actionable fields. The raw JSON also carries the model's
+      # internal "thinking" traces and tool-call logs, which are pure noise.
+      # sanitize() strips terminal escape sequences and control bytes: the
+      # review output is external input, so a malicious model response must
+      # not be able to write ANSI sequences to the developer's terminal.
+      jq -r '(.comments // [])[]
+             | "[\(.severity // "unknown")] \(.path // "?"):\(.start_line // 0)  \(.category // "-")\n    \(.content // "" | tostring | gsub("\\s+"; " "))\n"' \
+        "$OUTPUT_FILE" 2>/dev/null | sanitize || warn "Could not parse findings from the review output."
+    fi
+    summary="$(jq -r '.message // empty' "$OUTPUT_FILE" 2>/dev/null | sanitize)"
+    [[ -n "$summary" ]] && log "$summary"
+  fi
+elif [[ "$REVIEW_STATUS" -eq 0 ]]; then
+  log "Review completed with no output."
 fi
 
 if [[ "$REVIEW_STATUS" -ne 0 ]]; then
-  echo "[open-code-review] Review did not complete (exit $REVIEW_STATUS); commit proceeds." >&2
-else
-  echo "[open-code-review] Review complete. Commit proceeding."
+  # 3 is our own sentinel for "no timeout implementation available — skipped".
+  # 124 is the timeout exit code from both GNU timeout and our Perl wrapper.
+  # 128+N means the process died from signal N (e.g. 137=SIGKILL, 143=SIGTERM),
+  # which in practice also indicates a timeout or external interruption.
+  # An `ocr` that exits 3 or 124 on its own is reported with these same
+  # messages — accepted: all three mean "the review did not finish", and the
+  # commit proceeds either way, so the wording stays accurate.
+  if [[ "$REVIEW_STATUS" -eq 3 ]]; then
+    warn "Review skipped: neither 'timeout' nor 'perl' is available to bound the run."
+  elif [[ "$REVIEW_STATUS" -eq 124 ]]; then
+    warn "Review timed out after ${TIMEOUT_SECONDS}s (raise OCR_REVIEW_TIMEOUT_SECONDS to allow more). Commit proceeding."
+  elif [[ "$REVIEW_STATUS" -gt 128 ]]; then
+    sig=$((REVIEW_STATUS - 128))
+    warn "Review killed by signal $sig (exit $REVIEW_STATUS); likely timed out or interrupted. Commit proceeding."
+  else
+    warn "Review did not complete (exit $REVIEW_STATUS); commit proceeds."
+  fi
 fi
+
+log "Review finished. Commit proceeding."
+exit 0
