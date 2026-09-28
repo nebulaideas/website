@@ -45,9 +45,12 @@ fi
 
 # Git does not source shell rc files, so recover the token from the profile when
 # the parent environment does not already carry it. Uses POSIX BRE quantifiers
-# ({n,}) because BSD sed on macOS does not support GNU's \+ and ++. The last
-# assignment wins (matching shell semantics) and a trailing inline comment is
-# stripped before the surrounding quotes are removed.
+# ({n,}) because BSD sed on macOS does not support GNU's \+ and ++. Within a
+# single file the last assignment wins (tail -n 1, matching shell semantics);
+# across files, the first rc file that yields a valid-looking token wins —
+# earlier candidates ($ZDOTDIR, then ~/.zshenv, ...) take precedence, like the
+# order a shell would first encounter. A trailing inline comment is stripped
+# before the surrounding quotes are removed.
 if [[ -z "${OCR_LLM_TOKEN:-${DEEPSEEK_API_KEY:-}}" ]]; then
   # ZDOTDIR is only consulted when it is set and differs from $HOME, so the
   # same file is not read twice.
@@ -64,9 +67,12 @@ if [[ -z "${OCR_LLM_TOKEN:-${DEEPSEEK_API_KEY:-}}" ]]; then
       sed -e 's/[[:space:]]\{1,\}#.*$//' -e 's/[[:space:]]*$//' |
       tail -n 1 |
       sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\\(.*\\)'\$/\\1/")"
-    # Accept only a bare token. A `$VAR` reference or an embedded space is not a
-    # usable key, so reject it and keep looking instead of failing later with a
-    # confusing authentication error.  Trust boundary (accurate): the recovered
+    # Accept only a bare token: a `$VAR` reference, an embedded space, or
+    # anything that does not look like a key is rejected, so a non-key line
+    # (aliases, options, comments) cannot be mistaken for the token.  The
+    # value is never eval'd or re-interpreted by a shell — it is exported
+    # as an env var — so the charset check is about plausibility, not
+    # injection safety.  Trust boundary (accurate): the recovered
     # value is exported as OCR_LLM_TOKEN and sent to OCR_LLM_URL — which a
     # user-supplied env value can override (a supported BYO-endpoint setup), so
     # the recovery must be trusted exactly as much as the user's own profile.
@@ -222,10 +228,14 @@ run_review() {
         exec @ARGV or exit 127;
       }
       # Write the child PID (= its PGID) so the bash signal handler can target
-      # the whole process group on SIGINT/SIGTERM.
+      # the whole process group on SIGINT/SIGTERM.  Both failure modes are
+      # fail-safe (kill the child first, then exit 127) so this path can never
+      # leak the ocr subtree: a skipped review beats an orphaned one.
       if (open(my $fh, ">", $pid_file)) {
         if (!print $fh $pid) { kill "KILL", -$pid; kill "KILL", $pid; waitpid($pid, 0); exit 127; }
         close $fh;
+      } else {
+        kill "KILL", -$pid; kill "KILL", $pid; waitpid($pid, 0); exit 127;
       }
       # Belt and braces: if the bash parent signals THIS wrapper before it can
       # read the PID file (its fallback targets the wrapper group, which does
