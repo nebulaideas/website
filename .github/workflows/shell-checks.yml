@@ -41,6 +41,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
+      # shellcheck ships with the pinned image today (verified in the run log),
+      # but installing it when absent keeps this job working if a future image
+      # drops it — a missing linter must not look like a lint failure.
+      - name: Ensure ShellCheck is available
+        run: command -v shellcheck >/dev/null 2>&1 || { sudo apt-get update -qq && sudo apt-get install -y shellcheck; }
+
       # The authoritative list of guarded files lives in `files` below.  The
       # trigger's directory globs are deliberately broader (they just decide
       # when to START the job), and a file listed here but missing from the

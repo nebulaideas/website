@@ -80,6 +80,9 @@ if [[ -z "${OCR_LLM_TOKEN:-${DEEPSEEK_API_KEY:-}}" ]]; then
     # bare token (no spaces/expansions), so it cannot inject shell syntax.
     if [[ "$recovered" =~ ^[A-Za-z0-9._+=/-]+$ ]]; then
       DEEPSEEK_API_KEY="$recovered"
+      # Name the source (never the value) so a stale/test key inherited from a
+      # higher-precedence rc file is diagnosable instead of silently winning.
+      log "Using API token recovered from $rc"
       break
     fi
   done

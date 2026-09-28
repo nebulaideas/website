@@ -22,9 +22,10 @@ echo "============================================="
 echo "✅ Lint and test checks passed. Running AI review..."
 echo "============================================="
 
-# 3. Advisory AI review of the staged changes. The review script is advisory by
-#    contract and always exits 0; the fallback logs a non-zero exit so an
-#    accidentally broken hook is still visible.
+# 3. Advisory AI review of the staged changes. The script always exits 0 by
+#    contract; the fallback below only fires if it cannot be parsed or exec'd
+#    (which the shell-checks CI gate now catches), and logs that exit so a
+#    broken hook is still visible instead of silently skipped.
 if [ -f "$REPO_ROOT/hooks/pre-commit-open-code-review" ]; then
   if [ -x "$REPO_ROOT/hooks/pre-commit-open-code-review" ]; then
     "$REPO_ROOT/hooks/pre-commit-open-code-review" || echo "[open-code-review] review hook exited $? (ignored)." >&2
