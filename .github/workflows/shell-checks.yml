@@ -21,6 +21,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: shell-checks-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   shell-check:
     name: Syntax and Lint
