@@ -22,6 +22,11 @@ permissions:
   contents: read
 
 concurrency:
+  # Safe now that `push` is scoped to the default branch: a branch push
+  # triggers only the pull_request event, so this group never cancels a
+  # same-commit duplicate — it only cancels superseded runs when commits
+  # land faster than the ~10s job.  github.ref is unique per PR
+  # (refs/pull/<n>/merge), so runs for different PRs never collide.
   group: shell-checks-${{ github.ref }}
   cancel-in-progress: true
 
@@ -34,10 +39,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      # The file list lives in ONE place so the trigger paths and the checks
-      # cannot drift apart.  A missing hook fails loudly — deleting it would
-      # otherwise silently disable the local review, the exact regression
-      # this workflow exists to catch.
+      # The authoritative list of guarded files lives in `files` below.  The
+      # trigger's directory globs are deliberately broader (they just decide
+      # when to START the job), and a file listed here but missing from the
+      # repo fails the job loudly — deleting or renaming a hook can never keep
+      # CI green.  Adding a new hook: add it to `files` (the globs already
+      # cover when to run).
       - name: Syntax and lint checks
         run: |
           set -euo pipefail
@@ -64,6 +71,15 @@ jobs:
               status=1
             fi
             echo "::endgroup::"
+            # Git refuses to run hooks without the executable bit, and the
+            # entry point skips non-executable scripts — a mode drop would
+            # silently disable the review.  Require 100755 in the index AND
+            # an executable worktree copy.
+            mode="$(git ls-files -s "$f" | awk '{print $1}')"
+            if [ "$mode" != "100755" ] || [ ! -x "$f" ]; then
+              echo "::error file=$f::Hook must be executable (index mode: $mode)"
+              status=1
+            fi
           done
           existing=()
           for f in "${files[@]}"; do

@@ -137,9 +137,15 @@ log "Reviewing staged changes (model=$OCR_LLM_MODEL, effort=$EFFORT, timeout=${T
 # leader (thanks to `set -m`, plus `--foreground` so timeout does not detach the
 # child into a new group), so the handler can target that group directly.
 TIMEOUT_MODE="none"
-if command -v timeout >/dev/null 2>&1; then
-  TIMEOUT_MODE="timeout"
-elif command -v perl >/dev/null 2>&1; then
+if command -v timeout >/dev/null 2>&1 && timeout --kill-after=1 --foreground 1 true 2>/dev/null; then
+  TIMEOUT_MODE="gnu-timeout"
+elif command -v timeout >/dev/null 2>&1; then
+  TIMEOUT_MODE="plain-timeout"
+fi
+if [[ "$TIMEOUT_MODE" == "none" || "$TIMEOUT_MODE" == "plain-timeout" ]] && command -v perl >/dev/null 2>&1; then
+  # Prefer the Perl wrapper over a plain (busybox-style) timeout: the wrapper
+  # reaps the whole ocr subtree on both the deadline and signals, while plain
+  # timeout detaches the child into its own group (unreachable by the handler).
   TIMEOUT_MODE="perl"
 fi
 
@@ -191,15 +197,11 @@ trap 'on_signal 143' TERM
 
 REVIEW_STATUS=0
 run_review() {
-  if [[ "$TIMEOUT_MODE" == "timeout" ]]; then
-    # Probe for GNU-only flags (not available on busybox, etc.).  --foreground
-    # keeps the child in this subshell's process group so the signal handler's
-    # group kill actually reaches ocr instead of a detached group.
-    if timeout --kill-after=1 --foreground 1 true 2>/dev/null; then
-      timeout --kill-after=10 --foreground "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
-    else
-      timeout "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
-    fi
+  if [[ "$TIMEOUT_MODE" == "gnu-timeout" ]]; then
+    # --kill-after escalates to SIGKILL if SIGTERM is ignored; --foreground
+    # keeps ocr in this subshell's process group (set -m) so the signal
+    # handler's group kill actually reaches it.
+    timeout --kill-after=10 --foreground "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
   elif [[ "$TIMEOUT_MODE" == "perl" ]]; then
     # macOS does not ship GNU timeout.  This wrapper forks the child into its
     # own process group (setpgrp) and polls waitpid() with WNOHANG, killing
@@ -255,8 +257,13 @@ run_review() {
         select(undef, undef, undef, 0.2);
       }
     ' "$CHILD_PID_FILE" "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
+  elif [[ "$TIMEOUT_MODE" == "plain-timeout" ]]; then
+    # Last resort (busybox-style timeout, no Perl): the wall-clock limit — the
+    # critical guarantee — still holds, but the child is detached into its own
+    # process group, so signal-based reaping is best-effort on this path.
+    timeout "$TIMEOUT_SECONDS" ocr "${REVIEW_ARGS[@]}"
   else
-    warn "Neither 'timeout' nor 'perl' available — cannot enforce a time limit, skipping review."
+    warn "No usable timeout mechanism (GNU timeout, Perl) — cannot enforce a time limit, skipping review."
     # `return` (not a bare assignment) so the status survives the backgrounded
     # subshell and the parent can report the skip accurately.
     return 3
