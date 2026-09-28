@@ -60,9 +60,9 @@ if [[ -z "${OCR_LLM_TOKEN:-${DEEPSEEK_API_KEY:-}}" ]]; then
   fi
   for rc in "${rc_candidates[@]}"; do
     [[ -r "$rc" ]] || continue
-    # Both variable names are recovered, because the hook and README document
-    # OCR_LLM_TOKEN as the primary name while DEEPSEEK_API_KEY is the
-    # convenience alias — a user who follows the docs and sets only
+    # Both variable names are recovered: this script documents OCR_LLM_TOKEN as
+    # the primary name with DEEPSEEK_API_KEY as its alias, and the project docs
+    # mention either one — a user who follows them and sets only
     # OCR_LLM_TOKEN in their profile must not get "No LLM token found".
     # Separate -e expressions per name (BSD sed lacks BRE alternation); the
     # sed output preserves line order, so `tail -n 1` still yields the last

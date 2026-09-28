@@ -92,7 +92,14 @@ deadline_case() {
   else
     bad "$label → timeout not reported: $out"
   fi
-  sleep 1
+  # The hook reaps the subtree before returning, so this is only a grace
+  # period: poll briefly instead of a fixed sleep, which can be tight on a
+  # loaded runner.
+  i=0
+  while [ "$i" -lt 30 ] && [ -f "$TMP/ocr.pid" ] && kill -0 "$(cat "$TMP/ocr.pid")" 2>/dev/null; do
+    sleep 0.1
+    i=$((i + 1))
+  done
   if [ -f "$TMP/ocr.pid" ] && kill -0 "$(cat "$TMP/ocr.pid")" 2>/dev/null; then
     bad "$label → orphaned ocr subtree survived the deadline"
     kill "$(cat "$TMP/ocr.pid")" 2>/dev/null
