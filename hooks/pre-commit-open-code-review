@@ -326,6 +326,9 @@ if [[ "$REVIEW_STATUS" -ne 0 ]]; then
   # 124 is the timeout exit code from both GNU timeout and our Perl wrapper.
   # 128+N means the process died from signal N (e.g. 137=SIGKILL, 143=SIGTERM),
   # which in practice also indicates a timeout or external interruption.
+  # An `ocr` that exits 3 or 124 on its own is reported with these same
+  # messages — accepted: all three mean "the review did not finish", and the
+  # commit proceeds either way, so the wording stays accurate.
   if [[ "$REVIEW_STATUS" -eq 3 ]]; then
     warn "Review skipped: neither 'timeout' nor 'perl' is available to bound the run."
   elif [[ "$REVIEW_STATUS" -eq 124 ]]; then

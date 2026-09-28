@@ -50,7 +50,7 @@ jobs:
       - name: Syntax and lint checks
         run: |
           set -euo pipefail
-          files=(hooks/pre-commit-open-code-review .git-hooks/pre-commit)
+          files=(hooks/pre-commit-open-code-review .git-hooks/pre-commit hooks/test-pre-commit.sh)
           status=0
           for f in "${files[@]}"; do
             if [ ! -f "$f" ]; then
@@ -94,3 +94,10 @@ jobs:
             shellcheck --severity=error "${existing[@]}" || status=1
           fi
           exit "$status"
+
+      # Behavioural check for the Perl deadline wrapper and the skip
+      # fast-paths — syntax/lint alone cannot catch a deadline that fails to
+      # fire or leaves an orphaned review subtree.  Runs offline against a
+      # stubbed `ocr`.
+      - name: Functional smoke tests
+        run: bash hooks/test-pre-commit.sh
