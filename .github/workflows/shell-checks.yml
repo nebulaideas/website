@@ -32,22 +32,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Syntax check
+      # The file list lives in ONE place so the trigger paths and the checks
+      # cannot drift apart.  A missing hook fails loudly — deleting it would
+      # otherwise silently disable the local review, the exact regression
+      # this workflow exists to catch.
+      - name: Syntax and lint checks
         run: |
           set -euo pipefail
-          files=()
-          for f in hooks/pre-commit-open-code-review .git-hooks/pre-commit; do
-            [ -f "$f" ] && files+=("$f")
-          done
-          if [ "${#files[@]}" -eq 0 ]; then
-            echo "No shell hooks found — nothing to check."
-            exit 0
-          fi
+          files=(hooks/pre-commit-open-code-review .git-hooks/pre-commit)
           status=0
           for f in "${files[@]}"; do
-            # Pick the interpreter from the shebang so a POSIX sh script is not
-            # validated as bash (they are not mutually compatible).
-            case "$(head -n1 "$f")" in
+            if [ ! -f "$f" ]; then
+              echo "::error file=$f::Expected shell hook not found (deleted or renamed?)"
+              status=1
+              continue
+            fi
+            # Pick the interpreter from the shebang (CR stripped for CRLF
+            # checkouts) so a POSIX sh script is not validated as bash —
+            # they are not mutually compatible.
+            case "$(head -n1 "$f" | tr -d '\r')" in
               *bash*) interp=bash ;;
               *)      interp=sh ;;
             esac
@@ -60,17 +63,11 @@ jobs:
             fi
             echo "::endgroup::"
           done
-          exit "$status"
-
-      - name: ShellCheck (errors only)
-        run: |
-          set -euo pipefail
-          files=()
-          for f in hooks/pre-commit-open-code-review .git-hooks/pre-commit; do
-            [ -f "$f" ] && files+=("$f")
+          existing=()
+          for f in "${files[@]}"; do
+            if [ -f "$f" ]; then existing+=("$f"); fi
           done
-          if [ "${#files[@]}" -eq 0 ]; then
-            echo "No shell hooks found — nothing to lint."
-            exit 0
+          if [ "${#existing[@]}" -gt 0 ]; then
+            shellcheck --severity=error --external-sources "${existing[@]}" || status=1
           fi
-          shellcheck --severity=error --external-sources "${files[@]}"
+          exit "$status"

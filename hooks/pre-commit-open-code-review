@@ -29,6 +29,8 @@ fi
 
 if ! command -v ocr >/dev/null 2>&1; then
   log "ocr not found — skipping review."
+  # Keep this version in sync with ocr_version in .github/workflows/open-code-review.yml:
+  # both pin the CLI that CI and local commits review with, so bump them together.
   log "Install with: npm install --global @alibaba-group/open-code-review@1.12.9"
   exit 0
 fi
@@ -56,10 +58,12 @@ if [[ -z "${OCR_LLM_TOKEN:-${DEEPSEEK_API_KEY:-}}" ]]; then
       sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\\(.*\\)'\$/\\1/")"
     # Accept only a bare token. A `$VAR` reference or an embedded space is not a
     # usable key, so reject it and keep looking instead of failing later with a
-    # confusing authentication error.  Trust boundary: the recovered value is
-    # only ever used as the DeepSeek API token for OCR_LLM_URL's default
-    # endpoint — it is never sent to a user-supplied URL unless the caller set
-    # OCR_LLM_URL/OCR_LLM_TOKEN explicitly in the environment first.
+    # confusing authentication error.  Trust boundary (accurate): the recovered
+    # value is exported as OCR_LLM_TOKEN and sent to OCR_LLM_URL — which a
+    # user-supplied env value can override (a supported BYO-endpoint setup), so
+    # the recovery must be trusted exactly as much as the user's own profile.
+    # Only the user's own rc files are read, and the value is restricted to a
+    # bare token (no spaces/expansions), so it cannot inject shell syntax.
     if [[ "$recovered" =~ ^[A-Za-z0-9._-]+$ ]]; then
       DEEPSEEK_API_KEY="$recovered"
       break
@@ -153,7 +157,11 @@ on_signal() {
       sleep 0.1; _i=$((_i + 1))
     done
     if [[ -s "$CHILD_PID_FILE" ]]; then
-      target_pid="$(cat "$CHILD_PID_FILE" 2>/dev/null)"
+      candidate="$(cat "$CHILD_PID_FILE" 2>/dev/null)"
+      # Garbage or a partial write must not disable cleanup: only accept a
+      # positive integer, otherwise fall back to the wrapper PID below rather
+      # than signalling nothing (or the wrong group).
+      [[ "$candidate" =~ ^[1-9][0-9]*$ ]] && target_pid="$candidate"
     fi
   fi
   # Fall back to the wrapper/subshell PID.
@@ -208,6 +216,18 @@ run_review() {
         if (!print $fh $pid) { kill "KILL", -$pid; kill "KILL", $pid; waitpid($pid, 0); exit 127; }
         close $fh;
       }
+      # Belt and braces: if the bash parent signals THIS wrapper before it can
+      # read the PID file (its fallback targets the wrapper group, which does
+      # not contain the child after setpgrp), forward the signal to the child
+      # group so the ocr subtree is reaped either way.  NOTE: no apostrophes
+      # in Perl comments — they would terminate the surrounding single-quoted
+      # shell string and break the whole script.
+      $SIG{TERM} = $SIG{INT} = sub {
+        kill "KILL", -$pid;
+        kill "KILL", $pid;
+        waitpid($pid, 0);
+        exit 143;
+      };
       my $deadline = time + $t;
       while (1) {
         if (waitpid($pid, 1) == $pid) {
