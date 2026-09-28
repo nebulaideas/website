@@ -1,0 +1,19 @@
+{
+  "model": "jev-example",
+  "answers": {
+    "primary_offer": {
+      "type": "choice",
+      "choice": "fixed_scope_sprint",
+      "confidence": 0.71,
+      "probabilities": {
+        "fixed_scope_sprint": 0.71,
+        "open_consulting": 0.24,
+        "implementation_first": 0.05
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 0
+  }
+}
