@@ -5,8 +5,10 @@ name: Shell Checks
 # caller treats a non-zero exit as advisory), so it must be caught in CI.
 on:
   # Scope push to the default branch so a feature-branch push does not run the
-  # job twice (the same commit also triggers pull_request).  This is cleaner
-  # than a concurrency group, which would leave a cancelled check on the PR.
+  # job twice (the same commit also triggers pull_request).  pull_request is
+  # deliberately NOT path-filtered: if this check is ever made required in
+  # branch protection, a path filter would leave PRs that skip it with a
+  # permanently expected-but-missing status.  The job takes ~10s.
   push:
     branches: [main]
     paths:
@@ -14,10 +16,6 @@ on:
       - '.git-hooks/**'
       - '.github/workflows/shell-checks.yml'
   pull_request:
-    paths:
-      - 'hooks/**'
-      - '.git-hooks/**'
-      - '.github/workflows/shell-checks.yml'
   workflow_dispatch:
 
 permissions:
