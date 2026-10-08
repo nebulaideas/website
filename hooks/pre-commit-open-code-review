@@ -7,11 +7,11 @@
 # `git rebase --continue` and the commit that concludes a merge always work.
 #
 # Environment (all optional):
-#   OCR_LLM_URL                 LLM endpoint    (default: https://api.anthropic.com)
-#   OCR_LLM_MODEL               model id        (default: claude-haiku-5-5)
-#   OCR_LLM_TOKEN               API token       (default: $CLAUDE_API_KEY)
+#   OCR_LLM_URL                 LLM endpoint    (default: https://api.openai.com/v1/responses)
+#   OCR_LLM_MODEL               model id        (default: gpt-6-luna)
+#   OCR_LLM_TOKEN               API token       (default: $OPENAI_API_KEY)
 #   OCR_REVIEW_TIMEOUT_SECONDS  wall-clock limit (default: 600)
-#   OCR_REVIEW_EFFORT           low|medium|high  (default: low)
+#   OCR_REVIEW_EFFORT           low|medium|high  (default: medium)
 #   OCR_SKIP_REVIEW=1           bypass the review entirely
 #
 # `set -e` is deliberately NOT used: every failure path must degrade to
@@ -51,7 +51,7 @@ fi
 # earlier candidates ($ZDOTDIR, then ~/.zshenv, ...) take precedence, like the
 # order a shell would first encounter. A trailing inline comment is stripped
 # before the surrounding quotes are removed.
-if [[ -z "${OCR_LLM_TOKEN:-${CLAUDE_API_KEY:-}}" ]]; then
+if [[ -z "${OCR_LLM_TOKEN:-${OPENAI_API_KEY:-}}" ]]; then
   # ZDOTDIR is only consulted when it is set and differs from $HOME, so the
   # same file is not read twice.
   rc_candidates=("$HOME/.zshenv" "$HOME/.zprofile" "$HOME/.profile" "$HOME/.bash_profile")
@@ -61,7 +61,7 @@ if [[ -z "${OCR_LLM_TOKEN:-${CLAUDE_API_KEY:-}}" ]]; then
   for rc in "${rc_candidates[@]}"; do
     [[ -r "$rc" ]] || continue
     # Both variable names are recovered: this script documents OCR_LLM_TOKEN as
-    # the primary name with CLAUDE_API_KEY as its alias, and the project docs
+    # the primary name with OPENAI_API_KEY as its alias, and the project docs
     # mention either one — a user who follows them and sets only
     # OCR_LLM_TOKEN in their profile must not get "No LLM token found".
     # Separate -e expressions per name (BSD sed lacks BRE alternation); the
@@ -70,8 +70,8 @@ if [[ -z "${OCR_LLM_TOKEN:-${CLAUDE_API_KEY:-}}" ]]; then
     recovered="$(sed -n \
       -e 's/^[[:space:]]*export[[:space:]]\{1,\}OCR_LLM_TOKEN=//p' \
       -e 's/^[[:space:]]*OCR_LLM_TOKEN=//p' \
-      -e 's/^[[:space:]]*export[[:space:]]\{1,\}CLAUDE_API_KEY=//p' \
-      -e 's/^[[:space:]]*CLAUDE_API_KEY=//p' \
+      -e 's/^[[:space:]]*export[[:space:]]\{1,\}OPENAI_API_KEY=//p' \
+      -e 's/^[[:space:]]*OPENAI_API_KEY=//p' \
       "$rc" |
       sed -e 's/[[:space:]]\{1,\}#.*$//' -e 's/[[:space:]]*$//' |
       tail -n 1 |
@@ -88,7 +88,7 @@ if [[ -z "${OCR_LLM_TOKEN:-${CLAUDE_API_KEY:-}}" ]]; then
     # Only the user's own rc files are read, and the value is restricted to a
     # bare token (no spaces/expansions), so it cannot inject shell syntax.
     if [[ "$recovered" =~ ^[A-Za-z0-9._+=/-]+$ ]]; then
-      CLAUDE_API_KEY="$recovered"
+      OPENAI_API_KEY="$recovered"
       # Name the source (never the value) so a stale/test key inherited from a
       # higher-precedence rc file is diagnosable instead of silently winning.
       log "Using API token recovered from $rc"
@@ -97,9 +97,9 @@ if [[ -z "${OCR_LLM_TOKEN:-${CLAUDE_API_KEY:-}}" ]]; then
   done
 fi
 
-if [[ -z "${OCR_LLM_TOKEN:-${CLAUDE_API_KEY:-}}" ]]; then
+if [[ -z "${OCR_LLM_TOKEN:-${OPENAI_API_KEY:-}}" ]]; then
   log "No LLM token found — skipping review."
-  log "Set OCR_LLM_TOKEN (or CLAUDE_API_KEY)."
+  log "Set OCR_LLM_TOKEN (or OPENAI_API_KEY)."
   exit 0
 fi
 
@@ -121,14 +121,15 @@ for state_dir in rebase-merge rebase-apply MERGE_HEAD CHERRY_PICK_HEAD REVERT_HE
   fi
 done
 
-export OCR_LLM_URL="${OCR_LLM_URL:-https://api.anthropic.com}"
-export OCR_LLM_MODEL="${OCR_LLM_MODEL:-claude-haiku-5-5}"
-export OCR_LLM_TOKEN="${OCR_LLM_TOKEN:-$CLAUDE_API_KEY}"
-export OCR_USE_ANTHROPIC=true
-EFFORT="${OCR_REVIEW_EFFORT:-low}"
+export OCR_LLM_URL="${OCR_LLM_URL:-https://api.openai.com/v1/responses}"
+export OCR_LLM_MODEL="${OCR_LLM_MODEL:-gpt-6-luna}"
+export OCR_LLM_TOKEN="${OCR_LLM_TOKEN:-$OPENAI_API_KEY}"
+export OCR_USE_ANTHROPIC=false
+export OCR_LLM_PROTOCOL=openai-responses
+EFFORT="${OCR_REVIEW_EFFORT:-medium}"
 case "$EFFORT" in
   low|medium|high) ;;
-  *) warn "Invalid OCR_REVIEW_EFFORT='$EFFORT' (expected low|medium|high) — using low."; EFFORT="low" ;;
+  *) warn "Invalid OCR_REVIEW_EFFORT='$EFFORT' (expected low|medium|high) — using medium."; EFFORT="medium" ;;
 esac
 TIMEOUT_SECONDS="${OCR_REVIEW_TIMEOUT_SECONDS:-600}"
 if [[ ! "$TIMEOUT_SECONDS" =~ ^[1-9][0-9]*$ ]]; then

@@ -141,7 +141,7 @@ This repository utilizes three GitHub Actions workflows under `.github/workflows
    - Automatically runs linting and test coverage checks (`npm run test:coverage`) to validate change sets before integration.
 3. **OpenCodeReview PR Review & Gating** ([open-code-review.yml](.github/workflows/open-code-review.yml)):
    - Triggered on pull requests (non-draft).
-   - Uses the upstream `alibaba/open-code-review` GitHub Action with the npm-distributed `@alibaba-group/open-code-review` CLI, Claude Haiku, and the repository review guidance.
+   - Uses the upstream `alibaba/open-code-review` GitHub Action with the npm-distributed `@alibaba-group/open-code-review` CLI, OpenAI GPT-6 Luna (Responses API), and the repository review guidance.
    - Posts inline findings and a sticky summary; the action is configured for the English review output at medium effort.
    - The action installs `@alibaba-group/open-code-review` 1.12.9 itself via the `ocr_version` input.
 
@@ -150,7 +150,7 @@ This repository utilizes three GitHub Actions workflows under `.github/workflows
 To enable automatic deployments and AI review pipelines, add these secrets under **Settings > Secrets and variables > Actions** in your GitHub repository:
 * `CLOUDFLARE_API_TOKEN`: Your Cloudflare API Token (with **Cloudflare Pages — Edit** permission).
 * `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare Account ID.
-* `CLAUDE_API_KEY`: Your Anthropic API key (required for OpenCodeReview AI reviews).
+* `OPENAI_API_KEY`: Your OpenAI API key (required for OpenCodeReview AI reviews).
 * `GH_PAT` (optional): posts reviews as the bot identity. Without it, reviews post as `github-actions[bot]`.
 
 Review comments are posted with the workflow's built-in `GITHUB_TOKEN`; the job already grants `pull-requests: write`, so no personal access token is needed.
@@ -161,13 +161,13 @@ Review comments are posted with the workflow's built-in `GITHUB_TOKEN`; the job 
 
 To maintain code quality before pushing commits:
 * **Hook Template**: [.git-hooks/pre-commit](.git-hooks/pre-commit) — Runs `npm run lint` and `npm run test:coverage` inside the `app` directory, then delegates to the advisory AI review.
-* **OpenCodeReview Advisory Hook**: [hooks/pre-commit-open-code-review](hooks/pre-commit-open-code-review) — AI review of staged changes on **every commit**; it is advisory and never blocks commits. Uses Claude `claude-haiku-5-5` at low effort, reviewing the staged snapshot only. Install the CLI with `npm install --global @alibaba-group/open-code-review@1.12.13` and set `OCR_LLM_TOKEN` (or `CLAUDE_API_KEY`) in your shell profile.
+* **OpenCodeReview Advisory Hook**: [hooks/pre-commit-open-code-review](hooks/pre-commit-open-code-review) — AI review of staged changes on **every commit**; it is advisory and never blocks commits. Uses OpenAI `gpt-6-luna` (Responses API) at medium effort, reviewing the staged snapshot only. Install the CLI with `npm install --global @alibaba-group/open-code-review@1.12.13` and set `OCR_LLM_TOKEN` (or `OPENAI_API_KEY`) in your shell profile.
 * **Installation** (once per clone) — point Git at the version-controlled hook directory so hook updates arrive with `git pull`:
   ```bash
   npm --prefix app run setup-hooks
   ```
   This is equivalent to `git config core.hooksPath .git-hooks`.
-* **Tuning**: `OCR_REVIEW_EFFORT` (`low|medium|high`, default `low`), `OCR_REVIEW_TIMEOUT_SECONDS` (default `600`), and `OCR_SKIP_REVIEW=1` to bypass a single commit. The hook skips itself when the CLI or token is missing, and reads `CLAUDE_API_KEY` from your shell profile when the environment does not already carry it.
+* **Tuning**: `OCR_REVIEW_EFFORT` (`low|medium|high`, default `medium`), `OCR_REVIEW_TIMEOUT_SECONDS` (default `600`), and `OCR_SKIP_REVIEW=1` to bypass a single commit. The hook skips itself when the CLI or token is missing, and reads `OPENAI_API_KEY` from your shell profile when the environment does not already carry it.
 
 ---
 
