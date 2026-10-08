@@ -132,8 +132,8 @@ We use three GitHub Actions workflows in `.github/workflows/` to enforce softwar
    - Core Checks: `npm run lint`, `npm run test:coverage` (enforcing the 85% statement/branch coverage threshold), `npm run build`, and `npx wrangler pages deploy`.
 3. **OpenCodeReview PR Review & Gating (`open-code-review.yml`)**:
    - Triggers: On pull requests (non-draft).
-   - Purpose: Runs the upstream `alibaba/open-code-review` GitHub Action with the npm-distributed `@alibaba-group/open-code-review` CLI and DeepSeek.
-   - Configuration: `llm_url` is `https://api.deepseek.com`, `llm_model` is `deepseek-v4-flash`, `effort` is `medium`, and `DEEPSEEK_API_KEY` supplies the LLM token.
+   - Purpose: Runs the upstream `alibaba/open-code-review` GitHub Action (pinned to v1.12.13) with the npm-distributed `@alibaba-group/open-code-review` CLI and OpenAI.
+   - Configuration: `llm_url` is `https://api.openai.com/v1/responses` with `llm_protocol` `openai-responses`, `llm_model` is `gpt-6-luna`, `effort` is `medium`, and `OPENAI_API_KEY` supplies the LLM token. The Responses API is required because gpt-6-luna rejects function tools on chat completions. `GH_PAT` posts as the bot identity when set.
    - CI check: the action installs `@alibaba-group/open-code-review` 1.12.9 itself via the `ocr_version` input; `ci.yml` only runs lint and tests.
    - Review focus: HTML/CSS/JS, lint hygiene, code quality, best practices, security, SEO, and bilingual English/Spanish customer-facing copy.
    - Posting: OpenCodeReview publishes inline findings and a sticky summary; GitHub permissions are configured in the workflow.
