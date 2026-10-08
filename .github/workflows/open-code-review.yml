@@ -18,7 +18,8 @@ jobs:
       github.event.pull_request.draft == false &&
       github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # effort high allows up to 45 min per review group, plus setup and posting.
+    timeout-minutes: 60
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -27,16 +28,22 @@ jobs:
           fetch-depth: 0
 
       - name: Run OpenCodeReview
-        uses: alibaba/open-code-review@2c30c7001d3d30a3fdf3ed5513eed4bd879442b0 # v1.12.9
+        uses: alibaba/open-code-review@fabbdb296b0d97e2140ada8d54ca7d6d6d1d7ad4 # v1.12.13
         with:
-          llm_url: https://api.deepseek.com
-          llm_auth_token: ${{ secrets.DEEPSEEK_API_KEY }}
-          llm_model: deepseek-v4-flash
-          llm_use_anthropic: 'false'
+          llm_url: https://api.anthropic.com
+          llm_auth_token: ${{ secrets.CLAUDE_API_KEY }}
+          llm_model: claude-haiku-5-5
+          llm_use_anthropic: 'true'
           language: English
-          effort: medium
-          github_token: ${{ github.token }}
-          ocr_version: 1.12.9
+          effort: high
+          # GH_PAT posts as the bot identity when set; otherwise github-actions[bot].
+          github_token: ${{ secrets.GH_PAT || github.token }}
+          # Pinned to the release verified on the runner. Bump deliberately.
+          ocr_version: '1.12.13'
+          background: >-
+            Website and engineering platform: React, TypeScript and Vite in app/.
+            Flag: broken lint or coverage gates, accessibility regressions, and
+            motion that ignores prefers-reduced-motion.
           stream_progress: 'true'
           upload_artifacts: 'true'
           sticky_summary: 'true'
