@@ -1,0 +1,28 @@
+{
+  "model": "jev-example",
+  "answers": {
+    "instrument_before_copy": {
+      "type": "noul",
+      "noul": 0.91
+    },
+    "prioritize_bookings": {
+      "type": "score",
+      "score": 1.42,
+      "confidence": 0.73,
+      "legend": {
+        "0": "Low: focus on traffic volume first",
+        "1": "Medium: focus on CTA clicks and bookings first",
+        "2": "High: focus on qualified conversations and paid Sprints first"
+      },
+      "probabilities": {
+        "0": 0.08,
+        "1": 0.61,
+        "2": 0.31
+      }
+    }
+  },
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 0
+  }
+}
