@@ -68,10 +68,53 @@ Greater confidence in technical and organizational decision-making.
 
 ---
 
+## Who We Are
+
+Nebula Ideas is a two-partner engineering advisory firm based in León, Guanajuato, Mexico. We work remotely with companies across Mexico and the United States, in English and Spanish.
+
+- Ismael Marin — Co-Founder, AI Infrastructure & Tooling. Software engineer and tech lead. Website: https://ismaelmarin.dev · GitHub: https://github.com/igmarin
+- Carlos (Mumo) Muniz — Managing Partner, Engineering & Delivery. Staff-level engineer and team architect. LinkedIn: https://www.linkedin.com/in/mumoc
+
+We have worked together since 2014.
+
+---
+
+## Verified Open-Source Work
+
+We build the tools we recommend. Every project is public, versioned, and independently verifiable.
+
+- rails-ai-bridge — Rails context and read-only introspection for AI coding assistants. 11,000+ RubyGems downloads. https://rubygems.org/gems/rails-ai-bridge
+- ruby-skill-bench — Measures whether added context improves an agent's work. 3,000+ RubyGems downloads. https://rubygems.org/gems/ruby-skill-bench
+- rs-guard — Rust CLI for multi-provider AI code review in GitHub pull requests. Published Rust crate (archived). https://docs.rs/rs-guard
+
+---
+
+## FAQ
+
+### What is the Nebula Clarity Sprint?
+
+The Nebula Clarity Sprint helps organizations understand their current reality, identify friction, and uncover practical opportunities for AI, automation, and operational improvement before investing in a solution.
+
+### How long does the Clarity Sprint take?
+
+The Clarity Sprint is designed to be efficient and focused. It is generally completed in 1–2 weeks, depending on the complexity and scope of the organization.
+
+### What deliverables do I receive?
+
+You receive a clear view of the current situation, key risks and points of friction, prioritized opportunities, practical recommendations for next steps, guidance on AI and automation, and an initial action plan.
+
+### Do you work with organizations outside Mexico?
+
+Yes, we work with companies in both Mexico and the United States. Our team is bilingual and can provide services in English and Spanish.
+
+---
+
 ## Contact
 
 Website: https://nebulaideas.com
 
-Contact: https://nebulaideas.com/contact
+Contact: hello@nebulaideas.com
 
 LinkedIn: https://www.linkedin.com/company/nebula-ideas
+
+GitHub: https://github.com/nebulaideas

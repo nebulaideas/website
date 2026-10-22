@@ -1,5 +1,10 @@
 import { type Language, translations } from './translations';
 
+// Canonical base URL — never derive from window.location, which can include
+// query strings and hash fragments that would split SEO signals.
+const CANONICAL_URL = 'https://nebulaideas.com/';
+const OG_IMAGE_URL = 'https://nebulaideas.com/og-image.png';
+
 // Helper to update a meta tag by name/property, creating it if missing
 const updateMeta = (attrKey: 'name' | 'property', attrValue: string, contentValue: string) => {
   const candidates = document.head.querySelectorAll(`meta[${attrKey}]`);
@@ -41,13 +46,17 @@ export function updateMetaTags({
   updateMeta('name', 'twitter:title', title);
   updateMeta('name', 'twitter:description', ogDescription);
   updateMeta('property', 'og:locale', language === 'en' ? 'en_US' : 'es_MX');
-  updateMeta('property', 'og:url', window.location.href);
+  updateMeta('property', 'og:url', CANONICAL_URL);
   updateMeta('property', 'og:type', 'website');
-  updateMeta('property', 'og:image', 'https://nebulaideas.com/assets/logo.webp');
+  updateMeta('property', 'og:image', OG_IMAGE_URL);
+  updateMeta('property', 'og:image:width', '1200');
+  updateMeta('property', 'og:image:height', '630');
+  updateMeta('property', 'og:image:alt', title);
   updateMeta('name', 'twitter:card', 'summary_large_image');
   updateMeta('name', 'twitter:site', '@nebulaideas');
   updateMeta('name', 'twitter:creator', '@nebulaideas');
-  updateMeta('name', 'twitter:image', 'https://nebulaideas.com/assets/logo.webp');
+  updateMeta('name', 'twitter:image', OG_IMAGE_URL);
+  updateMeta('name', 'twitter:image:alt', title);
 
   // Add canonical URL
   let canonicalLink = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
@@ -56,7 +65,7 @@ export function updateMetaTags({
     canonicalLink.rel = 'canonical';
     document.head.appendChild(canonicalLink);
   }
-  canonicalLink.href = window.location.href;
+  canonicalLink.href = CANONICAL_URL;
 }
 
 function buildJsonLd(language: Language) {
@@ -80,6 +89,22 @@ function buildJsonLd(language: Language) {
       email: 'hello@nebulaideas.com',
       availableLanguage: ['English', 'Spanish'],
     },
+    founder: [
+      {
+        '@type': 'Person',
+        name: 'Ismael Marin',
+        jobTitle: 'Co-Founder, AI Infrastructure & Tooling',
+        url: 'https://ismaelmarin.dev',
+        sameAs: ['https://github.com/igmarin', 'https://ismaelmarin.dev'],
+      },
+      {
+        '@type': 'Person',
+        name: 'Carlos (Mumo) Muniz',
+        jobTitle: 'Managing Partner, Engineering & Delivery',
+        url: 'https://www.linkedin.com/in/mumoc',
+        sameAs: ['https://www.linkedin.com/in/mumoc', 'https://github.com/mumoc'],
+      },
+    ],
     sameAs: [
       'https://www.linkedin.com/company/nebula-ideas',
       'https://github.com/nebulaideas',

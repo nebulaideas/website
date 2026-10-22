@@ -4,6 +4,8 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import ClaritySprintSection from '@/sections/ClaritySprintSection';
 import BeyondClaritySprintSection from '@/sections/BeyondClaritySprintSection';
+import FoundersSection from '@/sections/FoundersSection';
+import FaqSection from '@/sections/FaqSection';
 
 const HeroSection = lazy(() => import('@/sections/HeroSection'));
 
@@ -18,6 +20,8 @@ function App() {
           </Suspense>
           <ClaritySprintSection />
           <BeyondClaritySprintSection />
+          <FoundersSection />
+          <FaqSection />
         </main>
         <Footer />
       </div>

@@ -54,7 +54,7 @@ export default function Footer() {
               {t('nav.schedule')}
             </a>
             <a
-              href="https://www.linkedin.com/company/nebulaideas"
+              href="https://www.linkedin.com/company/nebula-ideas"
               className="text-on-tertiary-container hover:text-nebula-gold transition-colors duration-200 flex items-center gap-1"
             >
               <Linkedin size={14} />

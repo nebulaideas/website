@@ -7,6 +7,8 @@ const navLinks = [
   { key: 'nav.home', href: '#top' },
   { key: 'nav.sprint', href: '#clarity-sprint' },
   { key: 'nav.services', href: '#beyond-clarity-sprint' },
+  { key: 'nav.founders', href: '#founders' },
+  { key: 'nav.faq', href: '#faq' },
 ] as const;
 
 export default function Navigation() {
