@@ -93,12 +93,15 @@ function Carousel({
 
   React.useEffect(() => {
     if (!api) {return}
-    onSelect(api)
     api.on("reInit", onSelect)
     api.on("select", onSelect)
+    // Initial canScroll* sync must not setState synchronously in the effect
+    // body (react-hooks/set-state-in-effect); defer it by one microtask.
+    queueMicrotask(() => onSelect(api))
 
     return () => {
-      api?.off("select", onSelect)
+      api.off("select", onSelect)
+      api.off("reInit", onSelect)
     }
   }, [api, onSelect])
 
