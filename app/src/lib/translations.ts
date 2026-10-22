@@ -14,6 +14,8 @@ export const translations = {
       home: 'Home',
       services: 'Beyond the Clarity Sprint',
       sprint: 'Clarity Sprint',
+      founders: 'About',
+      faq: 'FAQ',
       contact: 'Contact',
       toggle_es: 'ES',
       toggle_en: 'EN',
@@ -69,6 +71,58 @@ export const translations = {
       linkedin: 'LinkedIn',
       github: 'GitHub',
     },
+    founders: {
+      label: 'WHO WE ARE',
+      headline: 'Senior partners. Hands-on delivery.',
+      intro:
+        'Nebula Ideas is a two-partner engineering advisory firm. We combine deep architecture and code quality with business strategy and operational ROI — and we stay close to the code.',
+    },
+    founder1: {
+      name: 'Ismael Marin',
+      role: 'Co-Founder · AI Infrastructure & Tooling',
+      bio:
+        'Software engineer and tech lead in León, Mexico. I bring software engineering discipline — TDD, Domain-Driven Design, and rigorous evaluation — to agentic AI, building CLI tools and Rust agent runtimes that turn unpredictable LLMs into production-grade workflows.',
+    },
+    founder2: {
+      name: 'Carlos (Mumo) Muniz',
+      role: 'Managing Partner · Engineering & Delivery',
+      bio:
+        'Staff-level engineer and team architect with 15+ years building software, teams, and systems across the US and Mexico. I eliminate architectural bottlenecks and lead delivery on a foundation of psychological safety and the "Care to Deliver" principle.',
+    },
+    partnership: {
+      title: 'Partnership',
+      desc:
+        'We have worked together since 2014, delivering critical integrations for companies in Mexico and the USA. We met as engineer and manager; today we are partners.',
+    },
+    proof: {
+      label: 'VERIFIED OPEN-SOURCE WORK',
+      headline: 'Proof, not promises.',
+      desc:
+        'We build the tools we recommend. Every project below is public, versioned, and independently verifiable.',
+      downloads_label: '14,000+ combined RubyGems downloads',
+      project1: {
+        name: 'rails-ai-bridge',
+        desc: 'Rails context and read-only introspection for AI coding assistants.',
+        metric: '11,000+ RubyGems downloads',
+        link_label: 'View on RubyGems',
+      },
+      project2: {
+        name: 'ruby-skill-bench',
+        desc: 'Measures whether added context improves an agent’s work.',
+        metric: '3,000+ RubyGems downloads',
+        link_label: 'View on RubyGems',
+      },
+      project3: {
+        name: 'rs-guard',
+        desc: 'Rust CLI for multi-provider AI code review in GitHub pull requests.',
+        metric: 'Published Rust crate · archived',
+        link_label: 'View on docs.rs',
+      },
+    },
+    faq: {
+      label: 'FAQ',
+      headline: 'Frequently asked questions',
+    },
     seo: {
       title: 'Nebula Ideas — AI is an amplifier.',
       description:
@@ -97,6 +151,8 @@ export const translations = {
       home: 'Inicio',
       services: 'M\u00e1s all\u00e1 del Clarity Sprint',
       sprint: 'Nebula Clarity Sprint',
+      founders: 'Nosotros',
+      faq: 'Preguntas',
       contact: 'Contacto',
       toggle_es: 'ES',
       toggle_en: 'EN',
@@ -151,6 +207,58 @@ export const translations = {
       copyright: 'Nebula Ideas. Excelencia en Ingenier\u00eda.',
       linkedin: 'LinkedIn',
       github: 'GitHub',
+    },
+    founders: {
+      label: 'QUIÉNES SOMOS',
+      headline: 'Socios senior. Entrega manos a la obra.',
+      intro:
+        'Nebula Ideas es una firma de asesoría en ingeniería de dos socios. Combinamos arquitectura profunda y calidad de código con estrategia de negocio y ROI operativo, y nos mantenemos cerca del código.',
+    },
+    founder1: {
+      name: 'Ismael Marin',
+      role: 'Co-Fundador · Infraestructura y Herramientas de IA',
+      bio:
+        'Ingeniero de software y tech lead en León, México. Llevo la disciplina de la ingeniería de software — TDD, Domain-Driven Design y evaluación rigurosa — a la IA agéntica, construyendo herramientas CLI y entornos de ejecución de agentes en Rust que convierten LLMs impredecibles en flujos de trabajo de nivel de producción.',
+    },
+    founder2: {
+      name: 'Carlos (Mumo) Muniz',
+      role: 'Socio Director · Ingeniería y Entrega',
+      bio:
+        'Ingeniero de nivel staff y arquitecto de equipos con más de 15 años construyendo software, equipos y sistemas en Estados Unidos y México. Elimino cuellos de botella arquitectónicos y lidero la entrega sobre una base de seguridad psicológica y el principio de "Care to Deliver".',
+    },
+    partnership: {
+      title: 'Asociación',
+      desc:
+        'Hemos trabajado juntos desde 2014, entregando integraciones críticas para empresas en México y Estados Unidos. Nos conocimos como ingeniero y manager; hoy somos socios.',
+    },
+    proof: {
+      label: 'TRABAJO OPEN-SOURCE VERIFICABLE',
+      headline: 'Hechos, no promesas.',
+      desc:
+        'Construimos las herramientas que recomendamos. Cada proyecto es público, versionado e independientemente verificable.',
+      downloads_label: 'Más de 14,000 descargas combinadas en RubyGems',
+      project1: {
+        name: 'rails-ai-bridge',
+        desc: 'Contexto de Rails e introspección de solo lectura para asistentes de IA.',
+        metric: 'Más de 11,000 descargas en RubyGems',
+        link_label: 'Ver en RubyGems',
+      },
+      project2: {
+        name: 'ruby-skill-bench',
+        desc: 'Mide si el contexto adicional mejora el trabajo de un agente.',
+        metric: 'Más de 3,000 descargas en RubyGems',
+        link_label: 'Ver en RubyGems',
+      },
+      project3: {
+        name: 'rs-guard',
+        desc: 'CLI en Rust para revisión de código con IA multi-proveedor en pull requests de GitHub.',
+        metric: 'Crate de Rust publicado · archivado',
+        link_label: 'Ver en docs.rs',
+      },
+    },
+    faq: {
+      label: 'PREGUNTAS FRECUENTES',
+      headline: 'Preguntas frecuentes',
     },
     seo: {
       title: 'Nebula Ideas — La IA es un multiplicador.',

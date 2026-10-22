@@ -1,0 +1,21 @@
+{
+  "name": "Nebula Ideas",
+  "short_name": "Nebula Ideas",
+  "description": "Nebula Ideas helps organizations identify the value AI can create, uncover what should improve before automation, and build a clear path forward.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#010409",
+  "theme_color": "#060b13",
+  "icons": [
+    {
+      "src": "/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "market": "Mexico-first bilingual website",
+    "traffic": "baseline not established",
+    "offer_hypothesis": "fixed-scope paid Clarity Sprint",
+    "current_funnel": "site visit -> CTA -> Calendly booking -> qualified conversation -> paid Clarity Sprint",
+    "evidence_gap": "no historical funnel data"
+  },
+  "questions": {
+    "instrument_before_copy": {
+      "type": "noul",
+      "instructions": "Should Nebula instrument the funnel before changing the strategic message?",
+      "criteria": {
+        "true": "No reliable baseline exists; measurement must precede message comparison",
+        "false": "The current message is clearly unusable and should change before measurement"
+      }
+    },
+    "prioritize_bookings": {
+      "type": "score",
+      "instructions": "How should the initial website measurement priority be ranked?",
+      "criteria": [
+        "Low: focus on traffic volume first",
+        "Medium: focus on CTA clicks and bookings first",
+        "High: focus on qualified conversations and paid Sprints first"
+      ]
+    }
+  }
+}

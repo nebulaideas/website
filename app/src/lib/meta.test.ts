@@ -61,6 +61,40 @@ describe('updateMetaTags', () => {
     expect(ogDescMetaUpdated).toHaveAttribute('content', 'Updated og description');
   });
 
+  it('should set canonical and OG image to the canonical domain', () => {
+    updateMetaTags({ title: 'Home', description: 'Desc', language: 'en', ...defaults });
+
+    const canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
+    expect(canonical).toHaveAttribute('href', 'https://nebulaideas.com/');
+
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    expect(ogUrl).toHaveAttribute('content', 'https://nebulaideas.com/');
+
+    const ogImage = document.querySelector('meta[property="og:image"]');
+    expect(ogImage).toHaveAttribute('content', 'https://nebulaideas.com/og-image.png');
+
+    const twImage = document.querySelector('meta[name="twitter:image"]');
+    expect(twImage).toHaveAttribute('content', 'https://nebulaideas.com/og-image.png');
+  });
+
+  it('should set OG image dimensions and alt text', () => {
+    updateMetaTags({ title: 'Home', description: 'Desc', language: 'en', ...defaults });
+
+    const width = document.querySelector('meta[property="og:image:width"]');
+    expect(width).toHaveAttribute('content', '1200');
+    const height = document.querySelector('meta[property="og:image:height"]');
+    expect(height).toHaveAttribute('content', '630');
+    const alt = document.querySelector('meta[property="og:image:alt"]');
+    expect(alt).toHaveAttribute('content', 'Home');
+  });
+
+  it('should not duplicate canonical when updated twice', () => {
+    updateMetaTags({ title: 'Home', description: 'Desc', language: 'en', ...defaults });
+    updateMetaTags({ title: 'Home', description: 'Desc', language: 'es', ...defaults });
+    expect(document.querySelectorAll('link[rel="canonical"]').length).toBe(1);
+    expect(document.querySelectorAll('meta[property="og:image"]').length).toBe(1);
+  });
+
   it('should work when CSS is undefined', () => {
     const originalCSS = globalThis.CSS;
     // @ts-expect-error deleting CSS to test fallback

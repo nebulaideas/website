@@ -1,0 +1,23 @@
+{
+  "model": "jev-example",
+  "answers": {
+    "primary_message_frame": {
+      "type": "choice",
+      "choice": "improve_before_adopting_ai",
+      "confidence": 0.78,
+      "probabilities": {
+        "improve_before_adopting_ai": 0.78,
+        "ai_is_an_amplifier": 0.15,
+        "clarity_sprint_first": 0.07
+      }
+    },
+    "split_markets_now": {
+      "type": "noul",
+      "noul": 0.18
+    }
+  },
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 0
+  }
+}

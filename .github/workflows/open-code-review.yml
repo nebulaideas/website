@@ -18,6 +18,13 @@ jobs:
       github.event.pull_request.draft == false &&
       github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    # The ocr CLI spawns a background self-upgrade (bin/ocr.js) whenever a newer
+    # release exists than the pinned ocr_version. npm removes the old binary before
+    # installing the new one, so the review step can hit "Cannot find module
+    # '/usr/local/bin/ocr'". Pinning stays in ocr_version below.
+    # Upstream: alibaba/open-code-review#703, fix in progress in #1204.
+    env:
+      OCR_NO_UPDATE: '1'
     # Review effort medium; allow time for the slowest review group plus setup and posting.
     timeout-minutes: 60
     steps:

@@ -1,0 +1,27 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "market": "Mexico-first bilingual website",
+    "traffic": "baseline not established",
+    "evidence_gap": "no historical funnel data",
+    "current_architecture": "single bilingual React page with client-side language switching"
+  },
+  "questions": {
+    "language_proxy_only": {
+      "type": "noul",
+      "instructions": "Should language be used only as a temporary market proxy?",
+      "criteria": {
+        "true": "Language is observable now but does not prove geography or buyer type",
+        "false": "Language is sufficient to split Mexico and US messaging immediately"
+      }
+    },
+    "defer_market_split": {
+      "type": "noul",
+      "instructions": "Should the market message split be deferred until stronger evidence exists?",
+      "criteria": {
+        "true": "Current traffic and attribution are insufficient for a reliable split",
+        "false": "There is already enough evidence for separate market funnels"
+      }
+    }
+  }
+}

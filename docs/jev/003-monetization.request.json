@@ -1,0 +1,20 @@
+{
+  "model": "jev-latest",
+  "state": {
+    "market": "Mexico-first bilingual website",
+    "offer_hypothesis": "fixed-scope paid Clarity Sprint",
+    "expansion_hypothesis": "open-ended consulting after the Sprint",
+    "evidence_gap": "no historical funnel data"
+  },
+  "questions": {
+    "primary_offer": {
+      "type": "choice",
+      "instructions": "Which offer should Nebula test first?",
+      "criteria": {
+        "fixed_scope_sprint": "A fixed-scope paid diagnostic Sprint",
+        "open_consulting": "Open-ended consulting from the first conversation",
+        "implementation_first": "Lead with implementation work before diagnosis"
+      }
+    }
+  }
+}
