@@ -75,6 +75,3 @@ app/dist-ssr/
 *.sln
 *.sw?
 .DS_Store
-
-.opencodereview/
-review-result.txt
