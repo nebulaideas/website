@@ -75,3 +75,4 @@ app/dist-ssr/
 *.sln
 *.sw?
 .DS_Store
+.claude/
